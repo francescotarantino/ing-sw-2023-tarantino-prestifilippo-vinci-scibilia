@@ -6,5 +6,6 @@ public enum TileType {
     GAMES,
     FRAMES,
     TROPHIES,
-    PLANTS
+    PLANTS,
+    PLACEHOLDER
 }
