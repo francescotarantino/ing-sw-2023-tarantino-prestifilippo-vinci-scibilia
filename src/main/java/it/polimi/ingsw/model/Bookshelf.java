@@ -3,11 +3,13 @@ package it.polimi.ingsw.model;
 public class Bookshelf {
     private final String playerName;
 
+    private PersonalGoalCard personalGoalCard;
+
     private Tile[][] matrix;
 
-    public Bookshelf(String playerName) {
+    public Bookshelf(String playerName, PersonalGoalCard personalGoalCard) {
         this.playerName = playerName;
-
+        this.personalGoalCard = personalGoalCard;
 
         this.matrix = new Tile[5][6];
         for (int i = 0; i < 5; i++) {
@@ -19,6 +21,10 @@ public class Bookshelf {
 
     public String getPlayerName() {
         return this.playerName;
+    }
+
+    public PersonalGoalCard getPersonalGoalCard() {
+        return this.personalGoalCard;
     }
 
     public Tile getTile(int x, int y) {
