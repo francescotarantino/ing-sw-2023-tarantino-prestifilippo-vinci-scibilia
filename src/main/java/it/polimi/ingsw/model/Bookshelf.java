@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.GravityException;
+import it.polimi.ingsw.model.exceptions.IllegalPositionException;
+
 public class Bookshelf {
     private final String playerName;
 
