@@ -34,7 +34,15 @@ public class Bookshelf {
         return this.matrix[x][y];
     }
 
-    public void insertTile(int x, int y, Tile tile) {
+    public void insertTile(int x, int y, Tile tile) throws IllegalPositionException, GravityException {
+        if(x < 0 || x >= 5 || y < 0 || y >= 6){
+            throw new IndexOutOfBoundsException();
+        } else if (this.matrix[x][y] != null){ // cannot replace a tile that is already present
+            throw new IllegalPositionException();
+        } else if (y != 0 && this.matrix[x][y-1] == null){ // check if there is a tile under the one is being inserted
+            throw new GravityException();
+        }
+
         this.matrix[x][y] = tile;
     }
 }
