@@ -1,8 +1,13 @@
 package it.polimi.ingsw.model;
+import java.io.FileInputStream;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Random;
 import java.io.File;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
+import com.google.gson.*;
 public class Game {
     //attributes
     private final int gameID;
@@ -12,11 +17,11 @@ public class Game {
     private Bag bag;
     private LivingRoomBoard livingRoomBoard;
 
-    public Game(int numberOfPlayers,String hostName,int ID) throws InvalidNumberOfPlayersException,InvalidIDException{
+    public Game(int numberOfPlayers,String hostName,int ID){
         if(numberOfPlayers<2 || numberOfPlayers>4)
-            throw new InvalidNumberOfPlayersException();
+            throw new IllegalArgumentException("Illegal number of players. A game should have two to four players");
         if(ID<=0)
-            throw new InvalidIDException();
+            throw new IllegalArgumentException("Game ID must be greater than zero");
         //game construction
         //assigning ID, generating a board and a bag
         this.gameID = ID;
@@ -30,17 +35,17 @@ public class Game {
         this.bookshelves = new Bookshelf[numberOfPlayers];
         bookshelves[0] = new Bookshelf(hostName,personalGoalCards[0]);
     }
-    public void addShelf(String playerName) throws NoFreeBookshelfException,DuplicateNameException {
+    public void addShelf(String playerName){
         int found = -1;
         for (int i = 0; i < this.getTotalPlayersNumber() && found==-1; i++) {
             if (this.bookshelves[i] != null){
                 found = i;
                 if(this.bookshelves[i].getPlayerName().equals(playerName))
-                    throw new DuplicateNameException();
+                    throw new IllegalArgumentException("Username already present in this game");
             }
         }
         if(found == -1)
-            throw new NoFreeBookshelfException();
+            throw new IllegalStateException("No free bookshelf available");
         else
             bookshelves[found] = new Bookshelf(playerName,personalGoalCards[found]);
     }
@@ -61,22 +66,16 @@ public class Game {
     public Bookshelf[] getBookshelf() {
         return this.bookshelves;
     }
-    public int[] extractRandomCardIDs(int amount){ //may be updated to a different file type than txt
+    public int[] extractRandomCardIDs(int amount){
         //extracts indexes for random personal goal cards with no duplicates
         //reads rand generation boundary from a file
         int bound = -1;
-        do {
-            try {
-                File data = new File("src/main/resources/personalGoalCardsData.txt");
-                Scanner scan = new Scanner(data);
-                if (scan.hasNextInt())
-                    bound = scan.nextInt();
-                scan.close();
-            } catch (FileNotFoundException e) {
-                System.out.println("File not found.");
-                e.printStackTrace();
-            }
-        }while(bound == -1);
+        try {
+            //add reading of bound from JSON file
+        } catch (Exception e) {
+            System.out.println("File not found.");
+            e.printStackTrace();
+        }
         int[] numbers = new int[amount];
         for(int i=0;i<amount;i++)
             numbers[i] = -1;

@@ -6,7 +6,10 @@ public class Tile {
     public Tile (TileType Ttipe){
         this.type = Ttipe;
     }
-    public TileType getType( Tile t){
-        return t.type;
+    public Tile (Tile oldTile){
+        this.type = oldTile.getType();
+    }
+    public TileType getType(){
+        return this.type;
     }
 }
