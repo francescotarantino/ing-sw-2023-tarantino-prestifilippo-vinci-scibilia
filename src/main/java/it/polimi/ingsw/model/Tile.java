@@ -1,15 +1,17 @@
 package it.polimi.ingsw.model;
 
-public class Tile {
-    private TileType type;
+import it.polimi.ingsw.Constants;
 
-    public Tile (TileType Ttipe){
+public class Tile {
+    private Constants.TileType type;
+
+    public Tile (Constants.TileType Ttipe){
         this.type = Ttipe;
     }
     public Tile (Tile oldTile){
         this.type = oldTile.getType();
     }
-    public TileType getType(){
+    public Constants.TileType getType(){
         return this.type;
     }
 }

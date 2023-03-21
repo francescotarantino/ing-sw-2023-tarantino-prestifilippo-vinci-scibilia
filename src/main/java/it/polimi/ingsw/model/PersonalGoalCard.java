@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Constants;
+
 public class PersonalGoalCard extends GoalCard{
 
-    private TileType[][] matrix;
+    private Constants.TileType[][] matrix;
     private  int[] scoringTokenStack;
 
-    public TileType[][] getMatrix() {
+    public Constants.TileType[][] getMatrix() {
         return matrix;
     }
 
@@ -16,6 +18,6 @@ public class PersonalGoalCard extends GoalCard{
 
     @Override
     public int CheckValidity(Bookshelf B) {
-        //return 0;  TODO: once we have bookshelf class coded
+        return 0;  // TODO: once we have bookshelf class coded
     }
 }

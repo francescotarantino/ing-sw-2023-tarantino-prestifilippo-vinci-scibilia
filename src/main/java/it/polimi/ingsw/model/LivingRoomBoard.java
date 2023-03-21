@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.exceptions.IllegalPositionException;
 import it.polimi.ingsw.model.exceptions.IllegalTileException;
 
@@ -22,12 +23,12 @@ public class LivingRoomBoard {
         else if (board[x][y] != null) {
             throw new IllegalPositionException();
         }
-        else if (t.equals(new Tile(TileType.PLACEHOLDER))) {
+        else if (t.equals(new Tile(Constants.TileType.PLACEHOLDER))) {
             throw new IllegalTileException();
         }
     }
     public void removeTile(int x, int y) throws IllegalPositionException{
-        if (board[x][y].equals(new Tile(TileType.PLACEHOLDER))) {
+        if (board[x][y].equals(new Tile(Constants.TileType.PLACEHOLDER))) {
             throw new IllegalPositionException();
         }
         board[x][y] = null;
@@ -186,17 +187,17 @@ public class LivingRoomBoard {
         switch (numPlayers) {
             case 4 -> {
                 for (int i = 0; i < 9; i++) {
-                    board[invalidPositionsFourPlayers[i][0]][invalidPositionsFourPlayers[i][1]] = new Tile(TileType.PLACEHOLDER);
+                    board[invalidPositionsFourPlayers[i][0]][invalidPositionsFourPlayers[i][1]] = new Tile(Constants.TileType.PLACEHOLDER);
                 }
             }
             case 3 -> {
                 for (int i = 0; i < 9; i++) {
-                    board[invalidPositionsThreePlayers[i][0]][invalidPositionsThreePlayers[i][1]] = new Tile(TileType.PLACEHOLDER);
+                    board[invalidPositionsThreePlayers[i][0]][invalidPositionsThreePlayers[i][1]] = new Tile(Constants.TileType.PLACEHOLDER);
                 }
             }
             case 2 -> {
                 for (int i = 0; i < 9; i++) {
-                    board[invalidPositionsTwoPlayers[i][0]][invalidPositionsTwoPlayers[i][1]] = new Tile(TileType.PLACEHOLDER);
+                    board[invalidPositionsTwoPlayers[i][0]][invalidPositionsTwoPlayers[i][1]] = new Tile(Constants.TileType.PLACEHOLDER);
                 }
             }
         }
