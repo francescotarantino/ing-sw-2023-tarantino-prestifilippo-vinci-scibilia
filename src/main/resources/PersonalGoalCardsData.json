@@ -1,0 +1,40 @@
+{
+  "card": [
+    [
+      "PLANTS", 0 , "TROPHIES", 0, 0, 0, 0, 0, 0, "CATS", 0, 0, 0, "BOOKS", 0, 0, "GAMES", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "TROPHIES", 0, 0
+    ],
+    [
+      0, 0, 0, 0, 0, 0, "PLANTS", 0, 0, 0, "CATS", 0, "GAMES", 0, 0, 0, 0, 0, 0, "BOOKS", 0, 0, 0, "TROPHIES", 0, 0, 0, 0, 0, "FRAMES"
+    ],
+    [
+      0, 0, 0, 0, 0, "FRAMES", 0, 0, "GAMES", 0, 0, 0, "PLANTS", 0, 0, 0, "CATS", 0, 0, "TROPHIES", 0, 0, 0, 0, 0, "BOOKS", 0, 0, 0, 0
+    ],
+    [
+      0, 0, 0, 0, "GAMES", 0, 0, 0, 0, 0, "TROPHIES", 0, "FRAMES", 0, 0, 0, 0, 0, "PLANTRS", 0, 0, "BOOKS", "CATS", 0, 0, 0, 0, 0, 0, 0
+    ],
+    [
+      0, 0, 0, 0, 0, 0, "TROPHIES", 0, 0, 0, 0, 0, 0, 0, 0, 0, "FRAMES", "BOOKS", 0, 0, 0, 0, 0, 0, "PLANTS", "GAMES", 0, 0, "CATS", 0
+    ],
+    [
+      0, 0, "TROPHIES", 0, "CATS", 0, 0, 0, 0, 0, 0, 0, 0, "BOOKS", 0, 0, 0, 0, 0, 0, 0, "GAMES", 0, "FRAMES", 0, "PLANTS", 0, 0, 0, 0
+    ],
+    [
+      "CATS", 0, 0, 0, 0, 0, 0, 0, "FRAMES", 0, 0, "PLANTS", 0, 0, 0, "TROPHIES", 0, 0, 0, 0, 0, 0, 0, 0, "GAMES", 0, 0, "BOOKS", 0, 0
+    ],
+    [
+      0, 0, 0, 0, "FRAMES", 0, "CATS", 0, 0, 0, 0, 0, "TROPHIES", 0, 0, "PLANTS", 0, 0, 0, 0, 0, 0, 0, "BOOKS", 0, 0, 0, 0, "GAMES", 0
+    ],
+      [
+      0, 0, "GAMES", 0, 0, 0, 0, 0, 0, 0, 0, 0, "CATS", 0, 0, 0, 0, 0, 0, "BOOKS", 0, "TROPHIES", 0, 0, "PLANTS", "FRAMES", 0, 0, 0, 0
+    ],
+    [
+      0, 0, 0, 0, "TROPHIES", 0, "GAMES", 0, 0, 0, "BOOKS", 0, 0, 0, 0, 0, 0, 0, "CATS", 0, 0, "FRAMES", 0, 0, 0, 0, 0, 0, "PLANTS", 0
+    ],
+    [
+       0, 0, "PLANTS", 0, 0, 0, "BOOKS", 0, 0, 0, "GAMES", 0, 0, 0, 0, 0, 0,"FRAMES", 0, 0, 0, 0, 0, 0, "CATS", 0, 0, 0, "TROPHIES", 0
+    ],
+    [
+      0, 0, "BOOKS", 0, 0, 0, "PLANTS", 0, 0, 0, 0, 0, "PLANTS", 0, 0, 0, 0, 0, "TROPHIES", 0, 0, 0, 0, 0, "GAMES", "CATS", 0, 0, 0, 0
+    ]
+  ]
+}
