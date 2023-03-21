@@ -1,15 +1,12 @@
 package it.polimi.ingsw.model;
-
+import it.polimi.ingsw.Constants;
 import java.util.ArrayList;
 import java.util.Random;
 public class Bag {
     private ArrayList<Tile> tiles;
-    private int capacity;
-    public Bag(){
-        this.capacity = 132;
-    }
+    public Bag(){}
     public void fillBag(ArrayList<Tile> newTiles){
-        if(newTiles.size()>this.capacity)
+        if(newTiles.size()>Constants.bagCapacity)
             this.tiles = new ArrayList<Tile>(newTiles);
         else
             throw new IndexOutOfBoundsException();
