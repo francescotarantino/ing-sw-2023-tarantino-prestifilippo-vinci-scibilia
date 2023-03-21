@@ -1,7 +1,11 @@
 package it.polimi.ingsw;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.model.Point;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 
 public class Constants {
@@ -9,11 +13,10 @@ public class Constants {
     public static final int bookshelfX = 5;
     public static final int bookshelfY = 6;
 
-    /*constants concerning LivingRoomBoard*/
-
+    // Constants concerning LivingRoomBoard
     public static final int livingRoomBoardSize[] = {9, 9};
 
-    public static final Set getInvalidPositions(int numPlayers) {
+    public static Set getInvalidPositions(int numPlayers) {
 
         Set<Point> invalidPositions = new HashSet<Point>();
 
@@ -78,7 +81,6 @@ public class Constants {
     }
 
     //constants relative to class Game:
-    //to remove public static final int uniquePersonalGoalCards = 12;
     public static final int playersLowerBound = 2;
     public static final int playersUpperBound = 4;
     public static final int IDLowerBound = 0;
@@ -99,5 +101,14 @@ public class Constants {
         TROPHIES,
         PLANTS,
         PLACEHOLDER
+    }
+
+    public static ArrayList<ArrayList<String>> getPersonalGoalCard() {
+        File file = new File("src/main/resources/PersonalGoalCards.json");
+        try {
+            return (ArrayList<ArrayList<String>>) new Gson().fromJson(new FileReader(file), ArrayList.class);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

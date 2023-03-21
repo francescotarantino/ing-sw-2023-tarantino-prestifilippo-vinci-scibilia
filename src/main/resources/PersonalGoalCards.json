@@ -1,0 +1,38 @@
+[
+    [
+      "PLANTS", null , "TROPHIES", null, null, null, null, null, null, "CATS", null, null, null, "BOOKS", null, null, "GAMES", null, null, null, null, null, null, null, null, null, null, "TROPHIES", null, null
+    ],
+    [
+      null, null, null, null, null, null, "PLANTS", null, null, null, "CATS", null, "GAMES", null, null, null, null, null, null, "BOOKS", null, null, null, "TROPHIES", null, null, null, null, null, "FRAMES"
+    ],
+    [
+      null, null, null, null, null, "FRAMES", null, null, "GAMES", null, null, null, "PLANTS", null, null, null, "CATS", null, null, "TROPHIES", null, null, null, null, null, "BOOKS", null, null, null, null
+    ],
+    [
+      null, null, null, null, "GAMES", null, null, null, null, null, "TROPHIES", null, "FRAMES", null, null, null, null, null, "PLANTS", null, null, "BOOKS", "CATS", null, null, null, null, null, null, null
+    ],
+    [
+      null, null, null, null, null, null, "TROPHIES", null, null, null, null, null, null, null, null, null, "FRAMES", "BOOKS", null, null, null, null, null, null, "PLANTS", "GAMES", null, null, "CATS", null
+    ],
+    [
+      null, null, "TROPHIES", null, "CATS", null, null, null, null, null, null, null, null, "BOOKS", null, null, null, null, null, null, null, "GAMES", null, "FRAMES", null, "PLANTS", null, null, null, null
+    ],
+    [
+      "CATS", null, null, null, null, null, null, null, "FRAMES", null, null, "PLANTS", null, null, null, "TROPHIES", null, null, null, null, null, null, null, null, "GAMES", null, null, "BOOKS", null, null
+    ],
+    [
+      null, null, null, null, "FRAMES", null, "CATS", null, null, null, null, null, "TROPHIES", null, null, "PLANTS", null, null, null, null, null, null, null, "BOOKS", null, null, null, null, "GAMES", null
+    ],
+    [
+      null, null, "GAMES", null, null, null, null, null, null, null, null, null, "CATS", null, null, null, null, null, null, "BOOKS", null, "TROPHIES", null, null, "PLANTS", "FRAMES", null, null, null, null
+    ],
+    [
+      null, null, null, null, "TROPHIES", null, "GAMES", null, null, null, "BOOKS", null, null, null, null, null, null, null, "CATS", null, null, "FRAMES", null, null, null, null, null, null, "PLANTS", null
+    ],
+    [
+       null, null, "PLANTS", null, null, null, "BOOKS", null, null, null, "GAMES", null, null, null, null, null, null,"FRAMES", null, null, null, null, null, null, "CATS", null, null, null, "TROPHIES", null
+    ],
+    [
+      null, null, "BOOKS", null, null, null, "PLANTS", null, null, null, null, null, "PLANTS", null, null, null, null, null, "TROPHIES", null, null, null, null, null, "GAMES", "CATS", null, null, null, null
+    ]
+]
