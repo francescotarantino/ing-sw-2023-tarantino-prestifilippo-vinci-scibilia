@@ -10,7 +10,7 @@ import java.util.*;
 
 
 public class LivingRoomBoard {
-    private Tile[][] board;
+    private Tile board[][];
     public Tile getTile(Point p) throws IllegalPositionException{
         if (p.getX() < 0 || p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException();

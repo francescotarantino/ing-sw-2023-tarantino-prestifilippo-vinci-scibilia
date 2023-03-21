@@ -11,6 +11,7 @@ class Bag {
     private ArrayList<Tile> tiles;
 
     public Bag(){
+        tiles = new ArrayList<>();
         for(TileType tile: Arrays.stream(TileType.values()).filter(x -> x != TileType.PLACEHOLDER).toArray(TileType[]::new)){
             for(int i=0;i<Constants.tilesPerType;i++){
                 tiles.add(new Tile(tile, i % Constants.tileVariants));
