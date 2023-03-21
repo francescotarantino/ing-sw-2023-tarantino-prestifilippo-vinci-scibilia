@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
 public abstract class GoalCard {
-    private int ID;
+     int ID;
 
-    public abstract int GetId(GoalCard gc);
+    public abstract int GetId();
     public abstract int CheckValidity(Bookshelf B);
 }
