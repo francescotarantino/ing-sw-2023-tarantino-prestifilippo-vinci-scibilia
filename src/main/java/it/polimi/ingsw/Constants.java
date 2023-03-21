@@ -86,6 +86,10 @@ public class Constants {
     //constants relative to class Bag:
     public static final int bagCapacity = 132;
 
+    //constants relative to class Tile
+    public static final int tileVariants = 3;
+    public static final int tilesPerType = 22;
+
     //enumeration of all the possible Tile Types:
     public enum TileType {
         CATS,
