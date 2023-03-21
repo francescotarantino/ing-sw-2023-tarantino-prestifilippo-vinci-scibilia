@@ -14,8 +14,8 @@ public class Constants {
     public static final int bookshelfY = 6;
 
     // Constants concerning LivingRoomBoard
-    public static final int livingRoomBoardSize[] = {9, 9};
-
+    public static final int livingRoomBoardX = 9;
+    public static final int livingRoomBoardY = 9;
     public static Set getInvalidPositions(int numPlayers) {
 
         Set<Point> invalidPositions = new HashSet<Point>();
@@ -80,19 +80,16 @@ public class Constants {
         return invalidPositions;
     }
 
-    //constants relative to class Game:
+    // Constants relative to class Game:
     public static final int playersLowerBound = 2;
     public static final int playersUpperBound = 4;
     public static final int IDLowerBound = 0;
 
-    //constants relative to class Bag:
-    public static final int bagCapacity = 132;
-
-    //constants relative to class Tile
+    // Constants relative to class Tile
     public static final int tileVariants = 3;
     public static final int tilesPerType = 22;
 
-    //enumeration of all the possible Tile Types:
+    // Enumeration of all the possible Tile Types:
     public enum TileType {
         CATS,
         BOOKS,

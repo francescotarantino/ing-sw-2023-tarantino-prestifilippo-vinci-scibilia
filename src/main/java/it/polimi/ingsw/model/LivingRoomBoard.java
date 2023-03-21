@@ -12,7 +12,7 @@ import java.util.*;
 public class LivingRoomBoard {
     private Tile[][] board;
     public Tile getTile(Point p) throws IllegalPositionException{
-        if (p.getX() < 0 || p.getY() < 0 || p.getX() > Constants.livingRoomBoardSize[0] - 1 || p.getY() > Constants.livingRoomBoardSize[1] - 1) {
+        if (p.getX() < 0 || p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException();
         }
         else if (board[p.getX()][p.getY()].getType() == Constants.TileType.PLACEHOLDER) {
@@ -21,7 +21,7 @@ public class LivingRoomBoard {
         return board[p.getX()][p.getY()];
     }
     public void insertTile(Tile t, Point p) throws IllegalPositionException, IllegalTileException{
-        if (p.getX() < 0|| p.getY() < 0 || p.getX() > Constants.livingRoomBoardSize[0] - 1 || p.getY() > Constants.livingRoomBoardSize[1] - 1) {
+        if (p.getX() < 0|| p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException();
         }
         else if (board[p.getX()][p.getY()] != null) {
@@ -33,7 +33,7 @@ public class LivingRoomBoard {
         board[p.getX()][p.getY()] = t;
     }
     public void removeTile(Point p) throws IllegalPositionException{
-        if (p.getX() < 0|| p.getY() < 0 || p.getX() > Constants.livingRoomBoardSize[0] - 1 || p.getY() > Constants.livingRoomBoardSize[1] - 1) {
+        if (p.getX() < 0|| p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException();
         }
         if (board[p.getX()][p.getY()].getType() == Constants.TileType.PLACEHOLDER) {
@@ -46,7 +46,7 @@ public class LivingRoomBoard {
         if (numPlayers > Constants.playersUpperBound || numPlayers < Constants.playersLowerBound) {
             throw new IndexOutOfBoundsException();
         }
-        board = new Tile[Constants.livingRoomBoardSize[0]][Constants.livingRoomBoardSize[1]];
+        board = new Tile[Constants.livingRoomBoardX][Constants.livingRoomBoardY];
         Set<Point> invalidPositions = Constants.getInvalidPositions(numPlayers);
         for (Point p : invalidPositions) {
             board[p.getX()][p.getY()] = new Tile(Constants.TileType.PLACEHOLDER);
