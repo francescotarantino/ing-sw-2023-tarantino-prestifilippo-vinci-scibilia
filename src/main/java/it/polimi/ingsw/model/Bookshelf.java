@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.exceptions.GravityException;
 import it.polimi.ingsw.model.exceptions.IllegalPositionException;
 
@@ -14,9 +15,9 @@ public class Bookshelf {
         this.playerName = playerName;
         this.personalGoalCard = personalGoalCard;
 
-        this.matrix = new Tile[5][6];
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 6; j++) {
+        this.matrix = new Tile[Constants.bookshelfX][Constants.bookshelfY];
+        for (int i = 0; i < Constants.bookshelfX; i++) {
+            for (int j = 0; j < Constants.bookshelfY; j++) {
                 this.matrix[i][j] = null; // Forse è inutile
             }
         }
@@ -30,22 +31,22 @@ public class Bookshelf {
         return this.personalGoalCard;
     }
 
-    public Tile getTile(int x, int y) {
-        if(x < 0 || x >= 5 || y < 0 || y >= 6)
+    public Tile getTile(Point point) {
+        if(point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY)
             throw new IndexOutOfBoundsException();
 
-        return this.matrix[x][y];
+        return this.matrix[point.getX()][point.getY()];
     }
 
-    public void insertTile(int x, int y, Tile tile) throws IllegalPositionException, GravityException {
-        if(x < 0 || x >= 5 || y < 0 || y >= 6){
+    public void insertTile(Point point, Tile tile) throws IllegalPositionException, GravityException {
+        if(point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY){
             throw new IndexOutOfBoundsException();
-        } else if (this.matrix[x][y] != null){ // cannot replace a tile that is already present
+        } else if (this.matrix[point.getX()][point.getY()] != null){ // cannot replace a tile that is already present
             throw new IllegalPositionException();
-        } else if (y != 0 && this.matrix[x][y-1] == null){ // check if there is a tile under the one is being inserted
+        } else if (point.getY() != 0 && this.matrix[point.getX()][point.getY()-1] == null){ // check if there is a tile under the one is being inserted
             throw new GravityException();
         }
 
-        this.matrix[x][y] = tile;
+        this.matrix[point.getX()][point.getY()] = tile;
     }
 }
