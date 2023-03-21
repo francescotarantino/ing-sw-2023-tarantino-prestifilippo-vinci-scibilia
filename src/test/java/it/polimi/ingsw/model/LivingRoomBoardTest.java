@@ -70,11 +70,11 @@ public class LivingRoomBoardTest {
         };
         for (int i = 0; i < 9; i++) {
             try {
-                livingRoomBoard.insertTile(t, invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1]);
+                livingRoomBoard.insertTile(t, new Point(invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1]));
             } catch (IllegalPositionException | IllegalTileException e) {
                 fail(e);
             }
-            assertEquals(livingRoomBoard.getTile(invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1]), new Tile(Constants.TileType.PLACEHOLDER));
+            assertEquals(livingRoomBoard.getTile(new Point(invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1])), new Tile(Constants.TileType.PLACEHOLDER));
         }
     }
     @Test
@@ -130,11 +130,11 @@ public class LivingRoomBoardTest {
         };
         for (int i = 0; i < 9; i++) {
             try {
-                livingRoomBoard.insertTile(t, invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1]);
+                livingRoomBoard.insertTile(t, new Point(invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1]));
             } catch (IllegalPositionException | IllegalTileException e) {
                 fail(e);
             }
-            assertEquals(livingRoomBoard.getTile(invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1]), new Tile(Constants.TileType.PLACEHOLDER));
+            assertEquals(livingRoomBoard.getTile(new Point(invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1])), new Tile(Constants.TileType.PLACEHOLDER));
         }
     }
     @Test
@@ -181,11 +181,11 @@ public class LivingRoomBoardTest {
         };
         for (int i = 0; i < 9; i++) {
             try {
-                livingRoomBoard.insertTile(t, invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1]);
+                livingRoomBoard.insertTile(t, new Point(invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1]));
             } catch (IllegalPositionException | IllegalTileException e) {
                 fail(e);
             }
-            assertEquals(livingRoomBoard.getTile(invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1]), new Tile(Constants.TileType.PLACEHOLDER));
+            assertEquals(livingRoomBoard.getTile(new Point(invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1])), new Tile(Constants.TileType.PLACEHOLDER));
         }
     }
 }
