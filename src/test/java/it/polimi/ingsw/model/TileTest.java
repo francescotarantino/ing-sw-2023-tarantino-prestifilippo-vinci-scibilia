@@ -9,8 +9,9 @@ public class TileTest {
     @Test
     void checkType(){
         for(int i=0;i<Constants.TileType.values().length;i++){
-            Tile myTile = new Tile(Constants.TileType.values()[i]);
+            Tile myTile = new Tile(Constants.TileType.values()[i], 1);
             assertEquals(myTile.getType(), Constants.TileType.values()[i]);
+            assertEquals(myTile.getVariant(), 1);
         }
     }
 }
