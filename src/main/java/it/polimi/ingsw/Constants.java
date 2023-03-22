@@ -83,7 +83,6 @@ public class Constants {
     // Constants relative to class Game:
     public static final int playersLowerBound = 2;
     public static final int playersUpperBound = 4;
-    public static final int IDLowerBound = 0;
 
     // Constants relative to class Tile
     public static final int tileVariants = 3;
@@ -100,10 +99,17 @@ public class Constants {
         PLACEHOLDER
     }
 
+    // Method used to retrieve Personal Goal Cards from JSON file
+    private static ArrayList<ArrayList<String>> personalGoalCards;
     public static ArrayList<ArrayList<String>> getPersonalGoalCard() {
+        if (personalGoalCards != null) {
+            return personalGoalCards;
+        }
+
         File file = new File("src/main/resources/PersonalGoalCards.json");
         try {
-            return (ArrayList<ArrayList<String>>) new Gson().fromJson(new FileReader(file), ArrayList.class);
+            personalGoalCards = (ArrayList<ArrayList<String>>) new Gson().fromJson(new FileReader(file), ArrayList.class);
+            return personalGoalCards;
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
