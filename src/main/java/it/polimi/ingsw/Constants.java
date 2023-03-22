@@ -101,15 +101,15 @@ public class Constants {
 
     // Method used to retrieve Personal Goal Cards from JSON file
     private static ArrayList<ArrayList<String>> personalGoalCards;
-    public static ArrayList<ArrayList<String>> getPersonalGoalCard() {
+    public static ArrayList<ArrayList<String>> getPersonalGoalCards() {
         if (personalGoalCards != null) {
-            return personalGoalCards;
+            return new ArrayList<>(personalGoalCards);
         }
 
         File file = new File("src/main/resources/PersonalGoalCards.json");
         try {
             personalGoalCards = (ArrayList<ArrayList<String>>) new Gson().fromJson(new FileReader(file), ArrayList.class);
-            return personalGoalCards;
+            return new ArrayList<>(personalGoalCards);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

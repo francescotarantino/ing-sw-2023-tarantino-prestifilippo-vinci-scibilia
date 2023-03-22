@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 public class PersonalGoalCard extends GoalCard{
 
-    private Constants.TileType[][] matrix;
+    private final Constants.TileType[][] matrix;
     private  int[] scoringTokenStack; // TODO: to be implemented
 
     public PersonalGoalCard(int index) {
         this.matrix = new Constants.TileType[Constants.bookshelfX][Constants.bookshelfY];
 
-        ArrayList<String> data = Constants.getPersonalGoalCard().get(index);
+        ArrayList<String> data = Constants.getPersonalGoalCards().get(index);
 
         for (int i = 0; i < Constants.bookshelfX; i++){
             for (int j = 0; j < Constants.bookshelfY; j++){
