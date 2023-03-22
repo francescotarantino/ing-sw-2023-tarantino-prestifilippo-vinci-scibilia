@@ -37,4 +37,7 @@ class Bag {
         int randomIndex = rand.nextInt(this.tiles.size());
         return this.popTile(randomIndex);
     }
+    public int getRemainingTilesQuantity(){
+        return this.tiles.size();
+    }
 }
