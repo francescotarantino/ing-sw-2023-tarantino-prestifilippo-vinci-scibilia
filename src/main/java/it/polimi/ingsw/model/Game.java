@@ -17,6 +17,8 @@ public class Game {
     private Bag bag;
     private LivingRoomBoard livingRoomBoard;
 
+    private int currentPlayer;
+
     public Game(int numberOfPlayers,String hostName,int ID){
         if(numberOfPlayers<2 || numberOfPlayers>4)
             throw new IllegalArgumentException("Illegal number of players. A game should have two to four players");
@@ -61,6 +63,13 @@ public class Game {
     }
     public Bag getBag(){
         return this.bag;
+    }
+
+    public int getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+    public void modifiesCurrentPlayer(int pl){
+        currentPlayer = pl;
     }
 
     public Bookshelf[] getBookshelf() {
