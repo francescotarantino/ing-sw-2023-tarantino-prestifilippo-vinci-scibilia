@@ -20,7 +20,7 @@ public class Controller {
 
     public void start(){
         //TODO
-        game.ModifiescurrentPlayer(0);
+        game.modifiesCurrentPlayer(0);
     };
 
     public void nextTurn(){
@@ -34,8 +34,8 @@ public class Controller {
 
 
         if(game.getCurrentPlayer()  < game.getBookshelf().length)
-                game.ModifiescurrentPlayer(game.getCurrentPlayer() + 1 );
-        else game.ModifiescurrentPlayer(0);
+                game.modifiesCurrentPlayer(game.getCurrentPlayer() + 1 );
+        else game.modifiesCurrentPlayer(0);
     };
         //TODO: to be implemented controls on insertion/removing of tiles
     public Tile[] takeTiles(Point...points) throws IllegalPositionException {
