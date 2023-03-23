@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.exceptions.IllegalPositionException;
 import it.polimi.ingsw.model.exceptions.IllegalTileException;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ public class LivingRoomBoardTest {
     @Test
     void checkInsertionInBoardForTwo() throws IllegalPositionException {
         LivingRoomBoard livingRoomBoard = new LivingRoomBoard(2);
-        Tile t = new Tile(TileType.CATS);
+        Tile t = new Tile(Constants.TileType.CATS, 0);
         int invalidPositionsTwoPlayers[][] = {
             {0, 0},
             {0, 1},
@@ -69,17 +70,17 @@ public class LivingRoomBoardTest {
         };
         for (int i = 0; i < 9; i++) {
             try {
-                livingRoomBoard.insertTile(t, invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1]);
+                livingRoomBoard.insertTile(t, new Point(invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1]));
             } catch (IllegalPositionException | IllegalTileException e) {
                 fail(e);
             }
-            assertEquals(livingRoomBoard.getTile(invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1]), new Tile(TileType.PLACEHOLDER));
+            assertEquals(livingRoomBoard.getTile(new Point(invalidPositionsTwoPlayers[i][0], invalidPositionsTwoPlayers[i][1])), new Tile(Constants.TileType.PLACEHOLDER, 0));
         }
     }
     @Test
     void checkInsertionInBoardForThree() throws IllegalPositionException {
         LivingRoomBoard livingRoomBoard = new LivingRoomBoard(3);
-        Tile t = new Tile(TileType.CATS);
+        Tile t = new Tile(Constants.TileType.CATS, 0);
         int invalidPositionsThreePlayers[][] = {
                 {0, 0},
                 {0, 1},
@@ -129,17 +130,17 @@ public class LivingRoomBoardTest {
         };
         for (int i = 0; i < 9; i++) {
             try {
-                livingRoomBoard.insertTile(t, invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1]);
+                livingRoomBoard.insertTile(t, new Point(invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1]));
             } catch (IllegalPositionException | IllegalTileException e) {
                 fail(e);
             }
-            assertEquals(livingRoomBoard.getTile(invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1]), new Tile(TileType.PLACEHOLDER));
+            assertEquals(livingRoomBoard.getTile(new Point(invalidPositionsThreePlayers[i][0], invalidPositionsThreePlayers[i][1])), new Tile(Constants.TileType.PLACEHOLDER, 0));
         }
     }
     @Test
     void checkInsertionInBoardForFour() throws IllegalPositionException {
         LivingRoomBoard livingRoomBoard = new LivingRoomBoard(4);
-        Tile t = new Tile(TileType.CATS);
+        Tile t = new Tile(Constants.TileType.CATS, 0);
         int invalidPositionsFourPlayers[][] = {
                 {0, 0},
                 {0, 1},
@@ -180,11 +181,11 @@ public class LivingRoomBoardTest {
         };
         for (int i = 0; i < 9; i++) {
             try {
-                livingRoomBoard.insertTile(t, invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1]);
+                livingRoomBoard.insertTile(t, new Point(invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1]));
             } catch (IllegalPositionException | IllegalTileException e) {
                 fail(e);
             }
-            assertEquals(livingRoomBoard.getTile(invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1]), new Tile(TileType.PLACEHOLDER));
+            assertEquals(livingRoomBoard.getTile(new Point(invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1])), new Tile(Constants.TileType.PLACEHOLDER, 0));
         }
     }
 }
