@@ -1,55 +1,47 @@
 package it.polimi.ingsw.model;
-import java.io.FileInputStream;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
+import java.util.ArrayList;
 import java.util.Random;
-import java.io.File;
-import java.util.Scanner;
-import java.io.FileNotFoundException;
-import com.google.gson.*;
+import it.polimi.ingsw.Constants;
+
 public class Game {
     //attributes
     private final int gameID;
     private Bookshelf[] bookshelves;
-    private PersonalGoalCard[] personalGoalCards;
     private int[] randomNumbers;
     private Bag bag;
     private LivingRoomBoard livingRoomBoard;
 
-    private int currentPlayer;
-
-    public Game(int numberOfPlayers,String hostName,int ID){
-        if(numberOfPlayers<2 || numberOfPlayers>4)
-            throw new IllegalArgumentException("Illegal number of players. A game should have two to four players");
-        if(ID<=0)
-            throw new IllegalArgumentException("Game ID must be greater than zero");
+    public Game(int numberOfPlayers,Player newPlayer,int ID){
+        if(numberOfPlayers<Constants.playersLowerBound || numberOfPlayers>Constants.playersUpperBound)
+            throw new IllegalArgumentException("Illegal number of players. A game should have " + Constants.playersLowerBound + " to " + Constants.playersUpperBound + " players.");
+        if(ID<=Constants.IDLowerBound)
+            throw new IllegalArgumentException("Game ID must be greater than " + Constants.IDLowerBound);
         //game construction
         //assigning ID, generating a board and a bag
         this.gameID = ID;
         this.livingRoomBoard = new LivingRoomBoard(numberOfPlayers);
         this.bag = new Bag();
-        //generating an adequate amount of personal goal cards
-        this.personalGoalCards = new PersonalGoalCard[numberOfPlayers];
+        //generating an adequate amount of random numbers, used as indexes for class PersonalGoalCards to generate cards with no repetition
         randomNumbers = extractRandomCardIDs(numberOfPlayers);
-        personalGoalCards[0] = new PersonalGoalCard(randomNumbers[0]);
-        //generating an adequate amount of bookshelves
+        //generating an adequate amount of bookshelves and creating the first bookshelf for the first player
         this.bookshelves = new Bookshelf[numberOfPlayers];
-        bookshelves[0] = new Bookshelf(hostName,personalGoalCards[0]);
+        bookshelves[0] = new Bookshelf(newPlayer,new PersonalGoalCard(randomNumbers[0]));
     }
-    public void addShelf(String playerName){
+    public void addShelf(Player player){
         int found = -1;
         for (int i = 0; i < this.getTotalPlayersNumber() && found==-1; i++) {
             if (this.bookshelves[i] != null){
                 found = i;
-                if(this.bookshelves[i].getPlayerName().equals(playerName))
+                if(this.bookshelves[i].getPlayer().getUsername().equals(player.getUsername())) {
                     throw new IllegalArgumentException("Username already present in this game");
+                }
             }
         }
         if(found == -1)
             throw new IllegalStateException("No free bookshelf available");
         else
-            bookshelves[found] = new Bookshelf(playerName,personalGoalCards[found]);
+            bookshelves[found] = new Bookshelf(player,new PersonalGoalCard(randomNumbers[found]));
     }
     //methods
     public int getGameID(){
@@ -65,29 +57,14 @@ public class Game {
         return this.bag;
     }
 
-    public int getCurrentPlayer(){
-        return this.currentPlayer;
-    }
-    public void modifiesCurrentPlayer(int pl){
-        currentPlayer = pl;
-    }
-
     public Bookshelf[] getBookshelf() {
         return this.bookshelves;
     }
     public int[] extractRandomCardIDs(int amount){
         //extracts indexes for random personal goal cards with no duplicates
-        //reads rand generation boundary from a file
-        int bound = -1;
-        try {
-            //add reading of bound from JSON file
-        } catch (Exception e) {
-            System.out.println("File not found.");
-            e.printStackTrace();
-        }
+        ArrayList<ArrayList<String>> cards = Constants.getPersonalGoalCards();
+        int bound = cards.size();
         int[] numbers = new int[amount];
-        for(int i=0;i<amount;i++)
-            numbers[i] = -1;
         Random rand = new Random();
         boolean flag;
         for(int i=0;i<amount;i++){

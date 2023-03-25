@@ -5,16 +5,15 @@ import it.polimi.ingsw.model.exceptions.GravityException;
 import it.polimi.ingsw.model.exceptions.IllegalPositionException;
 
 public class Bookshelf {
-    private final String playerName;
+    private Player player;
 
     private PersonalGoalCard personalGoalCard;
 
     private Tile[][] matrix;
 
-    public Bookshelf(String playerName, PersonalGoalCard personalGoalCard) {
-        this.playerName = playerName;
+    public Bookshelf(Player newPlayer, PersonalGoalCard personalGoalCard) {
+        this.player = newPlayer;
         this.personalGoalCard = personalGoalCard;
-
         this.matrix = new Tile[Constants.bookshelfX][Constants.bookshelfY];
         for (int i = 0; i < Constants.bookshelfX; i++) {
             for (int j = 0; j < Constants.bookshelfY; j++) {
@@ -23,8 +22,8 @@ public class Bookshelf {
         }
     }
 
-    public String getPlayerName() {
-        return this.playerName;
+    public Player getPlayer() {
+        return this.player;
     }
 
     public PersonalGoalCard getPersonalGoalCard() {

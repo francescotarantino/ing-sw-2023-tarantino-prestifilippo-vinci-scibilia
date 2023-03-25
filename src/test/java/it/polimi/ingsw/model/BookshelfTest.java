@@ -15,7 +15,7 @@ public class BookshelfTest {
 
     @BeforeEach
     void init() {
-        bookshelf = new Bookshelf("TestPlayer", new PersonalGoalCard(0));
+        bookshelf = new Bookshelf(new Player("testUsername"), new PersonalGoalCard(0));
     }
 
     @Test

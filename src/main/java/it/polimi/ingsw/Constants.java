@@ -83,6 +83,7 @@ public class Constants {
     // Constants relative to class Game:
     public static final int playersLowerBound = 2;
     public static final int playersUpperBound = 4;
+    public static final int IDLowerBound = 0;
 
     // Constants relative to class Tile
     public static final int tileVariants = 3;
