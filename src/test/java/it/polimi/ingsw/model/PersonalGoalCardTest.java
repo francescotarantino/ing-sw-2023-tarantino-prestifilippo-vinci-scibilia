@@ -27,4 +27,44 @@ public class PersonalGoalCardTest {
             }
         }
     }
+
+    @Test
+    void checkValidityTest(){
+        Constants.TileType[][] matrix = {
+                {Constants.TileType.PLANTS, null, Constants.TileType.TROPHIES, null, null, null},
+                {Constants.TileType.FRAMES, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, Constants.TileType.GAMES},
+                {null, null, Constants.TileType.TROPHIES, null, null, null},
+        };
+        PersonalGoalCard pgc = new PersonalGoalCard(matrix);
+
+        Tile[][] bookshelf1 = {{
+                new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.BOOKS)
+        }, {
+                new Tile(Constants.TileType.FRAMES), new Tile(Constants.TileType.FRAMES), null, null, null, null
+        }, {
+                new Tile(Constants.TileType.TROPHIES), null, null, null, null, null
+        }, {
+                null, null, null, null, null, new Tile(Constants.TileType.GAMES)
+        }, {
+                null, null, new Tile(Constants.TileType.TROPHIES), null, null, null
+        }};
+
+        assertTrue(pgc.checkValidity(bookshelf1));
+
+        Tile[][] bookshelf2 = {{
+                new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES)
+        }, {
+                new Tile(Constants.TileType.FRAMES), new Tile(Constants.TileType.FRAMES), null, null, null, null
+        }, {
+                new Tile(Constants.TileType.TROPHIES), null, null, null, null, null
+        }, {
+                null, null, null, null, null, new Tile(Constants.TileType.GAMES)
+        }, {
+                null, null, null, null, null, null
+        }};
+
+        assertFalse(pgc.checkValidity(bookshelf2));
+    }
 }

@@ -24,6 +24,13 @@ public class PersonalGoalCard extends GoalCard {
         }
     }
 
+    // Constructor used for testing
+    public PersonalGoalCard(Constants.TileType[][] matrix) {
+        checkMatrixSize(matrix);
+
+        this.matrix = matrix;
+    }
+
     public Constants.TileType[][] getMatrix() {
         return this.matrix;
     }
@@ -35,14 +42,27 @@ public class PersonalGoalCard extends GoalCard {
 
     @Override
     public boolean checkValidity(Tile[][] matrix) {
+        checkMatrixSize(matrix);
+
         for (int i = 0; i < Constants.bookshelfX; i++){
             for (int j = 0; j < Constants.bookshelfY; j++){
-                if(this.matrix[i][j] != null && this.matrix[i][j] != matrix[i][j].getType()){
+                if(
+                        (this.matrix[i][j] != null && matrix[i][j] == null) ||
+                        (this.matrix[i][j] != null && this.matrix[i][j] != matrix[i][j].getType())
+                ){
                     return false;
                 }
             }
         }
 
         return true;
+    }
+
+    private static <T> void checkMatrixSize(T[][] matrix){
+        if(matrix.length != Constants.bookshelfX)
+            throw new IllegalArgumentException("Matrix must be " + Constants.bookshelfX + "x" + Constants.bookshelfY);
+        for (T[] tiles : matrix)
+            if (tiles.length != Constants.bookshelfY)
+                throw new IllegalArgumentException("Matrix must be " + Constants.bookshelfX + "x" + Constants.bookshelfY);
     }
 }
