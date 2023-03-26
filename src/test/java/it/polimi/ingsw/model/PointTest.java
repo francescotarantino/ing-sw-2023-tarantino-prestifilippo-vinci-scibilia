@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 public class PointTest {
 
     @Test
@@ -17,5 +19,13 @@ public class PointTest {
         }
     }
 
+    @Test
+    void checkEquals(){
+        Point point1 = new Point(0, 6);
+        Point point2 = new Point(0, 6);
+        assertEquals(point1, point2);
 
+        Point point3 = new Point(1, 6);
+        assertNotEquals(point1, point3);
+    }
 }
