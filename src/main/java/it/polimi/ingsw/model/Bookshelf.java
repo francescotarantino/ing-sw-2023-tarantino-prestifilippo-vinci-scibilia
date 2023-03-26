@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.model.exceptions.GravityException;
-import it.polimi.ingsw.model.exceptions.IllegalPositionException;
 
 public class Bookshelf {
     private final Player player;
@@ -15,11 +13,6 @@ public class Bookshelf {
         this.player = newPlayer;
         this.personalGoalCard = personalGoalCard;
         this.matrix = new Tile[Constants.bookshelfX][Constants.bookshelfY];
-        for (int i = 0; i < Constants.bookshelfX; i++) {
-            for (int j = 0; j < Constants.bookshelfY; j++) {
-                this.matrix[i][j] = null; // Forse è inutile
-            }
-        }
     }
 
     public Player getPlayer() {
@@ -32,18 +25,20 @@ public class Bookshelf {
 
     public Tile getTile(Point point) {
         if(point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY)
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Invalid bookshelf coordinates");
 
         return this.matrix[point.getX()][point.getY()];
     }
 
-    public void insertTile(Point point, Tile tile) throws IllegalPositionException, GravityException {
-        if(point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY){
-            throw new IndexOutOfBoundsException();
-        } else if (this.matrix[point.getX()][point.getY()] != null){ // cannot replace a tile that is already present
-            throw new IllegalPositionException();
-        } else if (point.getY() != 0 && this.matrix[point.getX()][point.getY()-1] == null){ // check if there is a tile under the one is being inserted
-            throw new GravityException();
+    public void insertTile(Point point, Tile tile) {
+        if (point == null || tile == null){
+            throw new NullPointerException("Arguments cannot be null");
+        } else if(point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY){
+            throw new IndexOutOfBoundsException("Invalid bookshelf coordinates");
+        } else if (this.matrix[point.getX()][point.getY()] != null){
+            throw new IllegalArgumentException("There is already a tile in that position");
+        } else if (point.getY() != 0 && this.matrix[point.getX()][point.getY()-1] == null){
+            throw new IllegalArgumentException("There is no tile below, gravity is not respected");
         }
 
         this.matrix[point.getX()][point.getY()] = tile;
