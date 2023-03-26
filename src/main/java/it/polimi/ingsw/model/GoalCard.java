@@ -13,8 +13,8 @@ public abstract class GoalCard {
     }
 
     public int getID(){
-        return ID;
+        return this.ID;
     }
 
-    public abstract boolean checkValidity(Tile[][] matrix);
+    public abstract int checkValidity(Tile[][] matrix);
 }

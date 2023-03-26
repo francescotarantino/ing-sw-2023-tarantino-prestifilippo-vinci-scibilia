@@ -34,24 +34,24 @@ public class PersonalGoalCardTest {
                 {Constants.TileType.PLANTS, null, Constants.TileType.TROPHIES, null, null, null},
                 {Constants.TileType.FRAMES, null, null, null, null, null},
                 {null, null, null, null, null, null},
-                {null, null, null, null, null, Constants.TileType.GAMES},
-                {null, null, Constants.TileType.TROPHIES, null, null, null},
+                {Constants.TileType.CATS, null, null, null, null, Constants.TileType.GAMES},
+                {null, null, null, null, null, Constants.TileType.TROPHIES},
         };
         PersonalGoalCard pgc = new PersonalGoalCard(matrix);
 
         Tile[][] bookshelf1 = {{
                 new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.BOOKS)
         }, {
-                new Tile(Constants.TileType.FRAMES), new Tile(Constants.TileType.FRAMES), null, null, null, null
+                new Tile(Constants.TileType.FRAMES), new Tile(Constants.TileType.FRAMES), null, null, null, new Tile(Constants.TileType.BOOKS)
         }, {
-                new Tile(Constants.TileType.TROPHIES), null, null, null, null, null
+                new Tile(Constants.TileType.TROPHIES), null, null, null, null, new Tile(Constants.TileType.BOOKS)
         }, {
                 null, null, null, null, null, new Tile(Constants.TileType.GAMES)
         }, {
-                null, null, new Tile(Constants.TileType.TROPHIES), null, null, null
+                null, null, null, null, null, new Tile(Constants.TileType.TROPHIES)
         }};
 
-        assertTrue(pgc.checkValidity(bookshelf1));
+        assertEquals(Constants.getPersonalGoalCardPoints(5), pgc.checkValidity(bookshelf1));
 
         Tile[][] bookshelf2 = {{
                 new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES)
@@ -60,11 +60,25 @@ public class PersonalGoalCardTest {
         }, {
                 new Tile(Constants.TileType.TROPHIES), null, null, null, null, null
         }, {
-                null, null, null, null, null, new Tile(Constants.TileType.GAMES)
+                null, null, null, null, null, null
         }, {
                 null, null, null, null, null, null
         }};
 
-        assertFalse(pgc.checkValidity(bookshelf2));
+        assertEquals(Constants.getPersonalGoalCardPoints(3), pgc.checkValidity(bookshelf2));
+
+        Tile[][] bookshelf3 = {{
+                null, null, null, null, null, null
+        }, {
+                null, null, null, null, null, null
+        }, {
+                null, null, null, null, null, null
+        }, {
+                null, null, null, null, null, null
+        }, {
+                null, null, null, null, null, null
+        }};
+
+        assertEquals(0, pgc.checkValidity(bookshelf3));
     }
 }

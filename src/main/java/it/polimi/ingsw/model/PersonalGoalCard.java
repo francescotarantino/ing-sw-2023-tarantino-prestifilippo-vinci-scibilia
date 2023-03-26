@@ -35,21 +35,19 @@ public class PersonalGoalCard extends GoalCard {
     }
 
     @Override
-    public boolean checkValidity(Tile[][] matrix) {
+    public int checkValidity(Tile[][] matrix) {
         checkMatrixSize(matrix);
 
+        int count = 0;
         for (int i = 0; i < Constants.bookshelfX; i++){
             for (int j = 0; j < Constants.bookshelfY; j++){
-                if(
-                        (this.matrix[i][j] != null && matrix[i][j] == null) ||
-                        (this.matrix[i][j] != null && this.matrix[i][j] != matrix[i][j].getType())
-                ){
-                    return false;
+                if(this.matrix[i][j] != null && matrix[i][j] != null && this.matrix[i][j] == matrix[i][j].getType()){
+                    count++;
                 }
             }
         }
 
-        return true;
+        return Constants.getPersonalGoalCardPoints(count);
     }
 
     private static <T> void checkMatrixSize(T[][] matrix){

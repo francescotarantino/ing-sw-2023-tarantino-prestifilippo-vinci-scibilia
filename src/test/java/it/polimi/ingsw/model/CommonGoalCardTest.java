@@ -13,21 +13,21 @@ public class CommonGoalCardTest {
     void init() {
         cgc2 = new CommonGoalCard(2, -1){
             @Override
-            public boolean checkValidity(Tile[][] matrix){
+            public boolean check(Tile[][] matrix){
                 return true;
             }
         };
 
         cgc3 = new CommonGoalCard(3, -1){
             @Override
-            public boolean checkValidity(Tile[][] matrix){
+            public boolean check(Tile[][] matrix){
                 return true;
             }
         };
 
         cgc4 = new CommonGoalCard(4, -1){
             @Override
-            public boolean checkValidity(Tile[][] matrix){
+            public boolean check(Tile[][] matrix){
                 return true;
             }
         };

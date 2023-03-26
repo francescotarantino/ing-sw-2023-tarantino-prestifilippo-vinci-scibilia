@@ -22,4 +22,14 @@ public abstract class CommonGoalCard extends GoalCard {
     public int takeScore(){
         return scoringTokenStack.pop();
     }
+
+    @Override
+    public int checkValidity(Tile[][] matrix) {
+        if(check(matrix))
+            return this.takeScore();
+        else
+            return 0;
+    }
+
+    public abstract boolean check(Tile[][] matrix);
 }
