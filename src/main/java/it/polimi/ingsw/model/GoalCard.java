@@ -1,8 +1,20 @@
 package it.polimi.ingsw.model;
 
 public abstract class GoalCard {
-    int ID;
+    final int ID;
 
-    public abstract int getId();
+    public GoalCard(int ID) {
+        this.ID = ID;
+    }
+
+    // Default ID is -1 if not specified
+    public GoalCard() {
+        this.ID = -1;
+    }
+
+    public int getID(){
+        return ID;
+    }
+
     public abstract boolean checkValidity(Tile[][] matrix);
 }

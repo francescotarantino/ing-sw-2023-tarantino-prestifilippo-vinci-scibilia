@@ -80,7 +80,7 @@ public class Constants {
         return invalidPositions;
     }
 
-    // Constants relative to class Game:
+    // Constants relative to class Game
     public static final int playersLowerBound = 2;
     public static final int playersUpperBound = 4;
     public static final int IDLowerBound = 0;
@@ -89,7 +89,7 @@ public class Constants {
     public static final int tileVariants = 3;
     public static final int tilesPerType = 22;
 
-    // Enumeration of all the possible Tile Types:
+    // Enumeration of all the possible Tile Types
     public enum TileType {
         CATS,
         BOOKS,
@@ -98,6 +98,27 @@ public class Constants {
         TROPHIES,
         PLANTS,
         PLACEHOLDER
+    }
+
+    // Scoring tokens used in CommonGoalCards
+    public static int[] getScoringTokens(int numberOfPlayers){
+        if(numberOfPlayers < playersLowerBound || numberOfPlayers > playersUpperBound){
+            throw new IllegalArgumentException("Number of players must be between" + playersLowerBound + " and " + playersUpperBound);
+        }
+
+        switch (numberOfPlayers) {
+            case 2 -> {
+                return new int[]{4, 8};
+            }
+            case 3 -> {
+                return new int[]{4, 6, 8};
+            }
+            case 4 -> {
+                return new int[]{2, 4, 6, 8};
+            }
+        }
+
+        return new int[]{};
     }
 
     // Method used to retrieve Personal Goal Cards from JSON file

@@ -1,14 +1,13 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
-
 import java.util.ArrayList;
 
 public class PersonalGoalCard extends GoalCard {
     private final Constants.TileType[][] matrix;
-    private int[] scoringTokenStack; // TODO: to be implemented
 
     public PersonalGoalCard(int index) {
+        super(index);
         this.matrix = new Constants.TileType[Constants.bookshelfX][Constants.bookshelfY];
 
         ArrayList<String> data = Constants.getPersonalGoalCards().get(index);
@@ -33,11 +32,6 @@ public class PersonalGoalCard extends GoalCard {
 
     public Constants.TileType[][] getMatrix() {
         return this.matrix;
-    }
-
-    @Override
-    public int getId() {
-        return this.ID;
     }
 
     @Override
