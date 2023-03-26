@@ -7,10 +7,10 @@ import it.polimi.ingsw.Constants;
 public class Game {
     //attributes
     private final int gameID;
-    private Bookshelf[] bookshelves;
-    private int[] randomNumbers;
-    private Bag bag;
-    private LivingRoomBoard livingRoomBoard;
+    private final Bookshelf[] bookshelves;
+    private final int[] randomNumbers;
+    private final Bag bag;
+    private final LivingRoomBoard livingRoomBoard;
 
     public Game(int numberOfPlayers,Player newPlayer,int ID){
         if(numberOfPlayers<Constants.playersLowerBound || numberOfPlayers>Constants.playersUpperBound)

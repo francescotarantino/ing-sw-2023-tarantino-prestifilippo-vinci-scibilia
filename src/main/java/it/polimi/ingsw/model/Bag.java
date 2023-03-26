@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 class Bag {
-    private ArrayList<Tile> tiles;
+    private final ArrayList<Tile> tiles;
 
     public Bag(){
         tiles = new ArrayList<>();

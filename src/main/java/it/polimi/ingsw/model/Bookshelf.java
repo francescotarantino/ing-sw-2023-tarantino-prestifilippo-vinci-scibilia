@@ -5,11 +5,11 @@ import it.polimi.ingsw.model.exceptions.GravityException;
 import it.polimi.ingsw.model.exceptions.IllegalPositionException;
 
 public class Bookshelf {
-    private Player player;
+    private final Player player;
 
-    private PersonalGoalCard personalGoalCard;
+    private final PersonalGoalCard personalGoalCard;
 
-    private Tile[][] matrix;
+    private final Tile[][] matrix;
 
     public Bookshelf(Player newPlayer, PersonalGoalCard personalGoalCard) {
         this.player = newPlayer;
