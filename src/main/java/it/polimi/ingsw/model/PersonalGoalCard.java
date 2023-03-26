@@ -4,10 +4,9 @@ import it.polimi.ingsw.Constants;
 
 import java.util.ArrayList;
 
-public class PersonalGoalCard extends GoalCard{
-
+public class PersonalGoalCard extends GoalCard {
     private final Constants.TileType[][] matrix;
-    private  int[] scoringTokenStack; // TODO: to be implemented
+    private int[] scoringTokenStack; // TODO: to be implemented
 
     public PersonalGoalCard(int index) {
         this.matrix = new Constants.TileType[Constants.bookshelfX][Constants.bookshelfY];
@@ -35,7 +34,15 @@ public class PersonalGoalCard extends GoalCard{
     }
 
     @Override
-    public int checkValidity(Bookshelf B) {
-        return 0;  // TODO: once we have bookshelf class coded
+    public boolean checkValidity(Tile[][] matrix) {
+        for (int i = 0; i < Constants.bookshelfX; i++){
+            for (int j = 0; j < Constants.bookshelfY; j++){
+                if(this.matrix[i][j] != null && this.matrix[i][j] != matrix[i][j].getType()){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
