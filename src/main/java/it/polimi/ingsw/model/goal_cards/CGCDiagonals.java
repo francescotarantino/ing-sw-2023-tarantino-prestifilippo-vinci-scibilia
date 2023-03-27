@@ -10,6 +10,9 @@ public class CGCDiagonals extends CommonGoalCard {
 
     @Override
     public boolean check(Tile[][] matrix) {
+        if (matrix == null){
+            throw new NullPointerException();
+        }
         for (int i = 0; i < Constants.bookshelfY - Constants.bookshelfX; i++) {
             for (int j = 1; j < Constants.bookshelfX; j++) {
                 if(!(matrix[j][Constants.bookshelfY - (1 + j + i)].sameType(matrix[0][Constants.bookshelfY - (1 + i)]))) {
