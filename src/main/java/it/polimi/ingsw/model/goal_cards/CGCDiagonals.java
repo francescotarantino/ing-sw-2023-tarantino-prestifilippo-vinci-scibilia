@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Tile;
 
 public class CGCDiagonals extends CommonGoalCard {
     public CGCDiagonals(int numberOfPlayers) {
-        super(numberOfPlayers, 7);
+        super(numberOfPlayers, Constants.commonGoalCardName.get("CGCDiagonals"));
     }
 
     @Override

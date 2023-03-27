@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Tile;
 
 public class CGCEightOf  extends CommonGoalCard{
     public CGCEightOf(int numberOfPlayers) {
-        super(numberOfPlayers, 6);
+        super(numberOfPlayers, Constants.commonGoalCardName.get("CGCEightOf"));
     }
 
     @Override

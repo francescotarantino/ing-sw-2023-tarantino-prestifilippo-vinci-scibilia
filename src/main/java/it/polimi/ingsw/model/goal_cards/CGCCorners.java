@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Tile;
 
 public class CGCCorners extends CommonGoalCard{
     public CGCCorners(int numberOfPlayers) {
-        super(numberOfPlayers, 2);
+        super(numberOfPlayers, Constants.commonGoalCardName.get("CGCCorners"));
     }
     @Override
     public boolean check(Tile[][] matrix) {
