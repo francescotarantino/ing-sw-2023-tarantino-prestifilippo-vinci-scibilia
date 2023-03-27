@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.Tile;
 
 import java.util.ArrayList;
 
+import static it.polimi.ingsw.Utils.checkMatrixSize;
+
 public class PersonalGoalCard extends GoalCard {
     private final Constants.TileType[][] matrix;
 
@@ -50,13 +52,5 @@ public class PersonalGoalCard extends GoalCard {
         }
 
         return Constants.getPersonalGoalCardPoints(count);
-    }
-
-    private static <T> void checkMatrixSize(T[][] matrix){
-        if(matrix.length != Constants.bookshelfX)
-            throw new IllegalArgumentException("Matrix must be " + Constants.bookshelfX + "x" + Constants.bookshelfY);
-        for (T[] tiles : matrix)
-            if (tiles.length != Constants.bookshelfY)
-                throw new IllegalArgumentException("Matrix must be " + Constants.bookshelfX + "x" + Constants.bookshelfY);
     }
 }

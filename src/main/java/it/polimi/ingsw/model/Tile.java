@@ -13,7 +13,7 @@ public class Tile {
     }
 
     public Tile (Constants.TileType type, int variant){
-        if(variant < 0 | variant > Constants.tileVariants){
+        if(variant < 0 || variant > Constants.tileVariants){
             throw new IllegalArgumentException("Tile variant invalid");
         }
         this.type = type;
