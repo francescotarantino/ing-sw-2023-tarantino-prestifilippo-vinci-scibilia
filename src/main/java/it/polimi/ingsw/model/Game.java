@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 import java.util.Random;
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
 
 public class Game {
     //attributes

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
 
 public class Bookshelf {
     private final Player player;

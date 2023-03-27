@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.goal_cards;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.model.Tile;
+
 import java.util.ArrayList;
 
 public class PersonalGoalCard extends GoalCard {

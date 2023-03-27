@@ -1,4 +1,6 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.goal_cards;
+
+import it.polimi.ingsw.model.Tile;
 
 public abstract class GoalCard {
     final int ID;
