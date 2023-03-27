@@ -8,13 +8,21 @@ public class Player {
         this.username = newName;
         this.points = 0;
     }
+
     public String getUsername(){
-        return new String(this.username);
+        return this.username;
     }
+
     public int getPoints(){
         return this.points;
     }
+
     public void addPoints(int newPoints){
         this.points += newPoints;
+    }
+
+    @Override
+    public String toString() {
+        return "@" + username + " (" + points + ")";
     }
 }
