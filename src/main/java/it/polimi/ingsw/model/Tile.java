@@ -44,6 +44,10 @@ public class Tile {
         return tile.getType() == this.type && tile.getVariant() == this.variant;
     }
 
+    public boolean sameType(Tile t) {
+        return t.type.equals(this.type);
+    }
+
     @Override
     public String toString() {
         return "Tile: " + type +"." + variant;
