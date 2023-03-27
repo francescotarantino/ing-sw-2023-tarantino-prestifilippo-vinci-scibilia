@@ -21,15 +21,19 @@ public class BagTest {
     }
     @Test
     void checkCreationAndRemoval() {
-        Tile tempTile;
-        Constants.TileType check;
+        int j = 0;
         assertEquals(this.bag.getRemainingTilesQuantity(), bound);
         for (int i = 0; i < bound; i++) {
-            tempTile = this.bag.popTile(0);
-            assertEquals(tempTile.getVariant(), i % Constants.tileVariants);
+            if(j == Constants.tilesPerType) j = 0;
+
+            Tile tempTile = this.bag.popTile(0);
+
             assertEquals(this.bag.getRemainingTilesQuantity(), bound - i - 1);
-            check = this.array[i % array.length];
-            assertEquals(tempTile.getType(), check);
+
+            assertEquals(tempTile.getVariant(), j % Constants.tileVariants);
+            assertEquals(tempTile.getType(), this.array[i / Constants.tilesPerType]);
+
+            j++;
         }
     }
 }
