@@ -175,15 +175,15 @@ public class Constants {
     public static final Map<String, Integer> commonGoalCardName = Map.ofEntries(
             entry("CGCGroupsOfEqualsSixOfTwo",1),
             entry("CGCCorners",2),
-            entry( "CGCGroupsOfEqualsFourOfFour",3),
-            entry( "CGCGroupsOfEqualsTwoSquares",4),
-            entry( "CGCThreeColumns",5),
-            entry( "CGCEightOf",6),
-            entry( "CGCDiagonals",7),
-            entry( "CGCFourRows",8),
-            entry( "CGCTwoColumns",9),
-            entry( "CGCTwoRows",10),
-            entry( "CGCCross",11),
-            entry( "CGCTriangular",12)
+            entry("CGCGroupsOfEqualsFourOfFour",3),
+            entry("CGCGroupsOfEqualsTwoSquares",4),
+            entry("CGCThreeColumns",5),
+            entry("CGCEightOf",6),
+            entry("CGCDiagonals",7),
+            entry("CGCFourRows",8),
+            entry("CGCTwoColumns",9),
+            entry("CGCTwoRows",10),
+            entry("CGCCross",11),
+            entry("CGCTriangular",12)
     );
 }

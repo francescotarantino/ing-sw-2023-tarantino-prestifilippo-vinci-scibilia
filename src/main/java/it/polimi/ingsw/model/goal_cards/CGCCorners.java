@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.goal_cards;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Tile;
+import static it.polimi.ingsw.Utils.checkMatrixSize;
 
 public class CGCCorners extends CommonGoalCard{
     public CGCCorners(int numberOfPlayers) {
@@ -12,6 +13,7 @@ public class CGCCorners extends CommonGoalCard{
         if (matrix == null) {
             throw new NullPointerException();
         }
+        checkMatrixSize(matrix);
         if (!(matrix[Constants.bookshelfX - 1][0]).sameType(matrix[0][0])) {
             return false;
         }
