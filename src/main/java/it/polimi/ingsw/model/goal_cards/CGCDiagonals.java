@@ -5,8 +5,8 @@ import it.polimi.ingsw.model.Tile;
 import static it.polimi.ingsw.Utils.checkMatrixSize;
 
 public class CGCDiagonals extends CommonGoalCard {
-    public CGCDiagonals(int numberOfPlayers) {
-        super(numberOfPlayers, Constants.commonGoalCardName.get("CGCDiagonals"));
+    public CGCDiagonals(int numberOfPlayers, int ID) {
+        super(numberOfPlayers, ID);
     }
 
     @Override

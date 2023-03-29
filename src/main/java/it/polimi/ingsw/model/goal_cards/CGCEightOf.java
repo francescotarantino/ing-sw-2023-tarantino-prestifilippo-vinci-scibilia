@@ -6,8 +6,8 @@ import java.util.Arrays;
 import static it.polimi.ingsw.Utils.checkMatrixSize;
 
 public class CGCEightOf  extends CommonGoalCard{
-    public CGCEightOf(int numberOfPlayers) {
-        super(numberOfPlayers, Constants.commonGoalCardName.get("CGCEightOf"));
+    public CGCEightOf(int numberOfPlayers, int ID) {
+        super(numberOfPlayers, ID);
     }
 
     @Override

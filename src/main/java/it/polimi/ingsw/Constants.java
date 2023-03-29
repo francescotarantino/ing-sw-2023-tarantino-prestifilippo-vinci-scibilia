@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
-import static java.util.Map.entry;
 public class Constants {
     // Bookshelf size
     public static final int bookshelfX = 5;
@@ -101,8 +100,8 @@ public class Constants {
     }
 
     // Scoring tokens used in CommonGoalCards
-    public static int[] getScoringTokens(int numberOfPlayers){
-        if(numberOfPlayers < playersLowerBound || numberOfPlayers > playersUpperBound){
+    public static int[] getScoringTokens(int numberOfPlayers) {
+        if (numberOfPlayers < playersLowerBound || numberOfPlayers > playersUpperBound) {
             throw new IllegalArgumentException("Number of players must be between" + playersLowerBound + " and " + playersUpperBound);
         }
 
@@ -123,6 +122,7 @@ public class Constants {
 
     // Method used to retrieve Personal Goal Cards from JSON file
     private static ArrayList<ArrayList<String>> personalGoalCards;
+
     public static ArrayList<ArrayList<String>> getPersonalGoalCards() {
         if (personalGoalCards != null) {
             return new ArrayList<>(personalGoalCards);
@@ -138,12 +138,12 @@ public class Constants {
     }
 
     // Method used to retrieve Personal Goal Card Points
-    public static int getPersonalGoalCardPoints(int matches){
-        if(matches < 0){
+    public static int getPersonalGoalCardPoints(int matches) {
+        if (matches < 0) {
             throw new IllegalArgumentException("Number of matches must be positive");
         }
 
-        switch (matches){
+        switch (matches) {
             case 1 -> {
                 return 1;
             }
@@ -167,23 +167,4 @@ public class Constants {
             }
         }
     }
-    /*
-    * This map provides each CGC's ID, given its textual description.
-    * All CGC that share a prefix are part of the same class, hence their key can be obtained using concat.
-    * Therefore, all keys concerning CGCs that haven't been implemented yet are subject to changes, depending on the class they'll end up into
-    * */
-    public static final Map<String, Integer> commonGoalCardName = Map.ofEntries(
-            entry("CGCGroupsOfEqualsSixOfTwo",1),
-            entry("CGCCorners",2),
-            entry("CGCGroupsOfEqualsFourOfFour",3),
-            entry("CGCGroupsOfEqualsTwoSquares",4),
-            entry("CGCThreeColumns",5),
-            entry("CGCEightOf",6),
-            entry("CGCDiagonals",7),
-            entry("CGCFourRows",8),
-            entry("CGCTwoColumns",9),
-            entry("CGCTwoRows",10),
-            entry("CGCCross",11),
-            entry("CGCTriangular",12)
-    );
 }

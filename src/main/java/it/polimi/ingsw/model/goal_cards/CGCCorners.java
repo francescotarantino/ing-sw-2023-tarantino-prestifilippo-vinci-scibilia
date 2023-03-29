@@ -5,8 +5,8 @@ import it.polimi.ingsw.model.Tile;
 import static it.polimi.ingsw.Utils.checkMatrixSize;
 
 public class CGCCorners extends CommonGoalCard{
-    public CGCCorners(int numberOfPlayers) {
-        super(numberOfPlayers, Constants.commonGoalCardName.get("CGCCorners"));
+    public CGCCorners(int numberOfPlayers, int ID) {
+        super(numberOfPlayers, ID);
     }
     @Override
     public boolean check(Tile[][] matrix) {
