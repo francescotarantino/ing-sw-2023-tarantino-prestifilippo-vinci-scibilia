@@ -62,7 +62,7 @@ public abstract class CommonGoalCard extends GoalCard {
                 return new CGCCross(numPlayers, ID);
             }
             case 12 -> {
-                //return new CGCTriangular(numPlayers, ID);
+                return new CGCTriangular(numPlayers, ID);
             }
             default -> {
                 throw new IndexOutOfBoundsException("Invalid ID");
