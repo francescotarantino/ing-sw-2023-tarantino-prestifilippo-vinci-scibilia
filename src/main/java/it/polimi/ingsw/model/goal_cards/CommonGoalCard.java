@@ -59,7 +59,7 @@ public abstract class CommonGoalCard extends GoalCard {
                 return new CGCLines(numPlayers, ID, CGCLines.Direction.HORIZONTAL, 0, 2);
             }
             case 11 -> {
-                //return new CGCCross(numPlayers, ID);
+                return new CGCCross(numPlayers, ID);
             }
             case 12 -> {
                 //return new CGCTriangular(numPlayers, ID);
