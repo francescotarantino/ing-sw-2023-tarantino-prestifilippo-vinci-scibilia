@@ -41,7 +41,7 @@ public abstract class CommonGoalCard extends GoalCard {
                 return new CGCGroupsOfEquals(numPlayers, ID, CGCGroupsOfEquals.BlockType.TWO_SQUARES);
             }
             case 5 -> {
-                //return new CGCLines(numPlayers, ID, CGC.CGCMaxThreeDifferent.VERTICAL_MAX_THREE_DIFFERENT);
+                return new CGCLines(numPlayers, ID, CGCLines.Direction.VERTICAL, 3, 3);
             }
             case 6 -> {
                 return new CGCEightOf(numPlayers, ID);
@@ -50,14 +50,13 @@ public abstract class CommonGoalCard extends GoalCard {
                 return new CGCDiagonals(numPlayers, ID);
             }
             case 8 -> {
-                //return new CGCLines(numPlayers, ID, CGC.CGCMaxThreeDifferent.HORIZONTAL_MAX_THREE_DIFFERENT);
+                return new CGCLines(numPlayers, ID, CGCLines.Direction.HORIZONTAL, 3, 4);
             }
             case 9 -> {
-                //return new CGCLines(numPlayers, ID, CGC.CGCMaxThreeDifferent.VERTICAL_ALL_DIFFERENT);
+                return new CGCLines(numPlayers, ID, CGCLines.Direction.VERTICAL, 0, 2);
             }
             case 10 -> {
-                //return new CGCLines(numPlayers, ID, CGC.CGCMaxThreeDifferent.HORIZONTAL_ALL_DIFFERENT);
-
+                return new CGCLines(numPlayers, ID, CGCLines.Direction.HORIZONTAL, 0, 2);
             }
             case 11 -> {
                 //return new CGCCross(numPlayers, ID);
