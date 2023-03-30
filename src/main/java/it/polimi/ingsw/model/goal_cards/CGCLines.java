@@ -63,7 +63,7 @@ public class CGCLines extends CommonGoalCard {
             }
         }
 
-        return count_repetitions >= this.repetitions; // TODO CHECK IF >= OR ==
+        return count_repetitions == this.repetitions;
     }
 
     private boolean checkLine(Tile[] line){
