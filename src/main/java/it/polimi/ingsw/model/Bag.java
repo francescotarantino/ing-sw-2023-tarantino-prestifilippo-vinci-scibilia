@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-class Bag {
+public class Bag {
     private final ArrayList<Tile> tiles;
 
     public Bag(){
@@ -27,6 +27,10 @@ class Bag {
         }
         else
             throw new IndexOutOfBoundsException("Invalid tile index");
+    }
+
+    public void pushTile(Tile tile){
+        tiles.add(tile);
     }
 
     public Tile getRandomTile(){
