@@ -13,6 +13,9 @@ public class Game {
     private final Bag bag;
     private final LivingRoomBoard livingRoomBoard;
     private final CommonGoalCard[] commonGoalCards;
+    private final int firstPlayerIndex;
+    private int currentPlayerIndex;
+
 
     // Constructor
     /**
@@ -50,9 +53,12 @@ public class Game {
         this.commonGoalCards = new CommonGoalCard[numberOfCommonGoalCards];
         int[] randomCGCNumbers = extractRandomIDsWithoutDuplicates(numberOfCommonGoalCards, Constants.totalNumberOfCommonGoalCards);
         for(int i = 0; i < numberOfCommonGoalCards; i++){
-            System.out.println("Common goal card number " + i + " is " + randomCGCNumbers[i]);
             this.commonGoalCards[i] = CommonGoalCard.create(numberOfPlayers, randomCGCNumbers[i] + 1);
         }
+
+        // Extracting the first player index
+        this.firstPlayerIndex = (new Random()).nextInt(numberOfPlayers);
+        this.currentPlayerIndex = this.firstPlayerIndex;
     }
 
     // Public methods
@@ -99,6 +105,29 @@ public class Game {
 
     public CommonGoalCard[] getCommonGoalCards() {
         return this.commonGoalCards;
+    }
+
+    public int getFirstPlayerIndex() {
+        return this.firstPlayerIndex;
+    }
+
+    public int getCurrentPlayerIndex() {
+        return this.currentPlayerIndex;
+    }
+
+    public Player getCurrentPlayer() {
+        return this.bookshelves[this.currentPlayerIndex].getPlayer();
+    }
+
+    /**
+     * Sets the current player index
+     * @param currentPlayerIndex the new current player index
+     */
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        if(currentPlayerIndex < 0 || currentPlayerIndex >= this.getTotalPlayersNumber())
+            throw new IllegalArgumentException("Illegal player index");
+
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 
     // Private methods
