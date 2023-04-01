@@ -99,6 +99,11 @@ public class Constants {
         PLACEHOLDER
     }
 
+    // Constants relative to Common Goal Cards
+    public static final int minCommonGoalCards = 1;
+    public static final int maxCommonGoalCards = 2;
+    public static final int totalNumberOfCommonGoalCards = 12;
+
     // Scoring tokens used in CommonGoalCards
     public static int[] getScoringTokens(int numberOfPlayers) {
         if (numberOfPlayers < playersLowerBound || numberOfPlayers > playersUpperBound) {

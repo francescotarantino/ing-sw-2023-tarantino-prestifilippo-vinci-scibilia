@@ -23,6 +23,13 @@ public abstract class CommonGoalCard extends GoalCard {
     public int takeScore(){
         return scoringTokenStack.pop();
     }
+
+    /**
+     * Creates a specific common goal card based on the number of players and the ID
+     * @param numPlayers the number of players in the game
+     * @param ID the ID of the common goal card
+     * @return the common goal card, that is an instance of a subclass of CommonGoalCard
+     */
     public static CommonGoalCard create(int numPlayers, int ID) {
         if (numPlayers < Constants.playersLowerBound || numPlayers > Constants.playersUpperBound) {
             throw new IndexOutOfBoundsException("Invalid number of players.");
@@ -64,11 +71,8 @@ public abstract class CommonGoalCard extends GoalCard {
             case 12 -> {
                 return new CGCTriangular(numPlayers, ID);
             }
-            default -> {
-                throw new IndexOutOfBoundsException("Invalid ID");
-            }
+            default -> throw new IndexOutOfBoundsException("Invalid ID");
         }
-        return null;
     }
     
     @Override
