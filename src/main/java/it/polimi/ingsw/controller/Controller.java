@@ -1,42 +1,24 @@
-package it.polimi.ingsw.Controller;
+package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.*;
 
 public class Controller {
-    //private View view;        TODO: to be implemented
-
-    private Game game;
-
-    private Player CurrentPlayer;
-
-    private int PlayerIndex;
-
+    //private View view; //TODO: to be implemented
+    private final Game game;
 
     public Controller(Game game /* , View view */){
         this.game = game;
-        // this.view = view
+        // this.view = view;
     }
 
 
     public void start(){
         //TODO
 
-
-        //populating the LivingroomBoard
-        for (int i = 0; i < Constants.livingRoomBoardY; i++) {
-            for (int j = 0; j < Constants.livingRoomBoardX; j++) {
-                Tile CurrentTile = game.getLivingRoomBoard().getTile(new Point(j, i));
-                if (CurrentTile == null) {
-                    Tile newtile = game.getBag().getRandomTile();
-                    game.getLivingRoomBoard().insertTile(newtile, new Point(j, i));
-                }
-            }
-        }
-        //selecting first player
-        PlayerIndex =0;
-        CurrentPlayer = game.getBookshelves()[PlayerIndex].getPlayer();
-    };
+        // Populating the LivingRoomBoard
+        this.fillLivingRoomBoard();
+    }
 
     public void nextTurn() {
 
@@ -90,51 +72,57 @@ public class Controller {
                     }
                 }
             }
-            //   populating the LivingRoomBoard
-            for (int i = 0; i < Constants.livingRoomBoardY; i++) {
-                for (int j = 0; j < Constants.livingRoomBoardX; j++) {
-                    Tile CurrentTile = game.getLivingRoomBoard().getTile(new Point(j, i));
-                    if (CurrentTile == null) {
-                        Tile newtile = game.getBag().getRandomTile();
-                        game.getLivingRoomBoard().insertTile(newtile, new Point(j, i));
-                    }
-                }
-            }
 
+            // Populating the LivingRoomBoard
+            this.fillLivingRoomBoard();
         }
 
-        //todo:control if player have achieved the requirements of a common goal card ----> common goal card implementation is needed
+        //TODO: control if player have achieved the requirements of a common goal card ----> common goal card implementation is needed
 
-        //todo:control if a player has filled their bookshelf
+        //TODO: control if a player has filled their bookshelf
 
-        // changing the current player
-        if (CurrentPlayer != game.getBookshelves()[game.getBookshelves().length - 1].getPlayer()) {
-            PlayerIndex++;
-            CurrentPlayer = game.getBookshelves()[PlayerIndex].getPlayer();
-        } else {
-            PlayerIndex = 0;
-            CurrentPlayer = game.getBookshelves()[PlayerIndex].getPlayer();
-        }
-
+        // Changing the current player to the next one
+        this.nextPlayer();
     }
 
-        //TODO: to be implemented controls on insertion/removing of tiles
-    public Tile[] takeTiles(Point...points) throws IllegalPositionException {
+    //TODO: to be implemented controls on insertion/removing of tiles
+    public Tile[] takeTiles(Point...points) {
         Tile[] tiles = new Tile[points.length];
         for (int i = 0; i < points.length; i++) {
             tiles[i] = game.getLivingRoomBoard().getTile(points[i]);
             game.getLivingRoomBoard().removeTile(points[i]);
         }
         return tiles;
-    };
+    }
 
-    public void insertTiles( int column, Tile[] tiles){
+    public void insertTiles(int column, Tile[] tiles){
 
-    };
+    }
 
     public void checkCommonGoal(){
 
-    };
+    }
 
+    // Private methods
 
+    /**
+     * This method fills the LivingRoomBoard with tiles from the bag
+     */
+    private void fillLivingRoomBoard(){
+        for (int i = 0; i < Constants.livingRoomBoardX; i++) {
+            for (int j = 0; j < Constants.livingRoomBoardY; j++) {
+                if (game.getLivingRoomBoard().getTile(new Point(i, j)) == null) {
+                    Tile newtile = game.getBag().getRandomTile();
+                    game.getLivingRoomBoard().insertTile(newtile, new Point(i, j));
+                }
+            }
+        }
+    }
+
+    /**
+     * This method changes the current player to the next one
+     */
+    private void nextPlayer(){
+        this.game.setCurrentPlayerIndex((this.game.getCurrentPlayerIndex() + 1) % this.game.getTotalPlayersNumber());
+    }
 }
