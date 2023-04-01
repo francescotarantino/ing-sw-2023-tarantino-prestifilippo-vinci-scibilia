@@ -56,7 +56,7 @@ public class LivingRoomBoard {
      */
     public LivingRoomBoard(int numPlayers) {
         if (numPlayers > Constants.playersUpperBound || numPlayers < Constants.playersLowerBound) {
-            throw new IndexOutOfBoundsException("Invalid number of players");
+            throw new IllegalArgumentException("Invalid number of players");
         }
 
         board = new Tile[Constants.livingRoomBoardX][Constants.livingRoomBoardY];

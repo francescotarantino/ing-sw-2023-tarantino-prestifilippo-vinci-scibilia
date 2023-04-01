@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model;
 
-import java.util.Random;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
+import java.util.Random;
 
 public class Game {
     // Attributes
@@ -153,7 +153,7 @@ public class Game {
      * @param amount the amount of random numbers to be extracted
      * @param bound the upper bound (exclusive) of the random numbers to be extracted
      */
-    private static int[] extractRandomIDsWithoutDuplicates(int amount, int bound){
+    protected static int[] extractRandomIDsWithoutDuplicates(int amount, int bound){
         if(amount > bound)
             throw new IllegalArgumentException("Amount cannot be greater than bound");
 
