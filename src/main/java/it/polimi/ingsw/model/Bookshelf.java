@@ -94,7 +94,7 @@ public class Bookshelf {
      * If the common goal card is already completed, an exception is thrown.
      * @param index the index of the common goal card to be set as completed
      */
-    public void setCompletedCommonGoalCards(int index) {
+    public void setCommonGoalCardCompleted(int index) {
         if(index < 0 || index >= Constants.maxCommonGoalCards)
             throw new IndexOutOfBoundsException("Invalid index");
 

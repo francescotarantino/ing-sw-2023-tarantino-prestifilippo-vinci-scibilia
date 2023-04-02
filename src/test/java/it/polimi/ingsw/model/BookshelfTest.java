@@ -54,4 +54,22 @@ public class BookshelfTest {
         assertEquals(bookshelf.getTile(new Point(0,1)), new Tile(Constants.TileType.PLANTS));
     }
 
+    @Test
+    void checkCompletedCommonGoalCards(){
+        for(int i = 0; i < Constants.maxCommonGoalCards; i++)
+            assertFalse(bookshelf.isCommonGoalCardCompleted(i));
+
+        bookshelf.setCommonGoalCardCompleted(0);
+        assertTrue(bookshelf.isCommonGoalCardCompleted(0));
+        for(int i = 1; i < Constants.maxCommonGoalCards; i++)
+            assertFalse(bookshelf.isCommonGoalCardCompleted(i));
+
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            bookshelf.isCommonGoalCardCompleted(-1);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            bookshelf.setCommonGoalCardCompleted(0);
+        });
+    }
 }
