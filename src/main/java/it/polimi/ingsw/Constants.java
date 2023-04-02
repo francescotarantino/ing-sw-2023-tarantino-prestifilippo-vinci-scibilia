@@ -105,6 +105,7 @@ public class Constants {
     public static final int totalNumberOfCommonGoalCards = 12;
 
     // Scoring tokens used in CommonGoalCards
+    public static final int[] allScoringTokens = {2, 4, 6, 8};
     public static int[] getScoringTokens(int numberOfPlayers) {
         if (numberOfPlayers < playersLowerBound || numberOfPlayers > playersUpperBound) {
             throw new IllegalArgumentException("Number of players must be between" + playersLowerBound + " and " + playersUpperBound);
