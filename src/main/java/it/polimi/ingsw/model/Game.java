@@ -149,7 +149,6 @@ public class Game {
     // Private methods
     /**
      * Extracts random numbers without duplicates from 0 to bound-1
-     *
      * @param amount the amount of random numbers to be extracted
      * @param bound the upper bound (exclusive) of the random numbers to be extracted
      */

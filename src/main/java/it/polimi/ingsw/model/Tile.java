@@ -6,12 +6,20 @@ public class Tile {
     private final Constants.TileType type;
     private final int variant;
 
-    // Default variant is 0 when not specified (useful for placeholders)
+    /**
+     * Creates a new tile with the specified type. The variant is set to 0 (useful for placeholders).
+     * @param type the type of the new tile
+     */
     public Tile (Constants.TileType type){
         this.type = type;
         this.variant = 0;
     }
 
+    /**
+     * Creates a new tile with the specified type and variant.
+     * @param type the type of the new tile
+     * @param variant the variant of the new tile
+     */
     public Tile (Constants.TileType type, int variant){
         if(variant < 0 || variant > Constants.tileVariants){
             throw new IllegalArgumentException("Tile variant invalid");
@@ -20,6 +28,10 @@ public class Tile {
         this.variant = variant;
     }
 
+    /**
+     * Creates a new tile with the same type and variant of the specified tile.
+     * @param oldTile the tile to be copied
+     */
     public Tile (Tile oldTile){
         this.type = oldTile.getType();
         this.variant = oldTile.getVariant();

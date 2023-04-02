@@ -8,8 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonalGoalCardTest {
 
-    // Should we move this to another class?
-    // Checks if PGC file is read correctly: every element is a valid TileType and there is no PLACEHOLDER
+    /**
+     * Checks if PGC file is read correctly: every element is a valid TileType and there are no PLACEHOLDERs.
+     */
     @Test
     void checkReadFromFile(){
         assertDoesNotThrow(Constants::getPersonalGoalCards, "Error while reading PGC file");

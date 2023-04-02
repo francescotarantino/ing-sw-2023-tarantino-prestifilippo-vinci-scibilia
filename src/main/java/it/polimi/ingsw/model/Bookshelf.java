@@ -22,16 +22,14 @@ public class Bookshelf {
     }
 
     /**
-     * Returns the player who owns the bookshelf.
-     * @return the player
+     * @return the player who owns the bookshelf
      */
     public Player getPlayer() {
         return this.player;
     }
 
     /**
-     * Returns the personal goal card associated to the bookshelf.
-     * @return the personal goal card
+     * @return the personal goal card associated to the bookshelf
      */
     public PersonalGoalCard getPersonalGoalCard() {
         return this.personalGoalCard;
@@ -50,8 +48,7 @@ public class Bookshelf {
     }
 
     /**
-     * Returns the matrix of the bookshelf.
-     * @return the matrix of tiles
+     * @return the matrix of the bookshelf
      */
     public Tile[][] getMatrix() {
         return this.matrix;
