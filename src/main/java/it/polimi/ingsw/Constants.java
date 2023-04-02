@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
+
 public class Constants {
     // Bookshelf size
     public static final int bookshelfX = 5;
@@ -106,6 +107,12 @@ public class Constants {
 
     // Scoring tokens used in CommonGoalCards
     public static final int[] allScoringTokens = {2, 4, 6, 8};
+
+    /**
+     * Returns an array of scoring tokens used in common goal cards based on the number of players
+     * @param numberOfPlayers number of players of the game
+     * @return array of scoring tokens
+     */
     public static int[] getScoringTokens(int numberOfPlayers) {
         if (numberOfPlayers < playersLowerBound || numberOfPlayers > playersUpperBound) {
             throw new IllegalArgumentException("Number of players must be between" + playersLowerBound + " and " + playersUpperBound);
@@ -126,9 +133,12 @@ public class Constants {
         return new int[]{};
     }
 
-    // Method used to retrieve Personal Goal Cards from JSON file
+    // Constants relative to Personal Goal Cards
     private static ArrayList<ArrayList<String>> personalGoalCards;
-
+    /**
+     * Returns a list of all the Personal Goal Cards from the JSON file
+     * @return list of all the Personal Goal Cards
+     */
     public static ArrayList<ArrayList<String>> getPersonalGoalCards() {
         if (personalGoalCards != null) {
             return new ArrayList<>(personalGoalCards);
@@ -143,7 +153,11 @@ public class Constants {
         }
     }
 
-    // Method used to retrieve Personal Goal Card Points
+    /**
+     * Returns the number of points a player gets for a given number of tile matches
+     * @param matches number of tile matches
+     * @return points
+     */
     public static int getPersonalGoalCardPoints(int matches) {
         if (matches < 0) {
             throw new IllegalArgumentException("Number of matches must be positive");
