@@ -23,7 +23,9 @@ public class Controller {
      * This method is called at the end of each turn.
      */
     public void nextTurn() {
-        if (checkBookshelfNeedRefill()) {
+        // TODO: check if the player is allowed to end the turn
+
+        if (checkBoardNeedRefill()) {
             // TODO: decide if the LRB should be emptied or not
             // proceed to empty the livingroomBoard
             for (int i = 0; i < Constants.livingRoomBoardY; i++) {
@@ -40,12 +42,23 @@ public class Controller {
             this.fillLivingRoomBoard();
         }
 
+        // Check if the current player has achieved common goals
         this.checkCommonGoal();
 
-        //TODO: control if a player has filled their bookshelf
+        // Check if the current player has completed the bookshelf
+        if(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].isFull() && this.game.getFinalPlayerIndex() == -1){
+            this.game.setFinalPlayerIndex(this.game.getCurrentPlayerIndex());
+        }
 
-        // Changing the current player to the next one
-        this.nextPlayer();
+        if(
+                this.game.getFinalPlayerIndex() != -1 &&
+                ((this.game.getCurrentPlayerIndex() + 1) % this.game.getTotalPlayersNumber()) == this.game.getFinalPlayerIndex()
+        ){
+            this.endGame();
+        } else {
+            // Changing the current player to the next one
+            this.nextPlayer();
+        }
     }
 
     //TODO: to be implemented controls on insertion/removing of tiles
@@ -109,7 +122,7 @@ public class Controller {
      *
      * @return true if a refill is needed, false otherwise
      */
-    private boolean checkBookshelfNeedRefill() {
+    private boolean checkBoardNeedRefill() {
         int numTile = 0;
         int onlyTile = 0;
 
@@ -148,5 +161,9 @@ public class Controller {
         }
 
         return numTile == onlyTile;
+    }
+
+    private void endGame(){
+        // TODO: implement end game
     }
 }

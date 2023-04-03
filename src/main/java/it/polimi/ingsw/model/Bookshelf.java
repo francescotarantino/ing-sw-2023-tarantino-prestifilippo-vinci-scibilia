@@ -100,4 +100,17 @@ public class Bookshelf {
 
         this.completedCommonGoalCards[index] = true;
     }
+
+    /**
+     * @return true if the bookshelf is full, false otherwise
+     */
+    public boolean isFull(){
+        for (int i = 0; i < Constants.bookshelfX; i++) {
+            for (int j = 0; j < Constants.bookshelfY; j++) {
+                if (this.matrix[i][j] == null)
+                    return false;
+            }
+        }
+        return true;
+    }
 }

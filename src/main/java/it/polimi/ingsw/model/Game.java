@@ -61,6 +61,7 @@ public class Game {
         this.firstPlayerIndex = (new Random()).nextInt(numberOfPlayers);
         this.currentPlayerIndex = this.firstPlayerIndex;
 
+        // Final player index is -1 by default
         this.finalPlayerIndex = -1;
     }
 
