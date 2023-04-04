@@ -108,6 +108,10 @@ public class Constants {
     // Scoring tokens used in CommonGoalCards
     public static final int[] allScoringTokens = {2, 4, 6, 8};
 
+    // Constants relative to user choices
+    public static final int minPick = 1;
+    public static final int maxPick = 3;
+
     /**
      * Returns an array of scoring tokens used in common goal cards based on the number of players
      * @param numberOfPlayers number of players of the game

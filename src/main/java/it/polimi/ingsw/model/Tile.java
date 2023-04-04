@@ -62,6 +62,9 @@ public class Tile {
 
     @Override
     public String toString() {
-        return "Tile: " + type +"." + variant;
+        if(this.type == Constants.TileType.PLACEHOLDER)
+            return "";
+        else
+            return type + "." + variant;
     }
 }
