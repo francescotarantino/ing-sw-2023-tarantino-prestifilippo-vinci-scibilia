@@ -96,16 +96,18 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
         return currentSize;
     }
     private boolean findSquare(int i, int j, Tile[][] matrix) {
-        return checkAdjacentTile(i, j, matrix, Direction.UP) &&
-                checkAdjacentTile(i, j, matrix, Direction.RIGHT) &&
-                checkAdjacentTile(i + 1, j, matrix, Direction.UP) &&
-                !checkAdjacentTile(i, j, matrix, Direction.LEFT) &&
-                !checkAdjacentTile(i + 1, j, matrix, Direction.LEFT) &&
-                !checkAdjacentTile(i + 1, j, matrix, Direction.UP) &&
-                !checkAdjacentTile(i + 1, j + 1, matrix, Direction.UP) &&
-                !checkAdjacentTile(i + 1, j + 1, matrix, Direction.RIGHT) &&
-                !checkAdjacentTile(i, j + 1, matrix, Direction.RIGHT) &&
-                !checkAdjacentTile(i, j + 1, matrix, Direction.DOWN);
+        return  (
+            checkAdjacentTile(i, j, matrix, Direction.UP) &&
+            checkAdjacentTile(i, j, matrix, Direction.RIGHT) &&
+            checkAdjacentTile(i + 1, j, matrix, Direction.UP) &&
+            !checkAdjacentTile(i, j, matrix, Direction.LEFT) &&
+            !checkAdjacentTile(i + 1, j, matrix, Direction.LEFT) &&
+            !checkAdjacentTile(i + 1, j, matrix, Direction.UP) &&
+            !checkAdjacentTile(i + 1, j + 1, matrix, Direction.UP) &&
+            !checkAdjacentTile(i + 1, j + 1, matrix, Direction.RIGHT) &&
+            !checkAdjacentTile(i, j + 1, matrix, Direction.RIGHT) &&
+            !checkAdjacentTile(i, j + 1, matrix, Direction.DOWN)
+        );
     }
     private void setDone (int i, int j, boolean[][] done) {
         done[i][j] = true;
@@ -165,13 +167,12 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
             }
             case TWO_SQUARES -> {
                 HashMap<Constants.TileType, Integer> numberOfSquares = new HashMap<>();
-                int number;
                 for (int i = 0; i < Constants.bookshelfX - 1; i++) {
                     for (int j = 0; j < Constants.bookshelfY - 1; j++) {
                         if(!done[i][j]) {
                             if (findSquare(i, j, matrix)) {
                                 setDone(i, j, done);
-                                number = numberOfSquares.getOrDefault(matrix[i][j].getType(), 0);
+                                int number = numberOfSquares.getOrDefault(matrix[i][j].getType(), 0);
                                 numberOfSquares.put(matrix[i][j].getType(), number + 1);
                                 if (numberOfSquares.values().stream().anyMatch(kind -> kind > 1)) {
                                     return true;
