@@ -187,4 +187,25 @@ public class Constants {
             }
         }
     }
+
+    public static int getAdjacentTilesPoints(int numberOfTiles) {
+        if (numberOfTiles < 3) {
+            throw new IllegalArgumentException("Number of Tiles must be at least 3");
+        }
+
+        switch (numberOfTiles) {
+            case 3 -> {
+                return 2;
+            }
+            case 4 -> {
+                return 3;
+            }
+            case 5 -> {
+                return 5;
+            }
+            default -> {
+                return 8;
+            }
+        }
+    }
 }
