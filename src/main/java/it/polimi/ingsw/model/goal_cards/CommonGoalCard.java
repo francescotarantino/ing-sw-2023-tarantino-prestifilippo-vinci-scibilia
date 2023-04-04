@@ -9,6 +9,11 @@ import java.util.Stack;
 public abstract class CommonGoalCard extends GoalCard {
     private final Stack<Integer> scoringTokenStack;
 
+    /**
+     * Creates a common goal card with the given ID
+     * @param numberOfPlayers the number of players in the game
+     * @param ID the ID of the common goal card
+     */
     public CommonGoalCard(int numberOfPlayers, int ID) {
         super(ID);
         this.scoringTokenStack = new Stack<>();
@@ -16,11 +21,18 @@ public abstract class CommonGoalCard extends GoalCard {
         Arrays.stream(Constants.getScoringTokens(numberOfPlayers)).forEach(this.scoringTokenStack::push);
     }
 
+    /**
+     * @return the points of the scoring tokens available for this common goal card
+     */
     public int[] getAvailableScores(){
         return scoringTokenStack.stream().mapToInt(i -> i).toArray();
     }
 
-    public int takeScore(){
+    /**
+     * Pops a scoring token from the stack and returns it
+     * @return the point of the scoring token
+     */
+    protected int takeScore(){
         return scoringTokenStack.pop();
     }
 
@@ -74,7 +86,12 @@ public abstract class CommonGoalCard extends GoalCard {
             default -> throw new IndexOutOfBoundsException("Invalid ID");
         }
     }
-    
+
+    /**
+     * Checks if the given matrix satisfies the requirements of the common goal card and returns the appropriate score.
+     * @param matrix the matrix to be checked
+     * @return the score of the common goal card if the matrix satisfies the requirements, 0 otherwise
+     */
     @Override
     public int checkValidity(Tile[][] matrix) {
         if(check(matrix))
@@ -83,5 +100,10 @@ public abstract class CommonGoalCard extends GoalCard {
             return 0;
     }
 
+    /**
+     * Checks if the given matrix satisfies the requirements of the common goal card
+     * @param matrix the matrix to be checked
+     * @return true if the matrix satisfies the requirements, false otherwise
+     */
     public abstract boolean check(Tile[][] matrix);
 }

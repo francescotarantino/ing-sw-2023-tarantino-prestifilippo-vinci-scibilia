@@ -7,6 +7,10 @@ import java.util.*;
 public class LivingRoomBoard {
     private final Tile[][] board;
 
+    /**
+     * @param p the coordinates of the tile to be returned
+     * @return the tile at the specified coordinates
+     */
     public Tile getTile(Point p) {
         if (p.getX() < 0 || p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException("Invalid living room board coordinates");
@@ -15,6 +19,11 @@ public class LivingRoomBoard {
         return board[p.getX()][p.getY()];
     }
 
+    /**
+     * Inserts the specified tile at the specified coordinates.
+     * @param t the tile to be inserted
+     * @param p the coordinates of the tile to be inserted
+     */
     public void insertTile(Tile t, Point p) {
         if (p.getX() < 0|| p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException("Invalid living room board coordinates");
@@ -27,6 +36,10 @@ public class LivingRoomBoard {
         board[p.getX()][p.getY()] = t;
     }
 
+    /**
+     * Removes the tile at the specified coordinates.
+     * @param p the coordinates of the tile to be removed
+     */
     public void removeTile(Point p) {
         if (p.getX() < 0|| p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException("Invalid living room board coordinates");
@@ -37,7 +50,10 @@ public class LivingRoomBoard {
         board[p.getX()][p.getY()] = null;
     }
 
-    /*creator*/
+    /**
+     * Creates a new living room board with the appropriate invalid positions.
+     * @param numPlayers the number of players in the game
+     */
     public LivingRoomBoard(int numPlayers) {
         if (numPlayers > Constants.playersUpperBound || numPlayers < Constants.playersLowerBound) {
             throw new IllegalArgumentException("Invalid number of players");

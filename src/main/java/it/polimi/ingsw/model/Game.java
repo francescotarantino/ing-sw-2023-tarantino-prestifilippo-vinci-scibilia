@@ -15,6 +15,7 @@ public class Game {
     private final CommonGoalCard[] commonGoalCards;
     private final int firstPlayerIndex;
     private int currentPlayerIndex;
+    private int finalPlayerIndex;
 
 
     // Constructor
@@ -59,10 +60,12 @@ public class Game {
         // Extracting the first player index
         this.firstPlayerIndex = (new Random()).nextInt(numberOfPlayers);
         this.currentPlayerIndex = this.firstPlayerIndex;
+
+        // Final player index is -1 by default
+        this.finalPlayerIndex = -1;
     }
 
     // Public methods
-
     /**
      * Adds a new bookshelf to the game
      * @param player: the new player that will be added to the game
@@ -130,11 +133,23 @@ public class Game {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
-    // Private methods
+    public void setFinalPlayerIndex(int finalPlayerIndex) {
+        if(finalPlayerIndex < 0 || finalPlayerIndex >= this.getTotalPlayersNumber())
+            throw new IllegalArgumentException("Illegal player index");
+        if (this.finalPlayerIndex != -1) {
+            throw new IllegalArgumentException("Final player already set");
+        }
 
+        this.finalPlayerIndex = finalPlayerIndex;
+    }
+
+    public int getFinalPlayerIndex() {
+        return this.finalPlayerIndex;
+    }
+
+    // Private methods
     /**
      * Extracts random numbers without duplicates from 0 to bound-1
-     *
      * @param amount the amount of random numbers to be extracted
      * @param bound the upper bound (exclusive) of the random numbers to be extracted
      */
