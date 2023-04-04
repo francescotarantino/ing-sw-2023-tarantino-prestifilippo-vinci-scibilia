@@ -23,7 +23,7 @@ public class CGCLinesTest {
         }, {
                 new Tile(CATS), new Tile(CATS), new Tile(GAMES), new Tile(BOOKS), new Tile(CATS), null
         }, {
-                new Tile(CATS), new Tile(CATS), null, null, null, null
+                new  Tile(CATS), new Tile(CATS), null, null, null, null
         }};
 
         matrix = new Tile[][]{{
