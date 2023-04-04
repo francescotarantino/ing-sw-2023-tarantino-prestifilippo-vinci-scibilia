@@ -16,9 +16,9 @@ public class Constants {
     // Constants concerning LivingRoomBoard
     public static final int livingRoomBoardX = 9;
     public static final int livingRoomBoardY = 9;
-    public static Set getInvalidPositions(int numPlayers) {
+    public static Set<Point> getInvalidPositions(int numPlayers) {
 
-        Set<Point> invalidPositions = new HashSet<Point>();
+        Set<Point> invalidPositions = new HashSet<>();
 
         invalidPositions.add(new Point(0, 0));
         invalidPositions.add(new Point(0, 1));
