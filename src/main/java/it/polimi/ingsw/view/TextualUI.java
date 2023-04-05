@@ -6,13 +6,13 @@ import it.polimi.ingsw.model.Point;
 
 import java.util.Scanner;
 
-public class TextualUI extends Observable<Move> implements Runnable {
+public class TextualUI implements Runnable {
     private enum State {
         MY_TURN,
         NOT_MY_TURN
     }
 
-    private State state = State.WAITING;
+    private State state = State.NOT_MY_TURN;
     private final Object lock = new Object();
 
     private State getState() {
@@ -40,7 +40,7 @@ public class TextualUI extends Observable<Move> implements Runnable {
                 }
             }
             System.out.println("Your turn!");
-            this.myTurn();
+            //this.myTurn();
         }
     }
 

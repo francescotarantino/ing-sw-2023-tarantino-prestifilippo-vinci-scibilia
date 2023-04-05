@@ -176,4 +176,16 @@ public class Game {
 
         return numbers;
     }
+
+    @Override
+    public String toString() {
+        String string = this.getGameID() + "\t";
+
+        for(int i=0; i<getTotalPlayersNumber(); i++){
+            if(this.getBookshelves()[i] != null)
+                string = string + this.getBookshelves()[i].getPlayer().getUsername() + "\t";
+        }
+
+        return string;
+    }
 }

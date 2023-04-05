@@ -10,7 +10,6 @@ public class GameView implements Serializable {
     public GameView(Game game){
         this.board = game.getLivingRoomBoard();
         this.bookshelves = game.getBookshelves();
-
     }
 
     public Bookshelf[] getBookshelves() {

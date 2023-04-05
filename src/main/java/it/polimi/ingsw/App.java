@@ -1,13 +1,7 @@
 package it.polimi.ingsw;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+public class App {
+    public static void main(String[] args) {
+        System.out.println("This App class is not used. You should run the AppClient or AppServer class.");
     }
 }
