@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.util.Scanner;
 
 public class AppClient {
@@ -32,7 +33,7 @@ public class AppClient {
                 System.out.println("Starting RMI client...");
                 try {
                     startRMI();
-                } catch (RemoteException | NotBoundException e) {
+                } catch (RemoteException | NotBoundException | ServerNotActiveException e) {
                     e.printStackTrace(); // TODO: handle exception
                 }
             }
@@ -43,7 +44,7 @@ public class AppClient {
         }
     }
 
-    private static void startRMI() throws RemoteException, NotBoundException {
+    private static void startRMI() throws RemoteException, NotBoundException, ServerNotActiveException {
         Scanner s = new Scanner(System.in);
         Registry registry = LocateRegistry.getRegistry();
         AppServer server = (AppServer) registry.lookup("myshelfie");
@@ -59,9 +60,9 @@ public class AppClient {
 
             System.out.println("""
                     Scegli l'azione da compiere:
-                     1.Creare una nuova partita
-                     2.Entrare in una partita
-                     3.Ricaricare la lista delle partite""");
+                     1. Creare una nuova partita
+                     2. Entrare in una partita
+                     3. Ricaricare la lista delle partite""");
             input = s.nextInt();
         } while(input != 1 && input != 2);
 

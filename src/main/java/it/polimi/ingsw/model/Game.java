@@ -147,6 +147,20 @@ public class Game {
         return this.finalPlayerIndex;
     }
 
+    /**
+     * Checks if the game has reached the maximum number of players allowed.
+     * @return true if the game is full, false otherwise
+     */
+    public boolean isFull() {
+        for (Bookshelf bookshelf : bookshelves) {
+            if (bookshelf == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     // Private methods
     /**
      * Extracts random numbers without duplicates from 0 to bound-1
@@ -179,13 +193,19 @@ public class Game {
 
     @Override
     public String toString() {
-        String string = this.getGameID() + "\t";
+        StringBuilder string = new StringBuilder();
+
+        string.append(this.getGameID()).append("\t");
 
         for(int i=0; i<getTotalPlayersNumber(); i++){
             if(this.getBookshelves()[i] != null)
-                string = string + this.getBookshelves()[i].getPlayer().getUsername() + "\t";
+                string.append(this.getBookshelves()[i].getPlayer().getUsername()).append("\t");
         }
 
-        return string;
+        if(this.isFull()){
+            string.append("(FULL)");
+        }
+
+        return string.toString();
     }
 }
