@@ -47,7 +47,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         int gameID = new Random().nextInt(998) + 1;
 
         System.out.println(getClientHost() + " is creating game " + gameID + " with username " + username + "...");
-        this.model = new Game(gameID, numberOfPlayers, new Player(username), 2);
+        this.model = new Game(gameID, numberOfPlayers, new Player(username), 2); // TODO: ask for number of Command Goal Cards
 
         AppServerImpl.insertGame(this.model);
 

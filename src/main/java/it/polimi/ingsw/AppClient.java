@@ -66,6 +66,8 @@ public class AppClient {
             input = s.nextInt();
         } while(input != 1 && input != 2);
 
+
+        ClientImpl client = new ClientImpl();
         switch(input) {
             case 1 -> {
                 int numberOfPlayers;
@@ -77,8 +79,7 @@ public class AppClient {
                             + " e " + Constants.playersUpperBound + ".");
                 } while(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound);
 
-                ClientImpl client = new ClientImpl(server.connect(), true, numberOfPlayers, username);
-                client.run();
+                client.create(server.connect(), numberOfPlayers, username);
             }
             case 2 -> {
                 //TODO: se la partita si è riempita prima di riuscire ad entrare, ricominciare da capo
@@ -93,9 +94,10 @@ public class AppClient {
 
                 } while(gameID <= Constants.IDLowerBound);
 
-                ClientImpl client = new ClientImpl(server.connect(), false, gameID, username);
-                client.run();
+                client.join(server.connect(), gameID, username);
             }
         }
+
+        client.run();
     }
 }
