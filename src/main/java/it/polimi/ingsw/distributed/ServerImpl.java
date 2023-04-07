@@ -1,9 +1,10 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.AppServerImpl;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameList;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.util.Observer;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -12,9 +13,10 @@ import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 
-public class ServerImpl extends UnicastRemoteObject implements Server {
+public class ServerImpl extends UnicastRemoteObject implements Server, Observer<GameList, GameList.Event> {
     private Game model;
     private Controller controller;
+    private Client client;
 
 
     public ServerImpl() throws RemoteException {
@@ -30,10 +32,20 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     }
 
     @Override
-    public void join(Client client, int gameID, String username) throws RemoteException, ServerNotActiveException {
+    public void register(Client client) throws RemoteException, ServerNotActiveException {
+        this.client = client;
+        GameList.getInstance().addObserver(this);
+
+        System.out.println(getClientHost() + " is registering to the server...");
+    }
+
+    @Override
+    public void join(int gameID, String username) throws RemoteException, ServerNotActiveException {
+        GameList.getInstance().deleteObserver(this);
+
         System.out.println(getClientHost() + " is joining game " + gameID + " with username " + username + "...");
 
-        this.model = AppServerImpl.getGame(gameID);
+        this.model = GameList.getInstance().getGame(gameID);
         if(this.model == null){
             throw new IllegalArgumentException();
         }
@@ -43,15 +55,31 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     }
 
     @Override
-    public void create(Client client, int numberOfPlayers, String username) throws RemoteException, ServerNotActiveException {
+    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, ServerNotActiveException {
+        GameList.getInstance().deleteObserver(this);
+
         int gameID = new Random().nextInt(998) + 1;
 
         System.out.println(getClientHost() + " is creating game " + gameID + " with username " + username + "...");
-        this.model = new Game(gameID, numberOfPlayers, new Player(username), 2); // TODO: ask for number of Command Goal Cards
+        this.model = new Game(gameID, numberOfPlayers, new Player(username), numberOfCommonGoalCards);
 
-        AppServerImpl.insertGame(this.model);
+        GameList.getInstance().addGame(this.model);
 
         this.controller = new Controller(this.model/*, view */);
+    }
+
+    @Override
+    public String[] getGamesList() throws RemoteException {
+        return GameList.getInstance().getGamesString();
+    }
+
+    @Override
+    public void update(GameList o, GameList.Event arg) {
+        try {
+            this.client.update(o.getGamesString(), arg);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

@@ -8,14 +8,15 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AppServerImpl extends UnicastRemoteObject implements AppServer {
     private static AppServerImpl instance;
-    private static final ArrayList<Game> games = new ArrayList<>();
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
-     * AppServerImpl fake constructor so it cannot be instantiated.
+     * AppServerImpl fake constructor, so it cannot be instantiated from outside.
      */
     protected AppServerImpl() throws RemoteException {}
 
@@ -43,14 +44,25 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
             try {
                 startRMI();
             } catch (RemoteException e) {
-                System.err.println("Cannot start RMI.");
+                System.err.println("Cannot start RMI protocol.");
                 e.printStackTrace();
             }
         });
         rmiThread.start();
 
+        Thread socketThread = new Thread(() -> {
+            try {
+                startSocket(12345);
+            } catch (RemoteException e) {
+                System.err.println("Cannot start socket protocol.");
+                e.printStackTrace();
+            }
+        });
+        socketThread.start();
+
         try {
             rmiThread.join();
+            socketThread.join();
         } catch (InterruptedException e) {
             System.err.println("No connection protocol available. Exiting...");
         }
@@ -60,46 +72,48 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
      * This method is used to start the RMI server.
      */
     private static void startRMI() throws RemoteException {
+        System.out.println("Starting RMI server...");
+
         AppServerImpl server = getInstance();
 
         Registry registry = LocateRegistry.getRegistry();
         registry.rebind("myshelfie", server);
+
+        System.out.println("RMI server started.");
     }
 
     /**
-     * This method is used to get the list of games on the server to be displayed on the client.
-     * @return an array of String describing the games on the server
+     * This method is used to start the socket server.
+     * @param port the port on which the server will listen
      */
-    public String[] getGamesString() throws RemoteException {
-        if(games.size() != 0)
-            return games
-                    .stream()
-                    .map(Game::toString)
-                    .toArray(String[]::new);
-        else
-            return new String[]{"Nessuna partita"};
-    }
-
-    /**
-     * This method is used to get a game from the list of games on the server.
-     * @param gameID the ID of the game to get
-     * @return the Game class of the game with the specified ID, null if the game doesn't exist
-     */
-    public static Game getGame(int gameID) {
-        return games
-                .stream()
-                .filter(g -> g.getGameID() == gameID)
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * This method is used to insert a new game in the list of games on the server.
-     * @param g the reference to the new Game class
-     */
-    public static void insertGame(Game g) {
-        games.add(g);
-    }
+    /*public static void startSocket(int port) throws RemoteException {
+        AppServerImpl instance = getInstance();
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            while (true) {
+                Socket socket = serverSocket.accept();
+                instance.executorService.submit(() -> {
+                    try {
+                        ClientSkeleton clientSkeleton = new ClientSkeleton(socket);
+                        Server server = new ServerImpl();
+                        server.register(clientSkeleton);
+                        while (true) {
+                            clientSkeleton.receive(server);
+                        }
+                    } catch (RemoteException | ServerNotActiveException e) {
+                        System.err.println("Cannot receive from client. Closing this connection...");
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            System.err.println("Cannot close socket");
+                        }
+                    }
+                });
+            }
+        } catch (IOException e) {
+            throw new RemoteException("Cannot start socket server", e);
+        }
+    }*/
 
     /**
      * This method is called by the client to connect to the ServerImpl.

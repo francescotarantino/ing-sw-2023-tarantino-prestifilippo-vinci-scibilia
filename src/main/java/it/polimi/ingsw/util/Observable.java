@@ -190,4 +190,14 @@ public class Observable<Event extends Enum<Event>> {
     public synchronized int countObservers() {
         return obs.size();
     }
+
+    /**
+     * Sets the changed flag and notifies all observers.
+     *
+     * @param event the event to notify the observers with
+     */
+    public void setChangedAndNotify(Event event) {
+        setChanged();
+        notifyObservers(event);
+    }
 }

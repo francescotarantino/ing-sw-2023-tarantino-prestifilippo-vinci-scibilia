@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.GameView;
