@@ -83,6 +83,7 @@ public class ServerStub implements Server {
 
             switch (ClientSkeleton.Methods.values()[enum_id]) {
                 case UPDATE_GAMES_LIST -> client.updateGamesList((String[]) ois.readObject(), (GameList.Event) ois.readObject());
+                case SHOW_ERROR -> client.showError((String) ois.readObject(), (boolean) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RemoteException("Cannot receive event", e);

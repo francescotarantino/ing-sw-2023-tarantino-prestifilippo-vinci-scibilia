@@ -1,5 +1,6 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.model.GameList;
 import it.polimi.ingsw.util.Observer;
 import it.polimi.ingsw.view.textual.StartUI;
@@ -35,11 +36,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         startUI.addObserver(this);
     }
 
-    private void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
+    private void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
         this.server.create(numberOfPlayers, numberOfCommonGoalCards, username);
     }
 
-    private void join(int gameID, String username) throws RemoteException {
+    private void join(int gameID, String username) throws RemoteException, InvalidChoiceException {
         this.server.join(gameID, username);
     }
 
@@ -51,27 +52,35 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void update(StartUI o, StartUI.Event arg) {
-        switch (arg) {
-            case CREATE -> {
-                try {
-                    create(o.getNumberOfPlayers(), o.getNumberOfCommonGoalCards(), o.getUsername());
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
+        try {
+            switch (arg) {
+                case CREATE -> {
+                    try {
+                        create(o.getNumberOfPlayers(), o.getNumberOfCommonGoalCards(), o.getUsername());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                case JOIN -> {
+                    try {
+                        join(o.getGameID(), o.getUsername());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                case REFRESH -> {
+                    try {
+                        server.getGamesList();
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
-            case JOIN -> {
-                try {
-                    join(o.getGameID(), o.getUsername());
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            case REFRESH -> {
-                try {
-                    server.getGamesList();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+        } catch (InvalidChoiceException e) {
+            try {
+                this.showError(e.getMessage(), false);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -79,5 +88,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void updateGamesList(String[] o, GameList.Event e) throws RemoteException {
         startUI.showGamesList(o);
+    }
+
+    @Override
+    public void showError(String err, boolean exit) throws RemoteException {
+        startUI.showError(err, exit);
     }
 }

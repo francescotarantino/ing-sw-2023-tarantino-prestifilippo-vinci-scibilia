@@ -1,6 +1,7 @@
 package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameList;
 import it.polimi.ingsw.model.Player;
@@ -39,29 +40,39 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
     }
 
     @Override
-    public void join(int gameID, String username) throws RemoteException {
-        GameList.getInstance().deleteObserver(this);
-
+    public void join(int gameID, String username) throws RemoteException, InvalidChoiceException {
         System.out.println("A client is joining game " + gameID + " with username " + username + "...");
 
         this.model = GameList.getInstance().getGame(gameID);
         if(this.model == null){
-            throw new IllegalArgumentException();
+            throw new InvalidChoiceException("Partita non trovata.");
         }
-        this.model.addBookshelf(new Player(username));
+
+        try {
+            this.model.addBookshelf(new Player(username));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            throw new InvalidChoiceException(e.getMessage());
+        }
+
+        GameList.getInstance().deleteObserver(this);
+        GameList.getInstance().setChangedAndNotify(GameList.Event.PLAYER_JOINED_GAME);
 
         this.controller = new Controller(this.model/*, view*/);
     }
 
     @Override
-    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
-        GameList.getInstance().deleteObserver(this);
-
+    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
         int gameID = new Random().nextInt(998) + 1;
 
         System.out.println("A client is creating game " + gameID + " with username " + username + "...");
-        this.model = new Game(gameID, numberOfPlayers, new Player(username), numberOfCommonGoalCards);
 
+        try {
+            this.model = new Game(gameID, numberOfPlayers, new Player(username), numberOfCommonGoalCards);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            throw new InvalidChoiceException(e.getMessage());
+        }
+
+        GameList.getInstance().deleteObserver(this);
         GameList.getInstance().addGame(this.model);
 
         this.controller = new Controller(this.model/*, view */);

@@ -102,15 +102,8 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
 
         try {
             setChangedAndNotify(Event.JOIN);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Partita non trovata.");
-
-            showMenu();
-        } catch (IllegalStateException e) {
-            System.out.println("Impossibile unirsi alla partita.");
-            System.err.println(e.getMessage());
-
-            showMenu();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            showError(e.getMessage(), false);
         }
     }
 
@@ -120,6 +113,16 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
             for (String game : o) {
                 System.out.println(game);
             }
+        }
+    }
+
+    public void showError(String err, boolean exit) {
+        System.err.println(err);
+
+        if(exit) {
+            System.exit(0);
+        } else {
+            showMenu();
         }
     }
 }

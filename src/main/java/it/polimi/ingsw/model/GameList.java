@@ -8,7 +8,8 @@ import java.util.ArrayList;
 public class GameList extends Observable<GameList.Event> {
     public enum Event {
         NEW_GAME,
-        REMOVED_GAME
+        REMOVED_GAME,
+        PLAYER_JOINED_GAME
     }
 
     private static final ArrayList<Game> games = new ArrayList<>();
