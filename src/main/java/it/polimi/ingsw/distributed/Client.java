@@ -6,5 +6,5 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface Client extends Remote {
-    void update(String[] o, GameList.Event e) throws RemoteException;
+    void updateGamesList(String[] o, GameList.Event e) throws RemoteException;
 }

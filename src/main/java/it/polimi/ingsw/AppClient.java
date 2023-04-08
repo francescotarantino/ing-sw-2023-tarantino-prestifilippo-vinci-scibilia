@@ -1,12 +1,12 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.distributed.ClientImpl;
+import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.ServerNotActiveException;
 
 public class AppClient {
     private enum ClientType {
@@ -32,22 +32,48 @@ public class AppClient {
                 System.out.println("Starting RMI client...");
                 try {
                     startRMI();
-                } catch (RemoteException | NotBoundException | ServerNotActiveException e) {
+                } catch (RemoteException | NotBoundException e) {
                     e.printStackTrace(); // TODO: handle exception
                 }
             }
             case SOCKET -> {
                 System.out.println("Starting socket client...");
-                System.out.println("Not implemented yet!");
+                try {
+                    startSocket();
+                } catch (RemoteException e) {
+                    e.printStackTrace(); // TODO: handle exception
+                }
             }
         }
     }
 
-    private static void startRMI() throws RemoteException, NotBoundException, ServerNotActiveException {
+    private static void startRMI() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry();
         AppServer server = (AppServer) registry.lookup("myshelfie");
 
         ClientImpl client = new ClientImpl(server.connect());
+        client.run();
+    }
+
+    private static void startSocket() throws RemoteException {
+        ServerStub serverStub = new ServerStub("localhost", 12345); // TODO: read ip and port from args
+        ClientImpl client = new ClientImpl(serverStub);
+        new Thread(() -> {
+            while(true) {
+                try {
+                    serverStub.receive(client);
+                } catch (RemoteException e) {
+                    System.err.println("Cannot receive from server. Stopping...");
+                    try {
+                        serverStub.close();
+                    } catch (RemoteException ex) {
+                        System.err.println("Cannot close connection with server. Halting...");
+                    }
+                    System.exit(1);
+                }
+            }
+        }).start();
+
         client.run();
     }
 }

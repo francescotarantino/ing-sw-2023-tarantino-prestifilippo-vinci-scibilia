@@ -2,8 +2,11 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.distributed.ServerImpl;
-import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.distributed.socket.middleware.ClientSkeleton;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -78,15 +81,15 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
 
         Registry registry = LocateRegistry.getRegistry();
         registry.rebind("myshelfie", server);
-
-        System.out.println("RMI server started.");
     }
 
     /**
      * This method is used to start the socket server.
      * @param port the port on which the server will listen
      */
-    /*public static void startSocket(int port) throws RemoteException {
+    public static void startSocket(int port) throws RemoteException {
+        System.out.println("Starting socket server...");
+
         AppServerImpl instance = getInstance();
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
@@ -99,7 +102,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
                         while (true) {
                             clientSkeleton.receive(server);
                         }
-                    } catch (RemoteException | ServerNotActiveException e) {
+                    } catch (RemoteException e) {
                         System.err.println("Cannot receive from client. Closing this connection...");
                     } finally {
                         try {
@@ -113,7 +116,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
         } catch (IOException e) {
             throw new RemoteException("Cannot start socket server", e);
         }
-    }*/
+    }
 
     /**
      * This method is called by the client to connect to the ServerImpl.

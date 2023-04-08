@@ -9,7 +9,6 @@ import it.polimi.ingsw.util.Observer;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 
@@ -32,18 +31,18 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
     }
 
     @Override
-    public void register(Client client) throws RemoteException, ServerNotActiveException {
+    public void register(Client client) throws RemoteException {
         this.client = client;
         GameList.getInstance().addObserver(this);
 
-        System.out.println(getClientHost() + " is registering to the server...");
+        System.out.println("A client is registering to the server...");
     }
 
     @Override
-    public void join(int gameID, String username) throws RemoteException, ServerNotActiveException {
+    public void join(int gameID, String username) throws RemoteException {
         GameList.getInstance().deleteObserver(this);
 
-        System.out.println(getClientHost() + " is joining game " + gameID + " with username " + username + "...");
+        System.out.println("A client is joining game " + gameID + " with username " + username + "...");
 
         this.model = GameList.getInstance().getGame(gameID);
         if(this.model == null){
@@ -55,12 +54,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
     }
 
     @Override
-    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, ServerNotActiveException {
+    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
         GameList.getInstance().deleteObserver(this);
 
         int gameID = new Random().nextInt(998) + 1;
 
-        System.out.println(getClientHost() + " is creating game " + gameID + " with username " + username + "...");
+        System.out.println("A client is creating game " + gameID + " with username " + username + "...");
         this.model = new Game(gameID, numberOfPlayers, new Player(username), numberOfCommonGoalCards);
 
         GameList.getInstance().addGame(this.model);
@@ -69,14 +68,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
     }
 
     @Override
-    public String[] getGamesList() throws RemoteException {
-        return GameList.getInstance().getGamesString();
+    public void getGamesList() throws RemoteException {
+        update(GameList.getInstance(), GameList.Event.NEW_GAME);
     }
 
     @Override
     public void update(GameList o, GameList.Event arg) {
         try {
-            this.client.update(o.getGamesString(), arg);
+            this.client.updateGamesList(o.getGamesString(), arg);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
