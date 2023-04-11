@@ -7,6 +7,7 @@ import it.polimi.ingsw.distributed.socket.middleware.ClientSkeleton;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -36,13 +37,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
     }
 
     public static void main(String[] args) {
-        try {
-            LocateRegistry.createRegistry(1099);
-        } catch (RemoteException e) {
-            System.err.println("Unable to launch RMI registry on the default port 1099.");
-            throw new RuntimeException(e);
-        }
-
         Thread rmiThread = new Thread(() -> {
             try {
                 startRMI();
@@ -55,7 +49,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
 
         Thread socketThread = new Thread(() -> {
             try {
-                startSocket(12345);
+                startSocket(Constants.defaultSocketPort);
             } catch (RemoteException e) {
                 System.err.println("Cannot start socket protocol.");
                 e.printStackTrace();
@@ -75,12 +69,19 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
      * This method is used to start the RMI server.
      */
     private static void startRMI() throws RemoteException {
-        System.out.println("Starting RMI server...");
+        System.out.println("RMI > Starting RMI server...");
 
         AppServerImpl server = getInstance();
 
-        Registry registry = LocateRegistry.getRegistry();
-        registry.rebind("myshelfie", server);
+        try {
+            Registry registry = LocateRegistry.getRegistry();
+            registry.rebind(Constants.defaultRMIName, server);
+        } catch (ConnectException e) {
+            System.err.println("RMI > Cannot find RMI registry. Creating a new one on port " + Constants.defaultRMIRegistryPort + "...");
+
+            Registry registry = LocateRegistry.createRegistry(Constants.defaultRMIRegistryPort);
+            registry.rebind(Constants.defaultRMIName, server);
+        }
     }
 
     /**
@@ -88,7 +89,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
      * @param port the port on which the server will listen
      */
     public static void startSocket(int port) throws RemoteException {
-        System.out.println("Starting socket server...");
+        System.out.println("SOCKET > Starting socket server...");
 
         AppServerImpl instance = getInstance();
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -103,18 +104,18 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
                             clientSkeleton.receive(server);
                         }
                     } catch (RemoteException e) {
-                        System.err.println("Cannot receive from client. Closing this connection...");
+                        System.err.println("SOCKET > Cannot receive from client. Closing this connection...");
                     } finally {
                         try {
                             socket.close();
                         } catch (IOException e) {
-                            System.err.println("Cannot close socket");
+                            System.err.println("SOCKET > Cannot close socket");
                         }
                     }
                 });
             }
         } catch (IOException e) {
-            throw new RemoteException("Cannot start socket server", e);
+            throw new RemoteException("SOCKET > Cannot start socket server", e);
         }
     }
 

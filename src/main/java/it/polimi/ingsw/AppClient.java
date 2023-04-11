@@ -16,47 +16,51 @@ public class AppClient {
 
     public static void main(String[] args) {
         ClientType clientType = ClientType.RMI;
+        String ip = "localhost";
+        int port = Constants.defaultRMIRegistryPort;
 
         if(args.length == 0) {
             System.out.println("Starting client with default options...");
-        } else if(args.length == 1) {
-            System.out.println("Starting client with options: " + args[0]);
-            clientType = ClientType.valueOf(args[0].toUpperCase());
         } else {
-            System.out.println("Too many arguments!");
-            System.exit(1);
+            clientType = ClientType.valueOf(args[0].toUpperCase());
+            System.out.println("Starting a " + clientType + " client...");
+
+            if (clientType == ClientType.SOCKET) {
+                port = Constants.defaultSocketPort;
+            }
+
+            if(args.length == 3) {
+                ip = args[1];
+                port = Integer.parseInt(args[2]);
+
+                System.out.println("Connecting to " + ip + ":" + port);
+            } else if(args.length != 1) {
+                System.out.println("Invalid arguments. Exiting...");
+                System.exit(1);
+            }
         }
 
-        switch (clientType) {
-            case RMI -> {
-                System.out.println("Starting RMI client...");
-                try {
-                    startRMI();
-                } catch (RemoteException | NotBoundException e) {
-                    e.printStackTrace(); // TODO: handle exception
-                }
+        try {
+            switch (clientType) {
+                case RMI -> startRMI(ip, port);
+                case SOCKET -> startSocket(ip, port);
             }
-            case SOCKET -> {
-                System.out.println("Starting socket client...");
-                try {
-                    startSocket();
-                } catch (RemoteException e) {
-                    e.printStackTrace(); // TODO: handle exception
-                }
-            }
+        } catch (RemoteException | NotBoundException e){
+            System.err.println("Cannot connect to server. Exiting...");
+            System.exit(1);
         }
     }
 
-    private static void startRMI() throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry();
-        AppServer server = (AppServer) registry.lookup("myshelfie");
+    private static void startRMI(String ip, int port) throws RemoteException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry(ip, port);
+        AppServer server = (AppServer) registry.lookup(Constants.defaultRMIName);
 
         ClientImpl client = new ClientImpl(server.connect());
         client.run();
     }
 
-    private static void startSocket() throws RemoteException {
-        ServerStub serverStub = new ServerStub("localhost", 12345); // TODO: read ip and port from args
+    private static void startSocket(String ip, int port) throws RemoteException {
+        ServerStub serverStub = new ServerStub(ip, port);
         ClientImpl client = new ClientImpl(serverStub);
         new Thread(() -> {
             while(true) {

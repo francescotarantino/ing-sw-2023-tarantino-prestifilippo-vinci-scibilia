@@ -51,37 +51,15 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
-    public void update(StartUI o, StartUI.Event arg) {
+    public void update(StartUI o, StartUI.Event arg) throws RemoteException {
         try {
             switch (arg) {
-                case CREATE -> {
-                    try {
-                        create(o.getNumberOfPlayers(), o.getNumberOfCommonGoalCards(), o.getUsername());
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                case JOIN -> {
-                    try {
-                        join(o.getGameID(), o.getUsername());
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                case REFRESH -> {
-                    try {
-                        server.getGamesList();
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                case CREATE -> create(o.getNumberOfPlayers(), o.getNumberOfCommonGoalCards(), o.getUsername());
+                case JOIN -> join(o.getGameID(), o.getUsername());
+                case REFRESH -> server.getGamesList();
             }
         } catch (InvalidChoiceException e) {
-            try {
-                this.showError(e.getMessage(), false);
-            } catch (RemoteException ex) {
-                throw new RuntimeException(ex);
-            }
+            this.showError(e.getMessage(), false);
         }
     }
 

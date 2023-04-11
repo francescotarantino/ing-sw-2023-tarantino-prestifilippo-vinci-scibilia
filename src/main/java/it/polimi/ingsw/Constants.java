@@ -191,4 +191,9 @@ public class Constants {
             }
         }
     }
+
+    // Constants relative to the server/client communication
+    public static final int defaultSocketPort = 12345;
+    public static final int defaultRMIRegistryPort = java.rmi.registry.Registry.REGISTRY_PORT;
+    public static final String defaultRMIName = "myshelfie";
 }

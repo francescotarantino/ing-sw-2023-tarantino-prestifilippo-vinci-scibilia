@@ -1,5 +1,6 @@
 package it.polimi.ingsw.util;
 
+import java.rmi.RemoteException;
 import java.util.Vector;
 
 /**
@@ -135,8 +136,15 @@ public class Observable<Event extends Enum<Event>> {
             clearChanged();
         }
 
-        for (int i = arrLocal.length-1; i>=0; i--)
-            ((Observer<Observable<Event>, Event>)arrLocal[i]).update(this, arg);
+        for (int i = arrLocal.length-1; i>=0; i--){
+            try {
+                ((Observer<Observable<Event>, Event>)arrLocal[i]).update(this, arg);
+            } catch (RemoteException e){
+                // If the observer is a remote object update may fail, so it should be removed
+                this.deleteObserver((Observer<Observable<Event>, Event>)arrLocal[i]);
+                System.err.println("Removing observer " + arrLocal[i] + " because of a RemoteException.");
+            }
+        }
     }
 
     /**

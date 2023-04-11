@@ -84,12 +84,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
     }
 
     @Override
-    public void update(GameList o, GameList.Event arg) {
-        try {
-            this.client.updateGamesList(o.getGamesString(), arg);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+    public void update(GameList o, GameList.Event arg) throws RemoteException {
+        this.client.updateGamesList(o.getGamesString(), arg);
     }
 }
 
