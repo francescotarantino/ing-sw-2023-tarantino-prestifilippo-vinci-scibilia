@@ -3,13 +3,13 @@ package it.polimi.ingsw.distributed.socket.middleware;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.exception.InvalidChoiceException;
-import it.polimi.ingsw.model.GameList;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class ClientSkeleton implements Client {
     private final ObjectOutputStream oos;
@@ -17,6 +17,7 @@ public class ClientSkeleton implements Client {
 
     public enum Methods {
         UPDATE_GAMES_LIST,
+        UPDATE_PLAYERS_LIST,
         SHOW_ERROR
     }
 
@@ -35,11 +36,10 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void updateGamesList(String[] o, GameList.Event e) throws RemoteException {
+    public void updateGamesList(String[] o) throws RemoteException {
         try {
             oos.writeObject(Methods.UPDATE_GAMES_LIST.ordinal());
             oos.writeObject(o);
-            oos.writeObject(e);
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
         }
@@ -53,6 +53,16 @@ public class ClientSkeleton implements Client {
             oos.writeObject(exit);
         } catch (IOException e) {
             throw new RemoteException("Cannot send error signal", e);
+        }
+    }
+
+    @Override
+    public void updatePlayersList(ArrayList<String> o) throws RemoteException {
+        try {
+            oos.writeObject(Methods.UPDATE_PLAYERS_LIST.ordinal());
+            oos.writeObject(o);
+        } catch (IOException e1) {
+            throw new RemoteException("Cannot send object", e1);
         }
     }
 

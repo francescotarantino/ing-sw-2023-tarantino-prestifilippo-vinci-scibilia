@@ -11,6 +11,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class ServerImpl extends UnicastRemoteObject implements Server, Observer<GameList, GameList.Event> {
@@ -54,7 +56,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
             throw new InvalidChoiceException(e.getMessage());
         }
 
-        GameList.getInstance().deleteObserver(this);
         GameList.getInstance().setChangedAndNotify(GameList.Event.PLAYER_JOINED_GAME);
 
         this.controller = new Controller(this.model/*, view*/);
@@ -72,7 +73,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
             throw new InvalidChoiceException(e.getMessage());
         }
 
-        GameList.getInstance().deleteObserver(this);
         GameList.getInstance().addGame(this.model);
 
         this.controller = new Controller(this.model/*, view */);
@@ -85,7 +85,15 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
 
     @Override
     public void update(GameList o, GameList.Event arg) throws RemoteException {
-        this.client.updateGamesList(o.getGamesString(), arg);
+        if(this.model != null){
+            if (arg == GameList.Event.PLAYER_JOINED_GAME) {
+                this.client.updatePlayersList(
+                        o.getGame(model.getGameID()).playersList()
+                );
+            }
+        } else {
+            this.client.updateGamesList(o.getGamesString());
+        }
     }
 }
 

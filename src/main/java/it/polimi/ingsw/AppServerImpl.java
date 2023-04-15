@@ -74,10 +74,12 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
         AppServerImpl server = getInstance();
 
         try {
+            System.out.println("RMI > Trying to get already existing RMI registry...");
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind(Constants.defaultRMIName, server);
         } catch (ConnectException e) {
-            System.err.println("RMI > Cannot find RMI registry. Creating a new one on port " + Constants.defaultRMIRegistryPort + "...");
+            System.err.println("RMI > Cannot find RMI registry.");
+            System.out.println("RMI > Creating a new RMI registry on port " + Constants.defaultRMIRegistryPort + "...");
 
             Registry registry = LocateRegistry.createRegistry(Constants.defaultRMIRegistryPort);
             registry.rebind(Constants.defaultRMIName, server);
@@ -95,6 +97,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("SOCKET > Accepting connection from " + socket.getInetAddress() + "...");
                 instance.executorService.submit(() -> {
                     try {
                         ClientSkeleton clientSkeleton = new ClientSkeleton(socket);

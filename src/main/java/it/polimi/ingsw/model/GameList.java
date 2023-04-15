@@ -4,6 +4,7 @@ import it.polimi.ingsw.util.Observable;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GameList extends Observable<GameList.Event> {
     public enum Event {

@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class ServerStub implements Server {
     private final String ip;
@@ -82,7 +83,8 @@ public class ServerStub implements Server {
             int enum_id = (Integer) ois.readObject();
 
             switch (ClientSkeleton.Methods.values()[enum_id]) {
-                case UPDATE_GAMES_LIST -> client.updateGamesList((String[]) ois.readObject(), (GameList.Event) ois.readObject());
+                case UPDATE_GAMES_LIST -> client.updateGamesList((String[]) ois.readObject());
+                case UPDATE_PLAYERS_LIST -> client.updatePlayersList((ArrayList<String>) ois.readObject());
                 case SHOW_ERROR -> client.showError((String) ois.readObject(), (boolean) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException e) {

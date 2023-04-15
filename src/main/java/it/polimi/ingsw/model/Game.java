@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
@@ -159,6 +161,21 @@ public class Game {
         }
 
         return true;
+    }
+
+    /**
+     * This method return the list of players in the game
+     * @return an ArrayList of Strings containing the usernames of the players in the game
+     */
+    public ArrayList<String> playersList() {
+        ArrayList<String> players = new ArrayList<>();
+        for (Bookshelf bookshelf : bookshelves) {
+            if (bookshelf != null) {
+                players.add(bookshelf.getPlayer().getUsername());
+            }
+        }
+
+        return players;
     }
 
     // Private methods
