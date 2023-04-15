@@ -26,6 +26,18 @@ public class Controller {
         // TODO: check if the player is allowed to end the turn
 
         if (checkBoardNeedRefill()) {
+            // TODO: decide if the LRB should be emptied or not
+        /*    // proceed to empty the livingroomBoard
+            for (int i = 0; i < Constants.livingRoomBoardY; i++) {
+                for (int j = 0; j < Constants.livingRoomBoardX; j++) {
+                    Tile currentTile = game.getLivingRoomBoard().getTile(new Point(j, i));
+                    if (currentTile != null && currentTile.getType() != Constants.TileType.PLACEHOLDER) {
+                        game.getLivingRoomBoard().removeTile(new Point(j, i));
+                        game.getBag().pushTile(currentTile);
+                    }
+                }
+            }
+        */
             // Populating the LivingRoomBoard
             this.fillLivingRoomBoard();
         }
@@ -60,6 +72,17 @@ public class Controller {
     }
 
     public void insertTiles(int column, Tile[] tiles){
+        Tile[][] playersBookshelf = game.getBookshelves()[game.getCurrentPlayerIndex()].getMatrix();
+        // TODO: revision of indexing policy for bookshelf
+        int freeposition = Constants.bookshelfX - 1; //using X as an Y for now
+        while( playersBookshelf[freeposition][column] != null) freeposition--;
+        int tilesindex = 0;
+        if( freeposition < tiles.length) throw  IndexOutOfBoundsException; // TODO: discuss about exceptions in controller
+        else for( int i = 0; i < tiles.length; i++){
+                game.getBookshelves()[game.getCurrentPlayerIndex()].insertTile(new Point(freeposition,column),tiles[tilesindex]);
+                freeposition--;
+                tilesindex++;
+            }
 
     }
 
