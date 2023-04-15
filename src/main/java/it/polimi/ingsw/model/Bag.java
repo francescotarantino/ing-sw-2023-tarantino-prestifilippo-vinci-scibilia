@@ -37,10 +37,6 @@ public class Bag {
         return returnTile;
     }
 
-    public void pushTile(Tile tile){
-        tiles.add(tile);
-    }
-
     /**
      * Returns a random tile from the bag and removes it.
      * @return the extracted tile

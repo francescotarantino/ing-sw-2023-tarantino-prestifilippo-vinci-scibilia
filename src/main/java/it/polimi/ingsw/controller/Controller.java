@@ -26,18 +26,6 @@ public class Controller {
         // TODO: check if the player is allowed to end the turn
 
         if (checkBoardNeedRefill()) {
-            // TODO: decide if the LRB should be emptied or not
-        /*    // proceed to empty the livingroomBoard
-            for (int i = 0; i < Constants.livingRoomBoardY; i++) {
-                for (int j = 0; j < Constants.livingRoomBoardX; j++) {
-                    Tile currentTile = game.getLivingRoomBoard().getTile(new Point(j, i));
-                    if (currentTile != null && currentTile.getType() != Constants.TileType.PLACEHOLDER) {
-                        game.getLivingRoomBoard().removeTile(new Point(j, i));
-                        game.getBag().pushTile(currentTile);
-                    }
-                }
-            }
-        */
             // Populating the LivingRoomBoard
             this.fillLivingRoomBoard();
         }
