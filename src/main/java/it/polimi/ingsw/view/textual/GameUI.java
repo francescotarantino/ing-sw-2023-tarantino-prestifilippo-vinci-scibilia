@@ -4,19 +4,16 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.Point;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameUI implements Runnable {
     private enum State {
-        WAITING_FOR_PLAYERS,
         MY_TURN,
         NOT_MY_TURN
     }
 
     private State state = State.NOT_MY_TURN;
     private final Object lock = new Object();
-    private ArrayList<String> playersNameList;
 
     private State getState() {
         synchronized (lock) {
@@ -33,9 +30,8 @@ public class GameUI implements Runnable {
 
     public void run() {
         while (true) {
-            while (getState() == State.NOT_MY_TURN || getState() == State.WAITING_FOR_PLAYERS) {
-                if(getState() == State.WAITING_FOR_PLAYERS)
-                    System.out.println("Waiting for players...");
+            while (getState() == State.NOT_MY_TURN) {
+                System.out.println("Waiting others turn...");
 
                 synchronized (lock) {
                     try {
@@ -83,18 +79,5 @@ public class GameUI implements Runnable {
             }
             System.out.println();
         }
-    }
-
-    public void showPlayersList(ArrayList<String> o) {
-        if (this.playersNameList == null){
-            System.out.println("Lista giocatori connessi: ");
-            for(String s : o){
-                System.out.println(s);
-            }
-        } else {
-            System.out.println(o.get(o.size() - 1));
-        }
-
-        this.playersNameList = o;
     }
 }

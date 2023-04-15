@@ -40,12 +40,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     private void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
         this.server.create(numberOfPlayers, numberOfCommonGoalCards, username);
-        gameUI.run();
     }
 
     private void join(int gameID, String username) throws RemoteException, InvalidChoiceException {
         this.server.join(gameID, username);
-        gameUI.run();
     }
 
     @Override
@@ -79,6 +77,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void updatePlayersList(ArrayList<String> o) throws RemoteException {
-        gameUI.showPlayersList(o);
+        startUI.showPlayersList(o);
     }
 }

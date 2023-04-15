@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.util.Observable;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class StartUI extends Observable<StartUI.Event> implements Runnable {
@@ -15,6 +16,7 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
     private int numberOfPlayers;
     private int numberOfCommonGoalCards;
     private int gameID;
+    private ArrayList<String> playersNameList;
 
     public String getUsername() {
         return username;
@@ -124,5 +126,18 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
         } else {
             showMenu();
         }
+    }
+
+    public void showPlayersList(ArrayList<String> o) {
+        if (this.playersNameList == null){
+            System.out.println("Lista giocatori connessi: ");
+            for(String s : o){
+                System.out.println(s);
+            }
+        } else {
+            o.stream().filter(s -> !this.playersNameList.contains(s)).forEach(System.out::println);
+        }
+
+        this.playersNameList = o;
     }
 }
