@@ -4,8 +4,10 @@ import it.polimi.ingsw.util.Observable;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Map;
 
+/**
+ * This class is used to store the list of games on the server.
+ */
 public class GameList extends Observable<GameList.Event> {
     public enum Event {
         NEW_GAME,
@@ -19,6 +21,7 @@ public class GameList extends Observable<GameList.Event> {
 
     /**
      * GameList fake constructor, so it cannot be instantiated from outside.
+     * To get the GameList instance, use the {@link GameList#getInstance()} method.
      */
     protected GameList() {}
 
@@ -42,11 +45,19 @@ public class GameList extends Observable<GameList.Event> {
         setChangedAndNotify(Event.NEW_GAME);
     }
 
+    /**
+     * This method is used to remove a game from the list of games on the server. It is not currently used.
+     * @param game the reference to the Game class to remove
+     */
     public void removeGame(Game game) {
         games.remove(game);
         setChangedAndNotify(Event.REMOVED_GAME);
     }
 
+    /**
+     * This method is used to get the list of games on the server.
+     * @return the list of games on the server
+     */
     public ArrayList<Game> getGames() {
         return games;
     }
@@ -64,6 +75,11 @@ public class GameList extends Observable<GameList.Event> {
                 .orElse(null);
     }
 
+    /**
+     * This method is used to get a textual representation of the games on the server.
+     * For each game, it is called the {@link Game#toString()} method.
+     * @return an array of strings containing the list of games on the server, null if there are no games
+     */
     public String[] getGamesString() throws RemoteException {
         if(games.size() != 0)
             return games
@@ -71,6 +87,6 @@ public class GameList extends Observable<GameList.Event> {
                     .map(Game::toString)
                     .toArray(String[]::new);
         else
-            return new String[]{"Nessuna partita"};
+            return null;
     }
 }

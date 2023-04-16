@@ -40,20 +40,27 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
         showMenu();
     }
 
+    /**
+     * Asks the user to insert his username.
+     */
     private void askUsername() {
         Scanner s = new Scanner(System.in);
 
-        System.out.print("Inserisci il tuo username: ");
+        System.out.print("Insert your username: ");
         this.username = s.next();
     }
 
+    /**
+     * Shows the start menu and asks the user to select an option.
+     * If the user selects an invalid option, the menu is shown again.
+     */
     private void showMenu(){
         Scanner s = new Scanner(System.in);
         System.out.println("""
-                    Scegli l'azione da compiere:
-                     1. Creare una nuova partita
-                     2. Entrare in una partita
-                     3. Esci""");
+                    Select an option:
+                     1. Create a new game
+                     2. Join an existing game
+                     3. Exit""");
 
         int choice = s.nextInt();
 
@@ -61,45 +68,54 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
             case 1 -> createGame();
             case 2 -> joinGame();
             case 3 -> System.exit(0);
-            default -> System.out.println("Invalid choice");
+            default -> {
+                System.err.println("Invalid choice.");
+                showMenu();
+            }
         }
     }
 
+    /**
+     * Asks the user to insert the number of players and the number of common goal cards, then sends a CREATE event.
+     */
     private void createGame(){
         Scanner s = new Scanner(System.in);
         do {
-            System.out.print("Quanti giocatori? ");
+            System.out.print("How many players? ");
             numberOfPlayers = s.nextInt();
             if(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound)
-                System.out.println("Il numero di giocatori deve essere compreso tra " + Constants.playersLowerBound
-                        + " e " + Constants.playersUpperBound + ".");
+                System.out.println("Number of players should be between " + Constants.playersLowerBound
+                        + " and " + Constants.playersUpperBound + ".");
         } while(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound);
 
         do {
-            System.out.print("Quante carte obiettivo comuni? ");
+            System.out.print("How many common goal cards? ");
             numberOfCommonGoalCards = s.nextInt();
             if(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards)
-                System.out.println("Il numero di carte obiettivo comuni deve essere compreso tra " + Constants.minCommonGoalCards
-                        + " e " + Constants.maxCommonGoalCards + ".");
+                System.out.println("Number of common goal cards should be between " + Constants.minCommonGoalCards
+                        + " and " + Constants.maxCommonGoalCards + ".");
         } while(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards);
 
         try {
             setChangedAndNotify(Event.CREATE);
         } catch (IllegalArgumentException e) {
-            System.out.println("Errore nella creazione della partita.");
+            System.out.println("Error while creating the game.");
             System.err.println(e.getMessage());
 
             showMenu();
         }
     }
 
+    /**
+     * Asks the user to insert the ID of the game to join, then sends a JOIN event.
+     */
     private void joinGame(){
         Scanner s = new Scanner(System.in);
         do {
-            System.out.print("Quale partita? ");
+            System.out.print("Which game do you want to join? ");
             gameID = s.nextInt();
             if(gameID <= Constants.IDLowerBound)
-                System.out.println("L'ID partita è un numero maggiore di zero!");
+                System.out.println("GameID is a positive number!");
         } while(gameID <= Constants.IDLowerBound);
 
         try {
@@ -109,15 +125,28 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
         }
     }
 
+    /**
+     * Shows the list of games on the server only if the user has inserted a username.
+     * @param o array of strings representing the list of games on the server
+     */
     public void showGamesList(String[] o){
-        if(o != null && this.username != null){
-            System.out.println("Lista delle partite disponibili:");
-            for (String game : o) {
-                System.out.println(game);
+        if(this.username != null){
+            if(o == null){
+                System.out.println("There are no games on the server.");
+            } else {
+                System.out.println("List of games on the server:");
+                for (String game : o) {
+                    System.out.println(game);
+                }
             }
         }
     }
 
+    /**
+     * Shows an error message and exits the program if exit is true.
+     * @param err error message to show
+     * @param exit if true, client is stopped
+     */
     public void showError(String err, boolean exit) {
         System.err.println(err);
 
@@ -128,9 +157,13 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
         }
     }
 
+    /**
+     * Shows the list of connected players.
+     * @param o a list of players usernames
+     */
     public void showPlayersList(ArrayList<String> o) {
         if (this.playersNameList == null){
-            System.out.println("Lista giocatori connessi: ");
+            System.out.println("List of connected players:");
             for(String s : o){
                 System.out.println(s);
             }

@@ -2,7 +2,6 @@ package it.polimi.ingsw.distributed.socket.middleware;
 
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
-import it.polimi.ingsw.model.GameList;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,6 +17,9 @@ public class ServerStub implements Server {
     private ObjectInputStream ois;
     private Socket socket;
 
+    /**
+     * This enumeration contains all the methods that the client can call on the server.
+     */
     public enum Methods {
         JOIN, CREATE, GET_GAMES_LIST
     }
@@ -27,6 +29,10 @@ public class ServerStub implements Server {
         this.port = port;
     }
 
+    /**
+     * Open a socket connection to the server and create the input and output streams.
+     * @param client the client to register, in this method is not used
+     */
     @Override
     public void register(Client client) throws RemoteException {
         try {

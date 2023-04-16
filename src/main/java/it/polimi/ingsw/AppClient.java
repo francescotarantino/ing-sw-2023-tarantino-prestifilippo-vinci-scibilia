@@ -14,6 +14,10 @@ public class AppClient {
         SOCKET
     }
 
+    /**
+     * Starts a client application.
+     * @param args client type (RMI or SOCKET), server IP and server port
+     */
     public static void main(String[] args) {
         ClientType clientType = ClientType.RMI;
         String ip = "localhost";
@@ -51,6 +55,11 @@ public class AppClient {
         }
     }
 
+    /**
+     * Starts an RMI client.
+     * @param ip server IP
+     * @param port server port
+     */
     private static void startRMI(String ip, int port) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(ip, port);
         AppServer server = (AppServer) registry.lookup(Constants.defaultRMIName);
@@ -59,6 +68,11 @@ public class AppClient {
         client.run();
     }
 
+    /**
+     * Starts a socket client.
+     * @param ip server IP
+     * @param port server port
+     */
     private static void startSocket(String ip, int port) throws RemoteException {
         ServerStub serverStub = new ServerStub(ip, port);
         ClientImpl client = new ClientImpl(serverStub);

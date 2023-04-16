@@ -36,6 +36,10 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
         return instance;
     }
 
+    /**
+     * Starts the server application.
+     * @param args ignored (for now)
+     */
     public static void main(String[] args) {
         Thread rmiThread = new Thread(() -> {
             try {
@@ -91,7 +95,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
      * @param port the port on which the server will listen
      */
     public static void startSocket(int port) throws RemoteException {
-        System.out.println("SOCKET > Starting socket server...");
+        System.out.println("SOCKET > Starting socket server on port " + port + "...");
 
         AppServerImpl instance = getInstance();
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -122,10 +126,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
         }
     }
 
-    /**
-     * This method is called by the client to connect to the ServerImpl.
-     * @return the ServerImpl instance that will be used by the client
-     */
     @Override
     public Server connect() throws RemoteException {
         return new ServerImpl();

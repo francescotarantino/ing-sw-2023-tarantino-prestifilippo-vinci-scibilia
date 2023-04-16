@@ -11,8 +11,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Random;
 
 public class ServerImpl extends UnicastRemoteObject implements Server, Observer<GameList, GameList.Event> {
@@ -47,7 +45,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
 
         this.model = GameList.getInstance().getGame(gameID);
         if(this.model == null){
-            throw new InvalidChoiceException("Partita non trovata.");
+            throw new InvalidChoiceException("Game not found.");
         }
 
         try {
