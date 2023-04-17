@@ -6,7 +6,7 @@ import static it.polimi.ingsw.Constants.TileType.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CGCGroupOfEqualsTest {
+public class CGCGroupsOfEqualsTest {
     static Tile[][]
             board1, //contains no groups
             board2, //contains 6 groups of two, but no groups of four, nor squares
@@ -42,15 +42,14 @@ public class CGCGroupOfEqualsTest {
         board4 = new Tile[][] {
             {new Tile(CATS), new Tile(BOOKS), new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES), new Tile(PLANTS)},
             {new Tile(PLANTS), new Tile(PLANTS), new Tile(CATS), new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES)},
-            {new Tile(PLANTS), new Tile(PLANTS), new Tile(CATS), new Tile(BOOKS), new Tile(BOOKS), new Tile(FRAMES)},
-            {new Tile(FRAMES), new Tile(TROPHIES), new Tile(TROPHIES), new Tile(BOOKS), new Tile(BOOKS), new Tile(GAMES)},
-            {new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES), new Tile(PLANTS), new Tile(CATS), new Tile(CATS)},
+            {new Tile(PLANTS), new Tile(PLANTS), new Tile(CATS), new Tile(PLANTS), new Tile(PLANTS), new Tile(FRAMES)},
+            {new Tile(FRAMES), new Tile(TROPHIES), new Tile(TROPHIES), new Tile(PLANTS), new Tile(PLANTS), new Tile(GAMES)},
+            {new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES), new Tile(BOOKS), new Tile(CATS), new Tile(CATS)},
         };
     }
     @Test
     void testCGC1() {
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 1);
-        assert cgc != null;
         assertFalse(cgc.check(board1));
         assertTrue(cgc.check(board2));
         assertTrue(cgc.check(board3));
@@ -59,7 +58,6 @@ public class CGCGroupOfEqualsTest {
     @Test
     void testCGC3() {
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 3);
-        assert cgc != null;
         assertFalse(cgc.check(board1));
         assertFalse(cgc.check(board2));
         assertTrue(cgc.check(board3));
@@ -68,7 +66,6 @@ public class CGCGroupOfEqualsTest {
     @Test
     void testCGC4() {
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 4);
-        assert cgc != null;
         assertFalse(cgc.check(board1));
         assertFalse(cgc.check(board2));
         assertFalse(cgc.check(board3));

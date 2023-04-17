@@ -77,13 +77,13 @@ public class Controller {
         int freeposition = Constants.bookshelfX - 1; //using X as an Y for now
         while( playersBookshelf[freeposition][column] != null) freeposition--;
         int tilesindex = 0;
-        if( freeposition < tiles.length) throw  IndexOutOfBoundsException; // TODO: discuss about exceptions in controller
+        /*if( freeposition < tiles.length) throw  IndexOutOfBoundsException; // TODO: discuss about exceptions in controller
         else for( int i = 0; i < tiles.length; i++){
                 game.getBookshelves()[game.getCurrentPlayerIndex()].insertTile(new Point(freeposition,column),tiles[tilesindex]);
                 freeposition--;
                 tilesindex++;
             }
-
+*/
     }
 
     // Private methods
