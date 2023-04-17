@@ -15,6 +15,10 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
         LEFT,
         RIGHT
     }
+
+    /**
+     * type of blocks that must be found in the matrix by the Common Goal Card
+     */
     public enum BlockType{
         FOUR_OF_FOUR,
         SIX_OF_TWO,
@@ -22,12 +26,18 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
     }
     
     private final BlockType blockType;
-    
+    /**
+     * @param blockType refers to the type of blocks that must be found, it can be:
+     *                  4x4 (CGC1), 6x2 (CGC3) or 2 squares (CGC4)
+     */
     public CGCGroupsOfEquals(int numberOfPlayers, int ID, BlockType blockType) {
         super(numberOfPlayers, ID);
         this.blockType = blockType;
     }
-    
+    /**
+     * @param direction is the direction in which the tile in the matrix is checked
+     * @return true if the tile in the matrix has the same type of the tile in the direction specified
+     */
     private boolean checkAdjacentTile(int x, int y, Tile[][] matrix, Direction direction) {
         if(x < 0 || x >= Constants.bookshelfX || y < 0 || y >= Constants.bookshelfY) {
             return false;
@@ -77,6 +87,11 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
         }
         return false;
     }
+
+    /**
+     * @return is the size of the group found starting from the tile in position (x,y) in the matrix
+     * The method is recursive, and it builds the biggest possible block by checking the adjacent tiles in all directions
+     */
     private int findGroup(int x, int y, Tile[][] matrix, boolean[][] done) {
         if (done[x][y]) {
             return 0;
@@ -95,13 +110,16 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
             }
         return currentSize;
     }
+
+    /**
+     * @return true if the matrix contains a 4x4 group of the same type, duly shaped and separated from other groups
+     */
     private boolean findSquare(int i, int j, Tile[][] matrix) {
-        return matrix[i][j].sameType(matrix[i+1][j]) && matrix[i][j].sameType(matrix[i][j+1]) && matrix[i][j].sameType(matrix[i+1][j+1]);
-    }
-    private boolean checkSquareValidity(int i, int j, Tile[][] matrix) {
-        if (i != 0) {
-            if (matrix[i][j].sameType(matrix[i - 1][j]) || matrix[i][j].sameType(matrix[i - 1][j + 1])) {
-                return false;
+        if (matrix[i][j].sameType(matrix[i+1][j]) && matrix[i][j].sameType(matrix[i][j+1]) && matrix[i][j].sameType(matrix[i+1][j+1])) {
+            if (i != 0) {
+                if (matrix[i][j].sameType(matrix[i - 1][j]) || matrix[i][j].sameType(matrix[i - 1][j + 1])) {
+                    return false;
+                }
             }
             if (j != 0) {
                 if (matrix[i][j].sameType(matrix[i][j - 1]) || matrix[i][j].sameType(matrix[i + 1][j - 1])) {
@@ -118,9 +136,14 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
                     return false;
                 }
             }
+            return true;
         }
-        return true;
+        return false;
     }
+
+    /**
+     *This method takes care of updating the done matrix for 4x4 groups
+     */
     private void setDone (int i, int j, boolean[][] done) {
         done[i][j] = true;
         done[i+1][j] = true;
@@ -182,7 +205,7 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
                 for (int i = 0; i < Constants.bookshelfX - 2; i++) {
                     for (int j = 0; j < Constants.bookshelfY - 2; j++) {
                         if(!done[i][j]) {
-                            if (findSquare(i, j, matrix) && checkSquareValidity(i, j, matrix)) {
+                            if (findSquare(i, j, matrix)) {
                                 setDone(i, j, done);
                                 int number = numberOfSquares.getOrDefault(matrix[i][j].getType(), 0);
                                 numberOfSquares.put(matrix[i][j].getType(), number + 1);

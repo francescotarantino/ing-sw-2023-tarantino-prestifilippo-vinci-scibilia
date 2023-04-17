@@ -18,7 +18,7 @@ public class CGCEightOf  extends CommonGoalCard{
         checkMatrixSize(matrix);
         int tilesOcc = 0;
         for(Constants.TileType type : Arrays.stream(Constants.TileType.values())
-                .filter(x -> x != Constants.TileType.PLACEHOLDER)
+                .filter(x -> x != Constants.TileType.PLACEHOLDER) //PLACEHOLDER must be excluded
                 .toArray(Constants.TileType[]::new)) {
             for (int i = 0; i < Constants.bookshelfX; i++) {
                 for (int j = 0; j < Constants.bookshelfY; j++) {
