@@ -61,7 +61,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
 
     @Override
     public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
-        int gameID = new Random().nextInt(998) + 1;
+        int gameID = GameList.getInstance().getGames().stream() // TODO: do we need to synchronize?
+                .mapToInt(Game::getGameID)
+                .max()
+                .orElse(0) + 1;
 
         System.out.println("A client is creating game " + gameID + " with username " + username + "...");
 
@@ -78,7 +81,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
 
     @Override
     public void getGamesList() throws RemoteException {
-        update(GameList.getInstance(), GameList.Event.NEW_GAME);
+        update(GameList.getInstance(), null);
     }
 
     @Override

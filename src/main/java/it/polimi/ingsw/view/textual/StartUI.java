@@ -84,7 +84,7 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
             System.out.print("How many players? ");
             numberOfPlayers = s.nextInt();
             if(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound)
-                System.out.println("Number of players should be between " + Constants.playersLowerBound
+                System.err.println("Number of players should be between " + Constants.playersLowerBound
                         + " and " + Constants.playersUpperBound + ".");
         } while(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound);
 
@@ -92,7 +92,7 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
             System.out.print("How many common goal cards? ");
             numberOfCommonGoalCards = s.nextInt();
             if(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards)
-                System.out.println("Number of common goal cards should be between " + Constants.minCommonGoalCards
+                System.err.println("Number of common goal cards should be between " + Constants.minCommonGoalCards
                         + " and " + Constants.maxCommonGoalCards + ".");
         } while(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards);
 

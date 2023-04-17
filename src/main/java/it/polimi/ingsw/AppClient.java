@@ -62,9 +62,9 @@ public class AppClient {
      */
     private static void startRMI(String ip, int port) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(ip, port);
-        AppServer server = (AppServer) registry.lookup(Constants.defaultRMIName);
+        AppServer appServer = (AppServer) registry.lookup(Constants.defaultRMIName);
 
-        ClientImpl client = new ClientImpl(server.connect());
+        ClientImpl client = new ClientImpl(appServer.connect());
         client.run();
     }
 
