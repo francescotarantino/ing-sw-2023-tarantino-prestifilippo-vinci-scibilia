@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Random;
 
 public class ServerImpl extends UnicastRemoteObject implements Server, Observer<GameList, GameList.Event> {
     private Game model;
@@ -54,7 +53,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
             throw new InvalidChoiceException(e.getMessage());
         }
 
-        GameList.getInstance().setChangedAndNotify(GameList.Event.PLAYER_JOINED_GAME);
+        if(this.model.isFull()){
+            GameList.getInstance().setChangedAndNotify(GameList.Event.GAME_IS_FULL);
+        } else {
+            GameList.getInstance().setChangedAndNotify(GameList.Event.PLAYER_JOINED_GAME);
+        }
 
         this.controller = new Controller(this.model/*, view*/);
     }
@@ -79,6 +82,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
         this.controller = new Controller(this.model/*, view */);
     }
 
+    /**
+     * When the client asks for the list of games, the server will trigger on the current ServerImpl a fake update of
+     * the GameList class.
+     */
     @Override
     public void getGamesList() throws RemoteException {
         update(GameList.getInstance(), null);
@@ -87,8 +94,20 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
     @Override
     public void update(GameList o, GameList.Event arg) throws RemoteException {
         if(this.model != null){
-            if (arg == GameList.Event.PLAYER_JOINED_GAME) {
-                this.client.updatePlayersList(
+            switch (arg) {
+                case GAME_IS_FULL -> {
+                    this.client.updatePlayersList(
+                            o.getGame(model.getGameID()).playersList()
+                    );
+
+                    if (this.model.isFull()) {
+                        this.client.gameHasStarted();
+
+                        GameList.getInstance().deleteObserver(this);
+                    }
+                }
+
+                case PLAYER_JOINED_GAME -> this.client.updatePlayersList(
                         o.getGame(model.getGameID()).playersList()
                 );
             }

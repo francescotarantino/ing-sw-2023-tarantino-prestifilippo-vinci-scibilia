@@ -18,7 +18,8 @@ public class ClientSkeleton implements Client {
     public enum Methods {
         UPDATE_GAMES_LIST,
         UPDATE_PLAYERS_LIST,
-        SHOW_ERROR
+        SHOW_ERROR,
+        GAME_HAS_STARTED,
     }
 
     public ClientSkeleton(Socket socket) throws RemoteException {
@@ -61,6 +62,15 @@ public class ClientSkeleton implements Client {
         try {
             oos.writeObject(Methods.UPDATE_PLAYERS_LIST.ordinal());
             oos.writeObject(o);
+        } catch (IOException e1) {
+            throw new RemoteException("Cannot send object", e1);
+        }
+    }
+
+    @Override
+    public void gameHasStarted() throws RemoteException {
+        try {
+            oos.writeObject(Methods.GAME_HAS_STARTED.ordinal());
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
         }

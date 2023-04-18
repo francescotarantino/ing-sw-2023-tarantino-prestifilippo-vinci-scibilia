@@ -23,4 +23,10 @@ public interface Client extends Remote {
      * @param o the list of players
      */
     void updatePlayersList(ArrayList<String> o) throws RemoteException;
+
+    /**
+     * This method is called by the server to notify the client that the game it is in has started.
+     * It should trigger a UI change.
+     */
+    void gameHasStarted() throws RemoteException;
 }

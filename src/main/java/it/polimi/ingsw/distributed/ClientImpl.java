@@ -79,4 +79,9 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void updatePlayersList(ArrayList<String> o) throws RemoteException {
         startUI.showPlayersList(o);
     }
+
+    @Override
+    public void gameHasStarted() throws RemoteException {
+        new Thread(gameUI).start(); // TODO: check if it's a good practice
+    }
 }

@@ -29,6 +29,8 @@ public class GameUI implements Runnable {
     }
 
     public void run() {
+        System.out.println("Starting GameUI...");
+
         while (true) {
             while (getState() == State.NOT_MY_TURN) {
                 System.out.println("Waiting others turn...");
