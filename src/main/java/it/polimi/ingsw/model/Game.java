@@ -7,14 +7,41 @@ import java.util.Random;
 
 public class Game {
     // Attributes
+    /**
+     * Identifies the game with a unique and positive ID
+     */
     private final int gameID;
+    /**
+     * Array of bookshelves, each one representing a player
+     */
     private final Bookshelf[] bookshelves;
+    /**
+     * Array of random numbers, used to obtain personal goal cards without repetition
+     */
     private final int[] randomPGCNumbers;
+    /**
+     * Bag of the game, which contains the tiles that a player can pick
+     */
     private final Bag bag;
+    /**
+     * Board of the game
+     */
     private final LivingRoomBoard livingRoomBoard;
+    /**
+     * Array of common goal cards, shared between all players, on which the controller can call the {@link CommonGoalCard#checkValidity(Tile[][])} method
+     */
     private final CommonGoalCard[] commonGoalCards;
+    /**
+     * Index of the first player that has to make a move. It is calculated randomly when the class is instantiated.
+     */
     private final int firstPlayerIndex;
+    /**
+     * Index of the current player that has to make a move. If it's equal to -1 the game has not started yet.
+     */
     private int currentPlayerIndex;
+    /**
+     * Index of the final player. It is equal to -1 until the last round.
+     */
     private int finalPlayerIndex;
 
 
@@ -59,9 +86,9 @@ public class Game {
 
         // Extracting the first player index
         this.firstPlayerIndex = (new Random()).nextInt(numberOfPlayers);
-        this.currentPlayerIndex = this.firstPlayerIndex;
 
-        // Final player index is -1 by default
+        // Current and final player indexes are set -1 by default
+        this.currentPlayerIndex = -1;
         this.finalPlayerIndex = -1;
     }
 
@@ -118,8 +145,15 @@ public class Game {
         return this.currentPlayerIndex;
     }
 
+    /**
+     * This method returns the current player that has to make a move, or null if the game has not started yet.
+     * @return the current player, or null if the game has not started yet
+     */
     public Player getCurrentPlayer() {
-        return this.bookshelves[this.currentPlayerIndex].getPlayer();
+        if(this.currentPlayerIndex != -1)
+            return this.bookshelves[this.currentPlayerIndex].getPlayer();
+        else
+            return null;
     }
 
     /**

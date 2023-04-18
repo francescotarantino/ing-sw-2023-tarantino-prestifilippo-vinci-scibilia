@@ -74,11 +74,9 @@ public class GameTest {
         assertEquals(this.game.getBookshelves().length, this.game.getTotalPlayersNumber());
         assertTrue(this.game.getGameID() > Constants.IDLowerBound);
         assertNotNull(this.game.getCommonGoalCards());
-        assertNotNull(this.game.getCurrentPlayer());
+        assertNull(this.game.getCurrentPlayer());
         assertFalse(this.game.getFirstPlayerIndex() > this.game.getTotalPlayersNumber()
                 || this.game.getFirstPlayerIndex() < 0);
-        assertFalse(this.game.getCurrentPlayerIndex() > this.game.getTotalPlayersNumber()
-                || this.game.getCurrentPlayerIndex() < 0);
     }
 
     @Test
