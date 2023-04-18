@@ -1,5 +1,5 @@
 package it.polimi.ingsw.listeners;
 
-public interface GameUIListener {
+public interface GameUIListener extends Listener {
 
 }

@@ -5,7 +5,7 @@ import it.polimi.ingsw.listeners.GameListListener;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import static it.polimi.ingsw.listeners.Utils.notifyListeners;
+import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 /**
  * This class is used to store the list of games on the server.

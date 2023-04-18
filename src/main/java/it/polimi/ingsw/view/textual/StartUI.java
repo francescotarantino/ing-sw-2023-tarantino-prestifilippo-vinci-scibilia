@@ -6,7 +6,7 @@ import it.polimi.ingsw.listeners.StartUIListener;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.listeners.Utils.notifyListeners;
+import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 public class StartUI implements Runnable {
     /**

@@ -53,10 +53,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
             throw new InvalidChoiceException(e.getMessage());
         }
 
+        GameList.getInstance().notifyPlayerJoinedGame(gameID);
+
         if(this.model.isFull()){
             GameList.getInstance().notifyGameFull(gameID);
-        } else {
-            GameList.getInstance().notifyPlayerJoinedGame(gameID);
         }
 
         this.controller = new Controller(this.model, this.client);
@@ -115,8 +115,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     @Override
     public void gameIsFull(int gameID) throws RemoteException {
         if(this.model != null && this.model.getGameID() == gameID){
-            this.client.updatePlayersList(this.model.playersList());
-
             this.client.gameHasStarted();
 
             GameList.getInstance().removeListener(this);
