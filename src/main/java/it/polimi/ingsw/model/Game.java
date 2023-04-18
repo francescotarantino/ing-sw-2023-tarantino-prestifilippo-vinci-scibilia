@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
 import java.util.Random;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Game {
     // Attributes
     /**
@@ -181,6 +184,35 @@ public class Game {
         return this.finalPlayerIndex;
     }
 
+    /**
+     * Checks if the game has reached the maximum number of players allowed.
+     * @return true if the game is full, false otherwise
+     */
+    public boolean isFull() {
+        for (Bookshelf bookshelf : bookshelves) {
+            if (bookshelf == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * This method return the list of players in the game
+     * @return an ArrayList of Strings containing the usernames of the players in the game
+     */
+    public ArrayList<String> playersList() {
+        ArrayList<String> players = new ArrayList<>();
+        for (Bookshelf bookshelf : bookshelves) {
+            if (bookshelf != null) {
+                players.add(bookshelf.getPlayer().getUsername());
+            }
+        }
+
+        return players;
+    }
+
     // Private methods
     /**
      * Extracts random numbers without duplicates from 0 to bound-1
@@ -209,5 +241,23 @@ public class Game {
         }
 
         return numbers;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+
+        string.append(this.getGameID()).append("\t");
+
+        for(int i=0; i<getTotalPlayersNumber(); i++){
+            if(this.getBookshelves()[i] != null)
+                string.append(this.getBookshelves()[i].getPlayer().getUsername()).append("\t");
+        }
+
+        if(this.isFull()){
+            string.append("(FULL)");
+        }
+
+        return string.toString();
     }
 }
