@@ -5,7 +5,7 @@ import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameList;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.util.GameListListener;
+import it.polimi.ingsw.listeners.GameListListener;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;

@@ -3,7 +3,7 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.Point;
-import it.polimi.ingsw.util.Observable;
+import it.polimi.ingsw.listeners.Observable;
 
 import java.util.Scanner;
 

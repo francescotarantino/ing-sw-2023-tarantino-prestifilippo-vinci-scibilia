@@ -1,14 +1,14 @@
 package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.util.StartUIListener;
+import it.polimi.ingsw.listeners.StartUIListener;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class StartUI implements Runnable {
+import static it.polimi.ingsw.listeners.Utils.notifyListeners;
 
+public class StartUI implements Runnable {
     /**
      * List of all Listeners which listen to this class
      */
@@ -24,7 +24,7 @@ public class StartUI implements Runnable {
     public void run() {
         askUsername();
 
-        refresh();
+        notifyListeners(lst, StartUIListener::refreshStartUI);
 
         showMenu();
     }
@@ -86,7 +86,7 @@ public class StartUI implements Runnable {
         } while(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards);
 
         try {
-            this.create();
+            notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCommonGoalCards, this.username));
             System.out.println("Game created successfully");
         } catch (IllegalArgumentException e) {
             System.out.println("Error while creating the game.");
@@ -109,7 +109,7 @@ public class StartUI implements Runnable {
         } while(gameID <= Constants.IDLowerBound);
 
         try {
-            join();
+            notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
         } catch (IllegalArgumentException | IllegalStateException e) {
             showError(e.getMessage(), false);
         }
@@ -171,40 +171,6 @@ public class StartUI implements Runnable {
     }
 
     public synchronized void removeListener(StartUIListener o){
-        //Automatically checked?
         lst.remove(o);
-    }
-
-    private synchronized void refresh() {
-        for(StartUIListener startUIListener : lst) {
-            try {
-                startUIListener.refreshStartUI();
-            } catch (RemoteException e) {
-                this.removeListener(startUIListener);
-                System.err.println("Removing observer " + startUIListener + " because of a RemoteException.");
-            }
-        }
-    }
-
-     private synchronized void create() {
-        for(StartUIListener startUIListener : lst) {
-            try {
-                startUIListener.createGame(this.numberOfPlayers, this.numberOfCommonGoalCards, this.username);
-            } catch (RemoteException e) {
-                this.removeListener(startUIListener);
-                System.err.println("Removing observer " + startUIListener + " because of a RemoteException.");
-            }
-        }
-    }
-
-    private synchronized void join() {
-        for(StartUIListener startUIListener : lst) {
-            try {
-                startUIListener.joinGame(this.gameID, this.username);
-            } catch (RemoteException e) {
-                this.removeListener(startUIListener);
-                System.err.println("Removing observer " + startUIListener + " because of a RemoteException.");
-            }
-        }
     }
 }

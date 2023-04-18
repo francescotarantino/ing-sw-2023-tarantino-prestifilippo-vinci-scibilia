@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.util.GameListListener;
+import it.polimi.ingsw.listeners.GameListListener;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+
+import static it.polimi.ingsw.listeners.Utils.notifyListeners;
 
 /**
  * This class is used to store the list of games on the server.
@@ -39,7 +41,7 @@ public class GameList {
      */
     public void addGame(Game game) {
         games.add(game);
-        notifyNewGame();
+        notifyListeners(lst, GameListListener::newGame);
     }
 
     /**
@@ -48,7 +50,7 @@ public class GameList {
      */
     public void removeGame(Game game) {
         games.remove(game);
-        notifyRemovedGame();
+        notifyListeners(lst, GameListListener::removedGame);
     }
 
     /**
@@ -97,47 +99,11 @@ public class GameList {
         lst.remove(o);
     }
 
-    private synchronized void notifyNewGame() {
-        for(GameListListener gameListListener : lst) {
-            try {
-                gameListListener.newGame();
-            } catch (RemoteException e) {
-                this.removeListener(gameListListener);
-                System.err.println("Removing listener " + gameListListener + " because of a RemoteException.");
-            }
-        }
-    }
-
-    private synchronized void notifyRemovedGame() {
-        for(GameListListener gameListListener : lst) {
-            try {
-                gameListListener.removedGame();
-            } catch (RemoteException e) {
-                this.removeListener(gameListListener);
-                System.err.println("Removing listener " + gameListListener + " because of a RemoteException.");
-            }
-        }
-    }
-
     public synchronized void notifyPlayerJoinedGame(int gameID) {
-        for(GameListListener gameListListener : lst) {
-            try {
-                gameListListener.playerJoinedGame(gameID);
-            } catch (RemoteException e) {
-                this.removeListener(gameListListener);
-                System.err.println("Removing listener " + gameListListener + " because of a RemoteException.");
-            }
-        }
+        notifyListeners(lst, gameListListener -> gameListListener.playerJoinedGame(gameID));
     }
 
     public synchronized void notifyGameFull(int gameID) {
-        lst.forEach(gameListListener -> {
-            try {
-                gameListListener.gameIsFull(gameID);
-            } catch (RemoteException e) {
-                this.removeListener(gameListListener);
-                System.err.println("Removing listener " + gameListListener + " because of a RemoteException.");
-            }
-        });
+        notifyListeners(lst, gameListListener -> gameListListener.gameIsFull(gameID));
     }
 }

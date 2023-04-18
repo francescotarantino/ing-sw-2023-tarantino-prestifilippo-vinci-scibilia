@@ -1,7 +1,7 @@
 package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.exception.InvalidChoiceException;
-import it.polimi.ingsw.util.StartUIListener;
+import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.view.textual.GameUI;
 import it.polimi.ingsw.view.textual.StartUI;
 
