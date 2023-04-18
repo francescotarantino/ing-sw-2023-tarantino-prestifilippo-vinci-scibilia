@@ -1,7 +1,10 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
+
+import java.util.HashMap;
 
 public class Bookshelf {
     private final Player player;
@@ -47,6 +50,33 @@ public class Bookshelf {
         return this.completedCommonGoalCards[index];
     }
 
+    /**
+     * @return the points scored by the player by creating clusters of tiles
+     */
+    public int adjacentObjectTiles() {
+        boolean[][] done = new boolean[Constants.bookshelfX][Constants.bookshelfY];
+        HashMap<Constants.TileType, Integer> biggestGroupFound = new HashMap<>();
+        for (int i = 0; i < Constants.bookshelfX; i++) {
+            for (int j = 0; j < Constants.bookshelfY; j++) {
+                if(!done[i][j]) {
+                    int groupSize = Utils.findGroup(i, j, matrix, done);
+                    if(groupSize >= 3) {
+                        int number = biggestGroupFound.getOrDefault(matrix[i][j].getType(), 0);
+                        if (groupSize > number) {
+                            biggestGroupFound.put(matrix[i][j].getType(), number);
+                        }
+                    }
+                }
+            }
+        }
+        int points = 0;
+        for (Constants.TileType type : Constants.TileType.values()) {
+            if (biggestGroupFound.get(type) != null) {
+                points += Constants.getAdjacentTilesPoints(biggestGroupFound.get(type));
+            }
+        }
+        return points;
+    }
     /**
      * @return the matrix of the bookshelf
      */
