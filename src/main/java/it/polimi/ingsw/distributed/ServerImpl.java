@@ -59,7 +59,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
             GameList.getInstance().setChangedAndNotify(GameList.Event.PLAYER_JOINED_GAME);
         }
 
-        this.controller = new Controller(this.model/*, view*/);
+        this.controller = new Controller(this.model, this.client);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
 
         GameList.getInstance().addGame(this.model);
 
-        this.controller = new Controller(this.model/*, view */);
+        this.controller = new Controller(this.model, this.client);
     }
 
     /**

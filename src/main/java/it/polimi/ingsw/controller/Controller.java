@@ -1,15 +1,16 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.*;
 
 public class Controller {
-    //private View view; //TODO: to be implemented
+    private final Client client;
     private final Game game;
 
-    public Controller(Game game /* , View view */){
+    public Controller(Game game, Client client){
         this.game = game;
-        // this.view = view;
+        this.client = client;
     }
 
     public void start(){
