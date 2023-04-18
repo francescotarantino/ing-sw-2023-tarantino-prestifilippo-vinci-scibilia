@@ -212,6 +212,12 @@ public class Constants {
             }
         }
     }
+    public enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    }
 
     // Constants relative to the server/client communication
     public static final int defaultSocketPort = 12345;

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.goal_cards;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.Tile;
 
 import java.util.HashMap;
@@ -9,12 +10,6 @@ import static it.polimi.ingsw.Utils.checkMatrixSize;
 
 
 public class CGCGroupsOfEquals extends CommonGoalCard {
-    private enum Direction {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
 
     /**
      * type of blocks that must be found in the matrix by the Common Goal Card
@@ -33,82 +28,6 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
     public CGCGroupsOfEquals(int numberOfPlayers, int ID, BlockType blockType) {
         super(numberOfPlayers, ID);
         this.blockType = blockType;
-    }
-    /**
-     * @param direction is the direction in which the tile in the matrix is checked
-     * @return true if the tile in the matrix has the same type of the tile in the direction specified
-     */
-    private boolean checkAdjacentTile(int x, int y, Tile[][] matrix, Direction direction) {
-        if(x < 0 || x >= Constants.bookshelfX || y < 0 || y >= Constants.bookshelfY) {
-            return false;
-        }
-        switch (direction) {
-            case UP -> {
-                if (y == Constants.bookshelfY - 1) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x][y + 1])) {
-                        return true;
-                    }
-                }
-            }
-            case RIGHT -> {
-                if (x == Constants.bookshelfX - 1) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x + 1][y])) {
-                        return true;
-                    }
-                }
-            }
-            case DOWN -> {
-                if (y == 0) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x][y - 1])) {
-                        return true;
-                    }
-                }
-            }
-            case LEFT -> {
-                if (x == 0) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x - 1][y])) {
-                        return true;
-                    }
-                }
-            }
-            default -> throw new IllegalStateException("Invalid direction: " + direction);
-        }
-        return false;
-    }
-
-    /**
-     * @return is the size of the group found starting from the tile in position (x,y) in the matrix
-     * The method is recursive, and it builds the biggest possible block by checking the adjacent tiles in all directions
-     */
-    private int findGroup(int x, int y, Tile[][] matrix, boolean[][] done) {
-        if (done[x][y]) {
-            return 0;
-        }
-        done[x][y] = true;
-        int currentSize = 1;
-            for(Direction direction: Direction.values()) {
-                if (checkAdjacentTile(x, y, matrix, direction)) {
-                    switch (direction) {
-                        case UP ->  currentSize += findGroup(x, y + 1, matrix, done);
-                        case RIGHT -> currentSize += findGroup(x + 1, y, matrix, done);
-                        case DOWN -> currentSize += findGroup(x, y - 1, matrix, done);
-                        case LEFT -> currentSize += findGroup(x - 1, y, matrix, done);
-                    }
-                }
-            }
-        return currentSize;
     }
 
     /**
@@ -167,14 +86,14 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
             throw new NullPointerException();
         }
         checkMatrixSize(matrix);
-        boolean[][] done = new boolean[6][6];
+        boolean[][] done = new boolean[Constants.bookshelfX][Constants.bookshelfY];
         int groupsFound = 0;
         switch (blockType) {
             case SIX_OF_TWO -> {
                 for (int i = 0; i < Constants.bookshelfX; i++) {
                     for (int j = 0; j < Constants.bookshelfY; j++) {
                         if(!done[i][j]) {
-                            if(findGroup(i, j, matrix, done) >= 2) {
+                            if(Utils.findGroup(i, j, matrix, done) >= 2) {
                                 groupsFound++;
                             }
                         }
@@ -189,7 +108,7 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
                 for (int i = 0; i < Constants.bookshelfX; i++) {
                     for (int j = 0; j < Constants.bookshelfY; j++) {
                         if(!done[i][j]) {
-                            if(findGroup(i, j, matrix, done) >= 4) {
+                            if(Utils.findGroup(i, j, matrix, done) >= 4) {
                                 groupsFound++;
                             }
                         }
