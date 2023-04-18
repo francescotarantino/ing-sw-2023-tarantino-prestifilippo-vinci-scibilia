@@ -53,7 +53,7 @@ public class ServerStub implements Server {
     }
 
     @Override
-    public void join(int gameID, String username) throws RemoteException {
+    public void addPlayerToGame(int gameID, String username) throws RemoteException {
         try {
             oos.writeObject(Methods.JOIN.ordinal());
             oos.writeObject(gameID);

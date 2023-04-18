@@ -3,13 +3,19 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.util.Observable;
 
 import java.util.Scanner;
 
-public class GameUI implements Runnable {
+public class GameUI extends Observable<GameUI.Event> implements Runnable {
     private enum State {
         MY_TURN,
         NOT_MY_TURN
+    }
+
+    public enum Event {
+        TURN_START,
+
     }
 
     private State state = State.NOT_MY_TURN;
@@ -45,8 +51,11 @@ public class GameUI implements Runnable {
             }
 
             System.out.println("Your turn!");
-            //this.myTurn();
+            this.myTurn();
         }
+    }
+
+    private void myTurn(){
     }
 
     /**

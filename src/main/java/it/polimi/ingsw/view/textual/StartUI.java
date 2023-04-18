@@ -1,41 +1,30 @@
 package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.util.Observable;
+import it.polimi.ingsw.util.StartUIListener;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class StartUI extends Observable<StartUI.Event> implements Runnable {
-    public enum Event {
-        CREATE,
-        JOIN,
-        REFRESH
-    }
+public class StartUI implements Runnable {
+
+    /**
+     * List of all Listeners which listen to this class
+     */
+    private final ArrayList<StartUIListener> lst = new ArrayList<>();
+
     private String username;
     private int numberOfPlayers;
     private int numberOfCommonGoalCards;
     private int gameID;
     private ArrayList<String> playersNameList;
 
-    public String getUsername() {
-        return username;
-    }
-    public int getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
-    public int getNumberOfCommonGoalCards() {
-        return numberOfCommonGoalCards;
-    }
-    public int getGameID() {
-        return gameID;
-    }
-
     @Override
     public void run() {
         askUsername();
 
-        setChangedAndNotify(Event.REFRESH);
+        refresh();
 
         showMenu();
     }
@@ -97,7 +86,8 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
         } while(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards);
 
         try {
-            setChangedAndNotify(Event.CREATE);
+            this.create();
+            System.out.println("Game created successfully");
         } catch (IllegalArgumentException e) {
             System.out.println("Error while creating the game.");
             System.err.println(e.getMessage());
@@ -119,7 +109,7 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
         } while(gameID <= Constants.IDLowerBound);
 
         try {
-            setChangedAndNotify(Event.JOIN);
+            join();
         } catch (IllegalArgumentException | IllegalStateException e) {
             showError(e.getMessage(), false);
         }
@@ -172,5 +162,49 @@ public class StartUI extends Observable<StartUI.Event> implements Runnable {
         }
 
         this.playersNameList = o;
+    }
+
+    public synchronized void addListener(StartUIListener o){
+        if(!lst.contains(o)){
+            lst.add(o);
+        }
+    }
+
+    public synchronized void removeListener(StartUIListener o){
+        //Automatically checked?
+        lst.remove(o);
+    }
+
+    private synchronized void refresh() {
+        for(StartUIListener startUIListener : lst) {
+            try {
+                startUIListener.refreshStartUI();
+            } catch (RemoteException e) {
+                this.removeListener(startUIListener);
+                System.err.println("Removing observer " + startUIListener + " because of a RemoteException.");
+            }
+        }
+    }
+
+     private synchronized void create() {
+        for(StartUIListener startUIListener : lst) {
+            try {
+                startUIListener.createGame(this.numberOfPlayers, this.numberOfCommonGoalCards, this.username);
+            } catch (RemoteException e) {
+                this.removeListener(startUIListener);
+                System.err.println("Removing observer " + startUIListener + " because of a RemoteException.");
+            }
+        }
+    }
+
+    private synchronized void join() {
+        for(StartUIListener startUIListener : lst) {
+            try {
+                startUIListener.joinGame(this.gameID, this.username);
+            } catch (RemoteException e) {
+                this.removeListener(startUIListener);
+                System.err.println("Removing observer " + startUIListener + " because of a RemoteException.");
+            }
+        }
     }
 }

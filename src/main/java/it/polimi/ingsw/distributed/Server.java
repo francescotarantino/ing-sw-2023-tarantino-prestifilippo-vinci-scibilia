@@ -18,7 +18,7 @@ public interface Server extends Remote {
      * @param username the username of the player
      * @throws InvalidChoiceException if the player cannot join the game (e.g. invalid gameID, the game is full, the username is already taken, etc.)
      */
-    void join(int gameID, String username) throws RemoteException, InvalidChoiceException;
+    void addPlayerToGame(int gameID, String username) throws RemoteException, InvalidChoiceException;
 
     /**
      * This method is called by the client to create a new game.
