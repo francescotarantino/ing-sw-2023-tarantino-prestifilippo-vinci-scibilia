@@ -1,17 +1,20 @@
 package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.Point;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameUI implements Runnable {
+    private final ArrayList<GameUIListener> lst = new ArrayList<>();
+
     private enum State {
         MY_TURN,
         NOT_MY_TURN
     }
-
     private State state = State.NOT_MY_TURN;
     private final Object lock = new Object();
 
@@ -29,8 +32,6 @@ public class GameUI implements Runnable {
     }
 
     public void run() {
-        System.out.println("Starting GameUI...");
-
         while (true) {
             while (getState() == State.NOT_MY_TURN) {
                 System.out.println("Waiting others turn...");
@@ -39,14 +40,17 @@ public class GameUI implements Runnable {
                     try {
                         lock.wait();
                     } catch (InterruptedException e) {
-                        System.err.println("Error while waiting for turn" + e.getMessage());
+                        System.err.println("Error while waiting for turn: " + e.getMessage());
                     }
                 }
             }
 
             System.out.println("Your turn!");
-            //this.myTurn();
+            this.myTurn();
         }
+    }
+
+    private void myTurn(){
     }
 
     /**
@@ -81,5 +85,15 @@ public class GameUI implements Runnable {
             }
             System.out.println();
         }
+    }
+
+    public synchronized void addListener(GameUIListener o){
+        if(!lst.contains(o)){
+            lst.add(o);
+        }
+    }
+
+    public synchronized void removeListener(GameUIListener o){
+        lst.remove(o);
     }
 }

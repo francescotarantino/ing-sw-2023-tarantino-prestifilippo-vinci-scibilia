@@ -81,7 +81,7 @@ public class ClientSkeleton implements Client {
             int enum_id = (Integer) ois.readObject();
 
             switch (ServerStub.Methods.values()[enum_id]) {
-                case JOIN -> server.join((int) ois.readObject(), (String) ois.readObject());
+                case JOIN -> server.addPlayerToGame((int) ois.readObject(), (String) ois.readObject());
                 case CREATE -> server.create((int) ois.readObject(), (int) ois.readObject(), (String) ois.readObject());
                 case GET_GAMES_LIST -> server.getGamesList();
             }

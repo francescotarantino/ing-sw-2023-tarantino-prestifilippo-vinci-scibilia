@@ -5,14 +5,14 @@ import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameList;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.util.Observer;
+import it.polimi.ingsw.listeners.GameListListener;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ServerImpl extends UnicastRemoteObject implements Server, Observer<GameList, GameList.Event> {
+public class ServerImpl extends UnicastRemoteObject implements Server, GameListListener {
     private Game model;
     private Controller controller;
     private Client client;
@@ -33,13 +33,13 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
     @Override
     public void register(Client client) throws RemoteException {
         this.client = client;
-        GameList.getInstance().addObserver(this);
+        GameList.getInstance().addListener(this);
 
         System.out.println("A client is registering to the server...");
     }
 
     @Override
-    public void join(int gameID, String username) throws RemoteException, InvalidChoiceException {
+    public void addPlayerToGame(int gameID, String username) throws RemoteException, InvalidChoiceException {
         System.out.println("A client is joining game " + gameID + " with username " + username + "...");
 
         this.model = GameList.getInstance().getGame(gameID);
@@ -53,10 +53,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
             throw new InvalidChoiceException(e.getMessage());
         }
 
+        GameList.getInstance().notifyPlayerJoinedGame(gameID);
+
         if(this.model.isFull()){
-            GameList.getInstance().setChangedAndNotify(GameList.Event.GAME_IS_FULL);
-        } else {
-            GameList.getInstance().setChangedAndNotify(GameList.Event.PLAYER_JOINED_GAME);
+            GameList.getInstance().notifyGameFull(gameID);
         }
 
         this.controller = new Controller(this.model, this.client);
@@ -88,32 +88,36 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Observer<
      */
     @Override
     public void getGamesList() throws RemoteException {
-        update(GameList.getInstance(), null);
+        this.client.updateGamesList(GameList.getInstance().getGamesString());
     }
 
     @Override
-    public void update(GameList o, GameList.Event arg) throws RemoteException {
-        if(this.model != null){
-            switch (arg) {
-                case GAME_IS_FULL -> {
-                    this.client.updatePlayersList(
-                            o.getGame(model.getGameID()).playersList()
-                    );
+    public void newGame() throws RemoteException {
+        if(this.model == null){
+            this.client.updateGamesList(GameList.getInstance().getGamesString());
+        }
+    }
 
-                    if (this.model.isFull()) {
-                        this.client.gameHasStarted();
+    @Override
+    public void removedGame() throws RemoteException {
+        if(this.model == null){
+            this.client.updateGamesList(GameList.getInstance().getGamesString());
+        }
+    }
 
-                        GameList.getInstance().deleteObserver(this);
-                    }
-                }
+    @Override
+    public void playerJoinedGame(int gameID) throws RemoteException {
+        if(this.model != null && this.model.getGameID() == gameID){
+            this.client.updatePlayersList(this.model.playersList());
+        }
+    }
 
-                case PLAYER_JOINED_GAME -> this.client.updatePlayersList(
-                        o.getGame(model.getGameID()).playersList()
-                );
-            }
-        } else {
-            this.client.updateGamesList(o.getGamesString());
+    @Override
+    public void gameIsFull(int gameID) throws RemoteException {
+        if(this.model != null && this.model.getGameID() == gameID){
+            this.client.gameHasStarted();
+
+            GameList.getInstance().removeListener(this);
         }
     }
 }
-

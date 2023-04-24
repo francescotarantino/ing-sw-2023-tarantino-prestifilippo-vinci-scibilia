@@ -1,20 +1,18 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.util.Observable;
+import it.polimi.ingsw.listeners.GameListListener;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import static it.polimi.ingsw.listeners.Listener.notifyListeners;
+
 /**
  * This class is used to store the list of games on the server.
  */
-public class GameList extends Observable<GameList.Event> {
-    public enum Event {
-        NEW_GAME,
-        REMOVED_GAME,
-        PLAYER_JOINED_GAME,
-        GAME_IS_FULL,
-    }
+public class GameList {
+
+    private final ArrayList<GameListListener> lst = new ArrayList<>();
 
     private static final ArrayList<Game> games = new ArrayList<>();
 
@@ -43,7 +41,7 @@ public class GameList extends Observable<GameList.Event> {
      */
     public void addGame(Game game) {
         games.add(game);
-        setChangedAndNotify(Event.NEW_GAME);
+        notifyListeners(lst, GameListListener::newGame);
     }
 
     /**
@@ -52,7 +50,7 @@ public class GameList extends Observable<GameList.Event> {
      */
     public void removeGame(Game game) {
         games.remove(game);
-        setChangedAndNotify(Event.REMOVED_GAME);
+        notifyListeners(lst, GameListListener::removedGame);
     }
 
     /**
@@ -89,5 +87,23 @@ public class GameList extends Observable<GameList.Event> {
                     .toArray(String[]::new);
         else
             return null;
+    }
+
+    public void addListener(GameListListener o){
+        if(!lst.contains(o)){
+            lst.add(o);
+        }
+    }
+
+    public void removeListener(GameListListener o){
+        lst.remove(o);
+    }
+
+    public synchronized void notifyPlayerJoinedGame(int gameID) {
+        notifyListeners(lst, gameListListener -> gameListListener.playerJoinedGame(gameID));
+    }
+
+    public synchronized void notifyGameFull(int gameID) {
+        notifyListeners(lst, gameListListener -> gameListListener.gameIsFull(gameID));
     }
 }
