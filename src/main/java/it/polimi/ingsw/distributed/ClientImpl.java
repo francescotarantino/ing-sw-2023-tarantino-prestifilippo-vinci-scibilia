@@ -84,6 +84,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void gameHasStarted() throws RemoteException {
+        System.out.println("Starting GameUI...");
         new Thread(gameUI).start(); // TODO: check if it's a good practice
     }
 }
