@@ -4,6 +4,8 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.*;
 
+import java.util.Arrays;
+
 public class Controller {
     private final Client client;
     private final Game game;
@@ -21,6 +23,27 @@ public class Controller {
 
         // Setting the current player to the first one that as to make a move
         this.game.setCurrentPlayerIndex(this.game.getFirstPlayerIndex());
+    }
+
+    /**
+     * TODO docs
+     * @param column
+     * @param points
+     * @return
+     */
+    public void performTurn(int column, Point...points){
+        if(column < 0 || column > Constants.bookshelfX)
+            throw new IndexOutOfBoundsException("Invalid column.");
+        if (points.length > Constants.maxPick || points.length == 0)
+            throw new IllegalArgumentException("Invalid number of tiles.");
+        if(!checkIfTilesCanBeTaken(points))
+            throw new IllegalArgumentException("Provided tiles can't be taken.");
+        if(!checkIfColumnHasEnoughSpace(column, points.length))
+            throw new IllegalArgumentException("Provided column doesn't have enough space.");
+
+        insertTiles(column, takeTiles(points));
+
+        nextTurn();
     }
 
     /**
@@ -53,8 +76,77 @@ public class Controller {
         }
     }
 
-    //TODO: to be implemented controls on insertion/removing of tiles
-    public Tile[] takeTiles(Point...points) {
+    // Private methods
+
+    private boolean checkIfTilesCanBeTaken(Point...points){
+        //checks if tiles are adjacent
+        if (
+                points.length != 1 &&
+                        (
+                                (!(points[0].getX() == points[1].getX() && checkContiguity(Point::getY, points))) ||
+                                (!(points[0].getY() == points[1].getY() && checkContiguity(Point::getX, points)))
+                        )
+        )
+            return false;
+        
+        //checks if tiles have at least one free side
+        for(Point point : points){
+            boolean flag = false;
+
+            if(point.getX() != 0){
+                if(game.getLivingRoomBoard().getTile(new Point(point.getX() - 1, point.getY())) == null ||
+                    game.getLivingRoomBoard().getTile(new Point(point.getX() - 1, point.getY())).getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+
+            if(point.getX() != Constants.livingRoomBoardX - 1){
+                if(game.getLivingRoomBoard().getTile(new Point(point.getX() + 1, point.getY())) == null ||
+                        game.getLivingRoomBoard().getTile(new Point(point.getX() + 1, point.getY())).getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+
+            if(point.getY() != 0){
+                if(game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() - 1)) == null ||
+                        game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() - 1)).getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+
+            if(point.getY() != Constants.livingRoomBoardY - 1){
+                if(game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() + 1)) == null ||
+                        game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() + 1)).getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+
+            if(!flag) return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkContiguity(java.util.function.ToIntFunction<Point> lambda, Point...points){
+        int[] tmp = Arrays.stream(points)
+                .mapToInt(lambda)
+                .sorted()
+                .toArray();
+        for(int i = 1; i < tmp.length; i++){
+            if(tmp[i] != (tmp[i-1] + 1))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean checkIfColumnHasEnoughSpace(int column, int tilesNum){
+        Tile[][] tempMatrix = this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix();
+        int counter = 0;
+        for(int i = Constants.bookshelfY; i >= 0; i--){
+            if(tempMatrix[column][i] == null){
+                counter++;
+            } else break;
+        }
+        return counter >= tilesNum;
+    }
+
+    private Tile[] takeTiles(Point...points) {
         Tile[] tiles = new Tile[points.length];
         for (int i = 0; i < points.length; i++) {
             tiles[i] = game.getLivingRoomBoard().getTile(points[i]);
@@ -63,7 +155,7 @@ public class Controller {
         return tiles;
     }
 
-    public void insertTiles(int column, Tile[] tiles){
+    private void insertTiles(int column, Tile[] tiles){
         Tile[][] playersBookshelf = game.getBookshelves()[game.getCurrentPlayerIndex()].getMatrix();
         // TODO: revision of indexing policy for bookshelf
         int freeposition = Constants.bookshelfX - 1; //using X as an Y for now
@@ -77,8 +169,6 @@ public class Controller {
             }
 */
     }
-
-    // Private methods
 
     /**
      * This method verifies if the current player has achieved the common goals, and then updates tokens accordingly.
