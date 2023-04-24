@@ -362,9 +362,9 @@ public class Controller {
                         confrontingColumns--;
                     }
                     if( sameType > 2) {
-                        int adjecentPoints;
-                        adjecentPoints = Constants.getAdjacentTilesPoints(sameType);
-                        game.getCurrentPlayer().addPoints(adjecentPoints);
+                        int adjacentPoints;
+                        adjacentPoints = Constants.getAdjacentTilesPoints(sameType);
+                        game.getCurrentPlayer().addPoints(adjacentPoints);
                     }
                 }
             }
