@@ -3,6 +3,7 @@ package it.polimi.ingsw.distributed.socket.middleware;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.model.GameView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,6 +21,7 @@ public class ClientSkeleton implements Client {
         UPDATE_PLAYERS_LIST,
         SHOW_ERROR,
         GAME_HAS_STARTED,
+        MODEL_CHANGED
     }
 
     public ClientSkeleton(Socket socket) throws RemoteException {
@@ -71,6 +73,16 @@ public class ClientSkeleton implements Client {
     public void gameHasStarted() throws RemoteException {
         try {
             oos.writeObject(Methods.GAME_HAS_STARTED.ordinal());
+        } catch (IOException e1) {
+            throw new RemoteException("Cannot send object", e1);
+        }
+    }
+
+    @Override
+    public void modelChanged(GameView gameView) throws RemoteException {
+        try {
+            oos.writeObject(Methods.MODEL_CHANGED.ordinal());
+            oos.writeObject(gameView);
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
         }

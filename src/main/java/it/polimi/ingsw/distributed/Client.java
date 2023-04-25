@@ -1,5 +1,7 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.model.GameView;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -29,4 +31,10 @@ public interface Client extends Remote {
      * It should trigger a UI change.
      */
     void gameHasStarted() throws RemoteException;
+
+    /**
+     * This method is called by the server to notify the client that the model has changed.
+     * @param gameView the new model-view object of the game
+     */
+    void modelChanged(GameView gameView) throws RemoteException;
 }

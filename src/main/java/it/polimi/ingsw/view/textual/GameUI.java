@@ -34,54 +34,84 @@ public class GameUI implements Runnable {
     public void run() {
         while (true) {
             while (getState() == State.NOT_MY_TURN) {
-                System.out.println("Waiting others turn...");
-
                 synchronized (lock) {
                     try {
                         lock.wait();
                     } catch (InterruptedException e) {
-                        System.err.println("Error while waiting for turn: " + e.getMessage());
+                        System.out.println("Error while waiting for turn: " + e.getMessage());
                     }
                 }
             }
 
-            System.out.println("Your turn!");
-            this.myTurn();
+            this.executeTurn();
         }
     }
 
-    private void myTurn(){
+    /**
+     * This method should be called when there is a change in the model of the game.
+     * @param gameView the new model-view of the game
+     */
+    public void update(GameView gameView){
+        this.updateBoard(gameView);
+
+        if(gameView.isMyTurn()) {
+            System.out.println("It's now your turn!");
+
+            setState(State.MY_TURN);
+        } else {
+            System.out.println("Now is player " + gameView.getPlayerUsernames()[gameView.getCurrentPlayerIndex()] + "'s turn.");
+
+            setState(State.NOT_MY_TURN);
+        }
     }
 
     /**
      * This method obtains the things that the player wants to do
-     *
      */
     private void executeTurn() {
         Scanner input = new Scanner(System.in);
-        int howMany;
-        do{
-            do {
-                System.out.println("Quante tessere vuoi prendere dal soggiorno?");
-                howMany = input.nextInt();
-                if(howMany < Constants.minPick || howMany > Constants.maxPick)
-                    System.out.println("Numero di tessere non valido.");
-            } while(howMany < Constants.minPick || howMany > Constants.maxPick);
-            for(int i=0; i < howMany; i++){
 
-            }
-        } while(true);
+        int howManyPick;
+        do {
+            System.out.print("How many tiles do you want to pick? ");
+            howManyPick = input.nextInt();
+
+            if(howManyPick < Constants.minPick || howManyPick > Constants.maxPick)
+                System.out.print("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
+        } while (howManyPick < Constants.minPick || howManyPick > Constants.maxPick);
+
+
+        Point[] points = new Point[howManyPick];
+        System.out.println("Now it's time to pick the tiles in order.");
+        for(int i = 0; i < howManyPick; i++){
+            System.out.println("Tile #" + i);
+
+            System.out.print("x: ");
+            int x = input.nextInt();
+
+            System.out.print("y: ");
+            int y = input.nextInt();
+
+            points[i] = new Point(x, y);
+        }
+
+        // TODO: check if the tiles are valid
+
+        System.out.print("In which column do you want to put the tiles? ");
+        int column = input.nextInt();
+
+        // TODO: invoke the listener
     }
 
     /**
      * This method prints the actual living room board
-     * @param model
      */
-    public void updateBoard(GameView model) {
+    private void updateBoard(GameView gameView){
         System.out.println("Stato attuale del soggiorno:");
         for(int i = 0; i < Constants.livingRoomBoardX; i++){
             for(int j=0; j < Constants.livingRoomBoardY; j++){
-                System.out.print(model.getBoard().getTile(new Point(i, j)) + "\t");
+
+                System.out.print(gameView.getBoard().getTile(new Point(i, j)).toString().charAt(0) + "\t");
             }
             System.out.println();
         }

@@ -30,6 +30,7 @@ public interface Listener {
             } catch (RemoteException e) {
                 listeners.remove(listener);
                 System.err.println("Removing listener " + listener + " because of a RemoteException.");
+                e.printStackTrace();
             }
         });
     }

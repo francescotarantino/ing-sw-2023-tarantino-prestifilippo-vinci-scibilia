@@ -2,9 +2,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Set;
 
-public class LivingRoomBoard {
+public class LivingRoomBoard implements Serializable {
     private final Tile[][] board;
 
     /**
