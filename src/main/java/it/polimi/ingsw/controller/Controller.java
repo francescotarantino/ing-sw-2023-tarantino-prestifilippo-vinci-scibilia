@@ -224,35 +224,36 @@ public class Controller {
                 Tile currentTile = game.getLivingRoomBoard().getTile(new Point(j, i));
                 if (currentTile != null && currentTile.getType() != Constants.TileType.PLACEHOLDER) {
                     numTile++;
+                    boolean b, c, d1, d2, d3, d4;
                     if (j != Constants.livingRoomBoardX - 1) {
-                        boolean b = game.getLivingRoomBoard().getTile(new Point(j + 1, i)).getType() == Constants.TileType.PLACEHOLDER;
-                        boolean c = game.getLivingRoomBoard().getTile(new Point(j + 1, i)) == null;
-                        if (b&&c) {
-                            if (j != 0) {
-                                b = game.getLivingRoomBoard().getTile(new Point(j - 1, i)).getType() == Constants.TileType.PLACEHOLDER;
-                                c = game.getLivingRoomBoard().getTile(new Point(j - 1, i)) == null;
-                                if (b&&c) {
-                                    if (i != Constants.livingRoomBoardY - 1) {
-                                        b = game.getLivingRoomBoard().getTile(new Point(j, i + 1)).getType() == Constants.TileType.PLACEHOLDER;
-                                        c = game.getLivingRoomBoard().getTile(new Point(j , i+1)) == null;
-                                        if (b&&c) {
-                                            if (i != 0) {
-                                                b = game.getLivingRoomBoard().getTile(new Point(j, i - 1)).getType() == Constants.TileType.PLACEHOLDER;
-                                                c = game.getLivingRoomBoard().getTile(new Point(j , i-1)) == null;
-                                                if (b&&c) {
-                                                    onlyTile++;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                         b = game.getLivingRoomBoard().getTile(new Point(j + 1, i)).getType() == Constants.TileType.PLACEHOLDER;
+                         c = game.getLivingRoomBoard().getTile(new Point(j + 1, i)) == null;
+                         d1 = b || c;
+                    }else d1 =true;
+
+                    if (j != 0) {
+                        b = game.getLivingRoomBoard().getTile(new Point(j - 1, i)).getType() == Constants.TileType.PLACEHOLDER;
+                        c = game.getLivingRoomBoard().getTile(new Point(j - 1, i)) == null;
+                        d2 = b || c;
+                    }else d2=true;
+
+                    if (i != Constants.livingRoomBoardY - 1) {
+                        b = game.getLivingRoomBoard().getTile(new Point(j, i + 1)).getType() == Constants.TileType.PLACEHOLDER;
+                        c = game.getLivingRoomBoard().getTile(new Point(j, i + 1)) == null;
+                        d3 = b || c;
+                    }else d3=true;
+
+                    if (i != 0) {
+                        b = game.getLivingRoomBoard().getTile(new Point(j, i - 1)).getType() == Constants.TileType.PLACEHOLDER;
+                        c = game.getLivingRoomBoard().getTile(new Point(j, i - 1)) == null;
+                        d4 = b || c;
+                    }else d4=true;
+
+                    if(d1&&d2&&d3&&d4) onlyTile++;
+
                 }
             }
         }
-
         return numTile == onlyTile;
     }
 
