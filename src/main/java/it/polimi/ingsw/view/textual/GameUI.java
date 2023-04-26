@@ -6,10 +6,11 @@ import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameUI implements Runnable {
-    private final ArrayList<GameUIListener> lst = new ArrayList<>();
+    private final List<GameUIListener> lst = new ArrayList<>();
 
     private enum State {
         MY_TURN,
@@ -107,10 +108,10 @@ public class GameUI implements Runnable {
      * This method prints the actual living room board
      */
     private void updateBoard(GameView gameView){
-        System.out.println("Stato attuale del soggiorno:");
-        for(int i = 0; i < Constants.livingRoomBoardX; i++){
-            for(int j=0; j < Constants.livingRoomBoardY; j++){
+        System.out.println("Current living room board:");
 
+        for(int j = Constants.livingRoomBoardY - 1; j >= 0; j--){
+            for(int i = 0; i < Constants.livingRoomBoardX; i++){
                 System.out.print(gameView.getBoard().getTile(new Point(i, j)).toString().charAt(0) + "\t");
             }
             System.out.println();
