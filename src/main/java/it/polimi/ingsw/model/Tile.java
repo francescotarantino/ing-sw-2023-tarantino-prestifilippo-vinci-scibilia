@@ -2,7 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
 
-public class Tile {
+import java.io.Serializable;
+
+public class Tile implements Serializable {
     private final Constants.TileType type;
     private final int variant;
 
@@ -63,7 +65,7 @@ public class Tile {
     @Override
     public String toString() {
         if(this.type == Constants.TileType.PLACEHOLDER)
-            return "";
+            return " ";
         else
             return type + "." + variant;
     }

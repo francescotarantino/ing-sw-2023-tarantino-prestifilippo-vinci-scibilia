@@ -1,12 +1,14 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
 import java.util.Random;
 
 import java.util.ArrayList;
-import java.util.Random;
+
+import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 public class Game {
     // Attributes
@@ -46,6 +48,10 @@ public class Game {
      * Index of the final player. It is equal to -1 until the last round.
      */
     private int finalPlayerIndex;
+    /**
+     * List of listeners that are notified when the game model changes.
+     */
+    private final ArrayList<GameListener> lst = new ArrayList<>();
 
 
     // Constructor
@@ -98,22 +104,25 @@ public class Game {
     // Public methods
     /**
      * Adds a new bookshelf to the game
-     * @param player: the new player that will be added to the game
+     * @param player the new player that will be added to the game
+     * @return the index of the new bookshelf
      */
-    public void addBookshelf(Player player){
+    public int addBookshelf(Player player){
         int i;
         for (i = 0; i < this.getTotalPlayersNumber(); i++) {
             if (this.bookshelves[i] != null){
                 if(this.bookshelves[i].getPlayer().getUsername().equals(player.getUsername())) {
                     throw new IllegalArgumentException("Username already present in this game");
                 }
-            } else
-                break;
+            } else break;
         }
-        if(i == this.getTotalPlayersNumber())
+
+        if(i == this.getTotalPlayersNumber()) {
             throw new IllegalStateException("No free bookshelf available");
-        else
-            bookshelves[i] = new Bookshelf(player, new PersonalGoalCard(randomPGCNumbers[i]));
+        }
+
+        bookshelves[i] = new Bookshelf(player, new PersonalGoalCard(randomPGCNumbers[i]));
+        return i;
     }
 
     public int getGameID(){
@@ -168,6 +177,8 @@ public class Game {
             throw new IllegalArgumentException("Illegal player index");
 
         this.currentPlayerIndex = currentPlayerIndex;
+
+        notifyListeners(lst, GameListener::modelChanged);
     }
 
     public void setFinalPlayerIndex(int finalPlayerIndex) {
@@ -259,5 +270,15 @@ public class Game {
         }
 
         return string.toString();
+    }
+
+    public void addListener(GameListener o){
+        if(!lst.contains(o)){
+            lst.add(o);
+        }
+    }
+
+    public void removeListener(GameListener o){
+        lst.remove(o);
     }
 }

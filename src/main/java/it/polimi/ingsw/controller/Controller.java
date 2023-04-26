@@ -29,7 +29,6 @@ public class Controller {
      * TODO docs
      * @param column
      * @param points
-     * @return
      */
     public void performTurn(int column, Point...points){
         if(column < 0 || column > Constants.bookshelfX)
@@ -92,25 +91,25 @@ public class Controller {
         //checks if tiles have at least one free side
         for(Point point : points){
             boolean flag = false;
-
+            //Up
             if(point.getX() != 0){
                 if(game.getLivingRoomBoard().getTile(new Point(point.getX() - 1, point.getY())) == null ||
                     game.getLivingRoomBoard().getTile(new Point(point.getX() - 1, point.getY())).getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
-
+            //Down
             if(point.getX() != Constants.livingRoomBoardX - 1){
                 if(game.getLivingRoomBoard().getTile(new Point(point.getX() + 1, point.getY())) == null ||
                         game.getLivingRoomBoard().getTile(new Point(point.getX() + 1, point.getY())).getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
-
+            //Left
             if(point.getY() != 0){
                 if(game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() - 1)) == null ||
                         game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() - 1)).getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
-
+            //Right
             if(point.getY() != Constants.livingRoomBoardY - 1){
                 if(game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() + 1)) == null ||
                         game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() + 1)).getType().equals(Constants.TileType.PLACEHOLDER))
@@ -141,9 +140,11 @@ public class Controller {
         for(int i = Constants.bookshelfY; i >= 0; i--){
             if(tempMatrix[column][i] == null){
                 counter++;
-            } else break;
+                if(counter == tilesNum)
+                    return true;
+            } else return false;
         }
-        return counter >= tilesNum;
+        return false;
     }
 
     private Tile[] takeTiles(Point...points) {

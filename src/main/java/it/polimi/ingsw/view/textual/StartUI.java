@@ -58,7 +58,7 @@ public class StartUI implements Runnable {
             case 2 -> joinGame();
             case 3 -> System.exit(0);
             default -> {
-                System.err.println("Invalid choice.");
+                System.out.println("Invalid choice.");
                 showMenu();
             }
         }
@@ -73,7 +73,7 @@ public class StartUI implements Runnable {
             System.out.print("How many players? ");
             numberOfPlayers = s.nextInt();
             if(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound)
-                System.err.println("Number of players should be between " + Constants.playersLowerBound
+                System.out.println("Number of players should be between " + Constants.playersLowerBound
                         + " and " + Constants.playersUpperBound + ".");
         } while(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound);
 
@@ -81,7 +81,7 @@ public class StartUI implements Runnable {
             System.out.print("How many common goal cards? ");
             numberOfCommonGoalCards = s.nextInt();
             if(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards)
-                System.err.println("Number of common goal cards should be between " + Constants.minCommonGoalCards
+                System.out.println("Number of common goal cards should be between " + Constants.minCommonGoalCards
                         + " and " + Constants.maxCommonGoalCards + ".");
         } while(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards);
 

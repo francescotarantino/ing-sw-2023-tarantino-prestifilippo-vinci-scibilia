@@ -2,6 +2,7 @@ package it.polimi.ingsw.distributed.socket.middleware;
 
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
+import it.polimi.ingsw.model.GameView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -93,6 +94,7 @@ public class ServerStub implements Server {
                 case UPDATE_PLAYERS_LIST -> client.updatePlayersList((ArrayList<String>) ois.readObject());
                 case SHOW_ERROR -> client.showError((String) ois.readObject(), (boolean) ois.readObject());
                 case GAME_HAS_STARTED -> client.gameHasStarted();
+                case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RemoteException("Cannot receive event", e);

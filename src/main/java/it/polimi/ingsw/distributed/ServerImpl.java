@@ -2,8 +2,10 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameList;
+import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.listeners.GameListListener;
 
@@ -12,10 +14,11 @@ import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ServerImpl extends UnicastRemoteObject implements Server, GameListListener {
+public class ServerImpl extends UnicastRemoteObject implements Server, GameListListener, GameListener {
     private Game model;
     private Controller controller;
     private Client client;
+    private int playerIndex;
 
 
     public ServerImpl() throws RemoteException {
@@ -48,23 +51,27 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         }
 
         try {
-            this.model.addBookshelf(new Player(username));
+            this.playerIndex = this.model.addBookshelf(new Player(username));
         } catch (IllegalArgumentException | IllegalStateException e) {
             throw new InvalidChoiceException(e.getMessage());
         }
 
         GameList.getInstance().notifyPlayerJoinedGame(gameID);
 
+        this.controller = new Controller(this.model, this.client);
+
+        this.model.addListener(this);
+
         if(this.model.isFull()){
             GameList.getInstance().notifyGameFull(gameID);
-        }
 
-        this.controller = new Controller(this.model, this.client);
+            this.controller.start();
+        }
     }
 
     @Override
     public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
-        int gameID = GameList.getInstance().getGames().stream() // TODO: do we need to synchronize?
+        int gameID = GameList.getInstance().getGames().stream()
                 .mapToInt(Game::getGameID)
                 .max()
                 .orElse(0) + 1;
@@ -77,9 +84,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
             throw new InvalidChoiceException(e.getMessage());
         }
 
+        // The player that creates the game is the first player to join it
+        this.playerIndex = 0;
+
         GameList.getInstance().addGame(this.model);
 
         this.controller = new Controller(this.model, this.client);
+
+        this.model.addListener(this);
     }
 
     /**
@@ -119,5 +131,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
             GameList.getInstance().removeListener(this);
         }
+    }
+
+    @Override
+    public void modelChanged() throws RemoteException {
+        this.client.modelChanged(new GameView(this.model, this.playerIndex));
     }
 }

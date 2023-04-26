@@ -2,6 +2,7 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.listeners.StartUIListener;
+import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.view.textual.GameUI;
 import it.polimi.ingsw.view.textual.StartUI;
 
@@ -86,5 +87,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void gameHasStarted() throws RemoteException {
         System.out.println("Starting GameUI...");
         new Thread(gameUI).start(); // TODO: check if it's a good practice
+    }
+
+    @Override
+    public void modelChanged(GameView gameView) throws RemoteException {
+        gameUI.update(gameView);
     }
 }
