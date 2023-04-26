@@ -2,7 +2,8 @@ package it.polimi.ingsw.distributed.socket.middleware;
 
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
-import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class ServerStub implements Server {
      * This enumeration contains all the methods that the client can call on the server.
      */
     public enum Methods {
-        JOIN, CREATE, GET_GAMES_LIST
+        JOIN, CREATE, GET_GAMES_LIST, PERFORM_TURN
     }
 
     public ServerStub(String ip, int port) {
@@ -83,6 +84,17 @@ public class ServerStub implements Server {
             oos.writeObject(Methods.GET_GAMES_LIST.ordinal());
         } catch (IOException e) {
             throw new RemoteException("Cannot receive event", e);
+        }
+    }
+
+    @Override
+    public void performTurn(int column, Point... points) throws RemoteException {
+        try {
+            oos.writeObject(Methods.PERFORM_TURN.ordinal());
+            oos.writeObject(column);
+            oos.writeObject(points);
+        } catch (IOException e) {
+            throw new RemoteException("Cannot send event", e);
         }
     }
 

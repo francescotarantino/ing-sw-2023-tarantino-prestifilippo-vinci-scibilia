@@ -1,8 +1,10 @@
 package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.listeners.StartUIListener;
-import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.view.textual.GameUI;
 import it.polimi.ingsw.view.textual.StartUI;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
@@ -13,7 +15,7 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class ClientImpl extends UnicastRemoteObject implements Client, Runnable, StartUIListener {
+public class ClientImpl extends UnicastRemoteObject implements Client, Runnable, StartUIListener, GameUIListener {
     private final Server server;
     private final StartUI startUI = new StartUI();
     private final GameUI gameUI = new GameUI();
@@ -87,11 +89,17 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void gameHasStarted() throws RemoteException {
         System.out.println("Starting GameUI...");
-        new Thread(gameUI).start(); // TODO: check if it's a good practice
+        new Thread(gameUI).start();
+        gameUI.addListener(this);
     }
 
     @Override
     public void modelChanged(GameView gameView) throws RemoteException {
         gameUI.update(gameView);
+    }
+
+    @Override
+    public void performTurn(int column, Point...points) throws RemoteException {
+        this.server.performTurn(column, points);
     }
 }

@@ -5,7 +5,8 @@ import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameList;
-import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.listeners.GameListListener;
 
@@ -136,5 +137,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     @Override
     public void modelChanged() throws RemoteException {
         this.client.modelChanged(new GameView(this.model, this.playerIndex));
+    }
+
+    @Override
+    public void performTurn(int column, Point... points) throws RemoteException {
+        this.controller.performTurn(column, points);
     }
 }

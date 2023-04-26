@@ -1,11 +1,14 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.viewmodel;
+
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Tile;
 
 import java.io.Serializable;
 import java.util.Arrays;
 
 public class GameView implements Serializable {
     static final long serialVersionUID = 1L;
-    private final LivingRoomBoard board;
+    private final Tile[][] livingRoomBoardMatrix;
     private final Tile[][] bookshelfMatrix;
     private final int currentPlayerIndex;
     /**
@@ -17,7 +20,7 @@ public class GameView implements Serializable {
     public GameView(Game game, int playerIndex){
         this.playerIndex = playerIndex;
 
-        this.board = game.getLivingRoomBoard(); // TODO: we should consider to make a copy of the board instead of serializing the model
+        this.livingRoomBoardMatrix = game.getLivingRoomBoard().getMatrix();
         this.bookshelfMatrix = game.getBookshelves()[this.playerIndex].getMatrix();
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.playerUsernames = Arrays.stream(game.getBookshelves()).map(x -> x.getPlayer().getUsername()).toArray(String[]::new);
@@ -27,8 +30,8 @@ public class GameView implements Serializable {
         return bookshelfMatrix;
     }
 
-    public LivingRoomBoard getBoard() {
-        return board;
+    public Tile[][] getLivingRoomBoardMatrix() {
+        return livingRoomBoardMatrix;
     }
 
     public int getCurrentPlayerIndex() {

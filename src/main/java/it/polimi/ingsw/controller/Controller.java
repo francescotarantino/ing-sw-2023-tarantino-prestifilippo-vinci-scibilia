@@ -4,7 +4,8 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.*;
 
-import java.util.Arrays;
+import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
+import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
 
 public class Controller {
     private final Client client;
@@ -35,9 +36,9 @@ public class Controller {
             throw new IndexOutOfBoundsException("Invalid column.");
         if (points.length > Constants.maxPick || points.length == 0)
             throw new IllegalArgumentException("Invalid number of tiles.");
-        if(!checkIfTilesCanBeTaken(points))
+        if(!checkIfTilesCanBeTaken(this.game.getLivingRoomBoard().getMatrix(), points))
             throw new IllegalArgumentException("Provided tiles can't be taken.");
-        if(!checkIfColumnHasEnoughSpace(column, points.length))
+        if(!checkIfColumnHasEnoughSpace(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix(), column, points.length))
             throw new IllegalArgumentException("Provided column doesn't have enough space.");
 
         insertTiles(column, takeTiles(points));
@@ -76,76 +77,6 @@ public class Controller {
     }
 
     // Private methods
-
-    private boolean checkIfTilesCanBeTaken(Point...points){
-        //checks if tiles are adjacent
-        if (
-                points.length != 1 &&
-                        (
-                                (!(points[0].getX() == points[1].getX() && checkContiguity(Point::getY, points))) ||
-                                (!(points[0].getY() == points[1].getY() && checkContiguity(Point::getX, points)))
-                        )
-        )
-            return false;
-        
-        //checks if tiles have at least one free side
-        for(Point point : points){
-            boolean flag = false;
-            //Up
-            if(point.getX() != 0){
-                if(game.getLivingRoomBoard().getTile(new Point(point.getX() - 1, point.getY())) == null ||
-                    game.getLivingRoomBoard().getTile(new Point(point.getX() - 1, point.getY())).getType().equals(Constants.TileType.PLACEHOLDER))
-                    flag = true;
-            } else flag = true;
-            //Down
-            if(point.getX() != Constants.livingRoomBoardX - 1){
-                if(game.getLivingRoomBoard().getTile(new Point(point.getX() + 1, point.getY())) == null ||
-                        game.getLivingRoomBoard().getTile(new Point(point.getX() + 1, point.getY())).getType().equals(Constants.TileType.PLACEHOLDER))
-                    flag = true;
-            } else flag = true;
-            //Left
-            if(point.getY() != 0){
-                if(game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() - 1)) == null ||
-                        game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() - 1)).getType().equals(Constants.TileType.PLACEHOLDER))
-                    flag = true;
-            } else flag = true;
-            //Right
-            if(point.getY() != Constants.livingRoomBoardY - 1){
-                if(game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() + 1)) == null ||
-                        game.getLivingRoomBoard().getTile(new Point(point.getX(), point.getY() + 1)).getType().equals(Constants.TileType.PLACEHOLDER))
-                    flag = true;
-            } else flag = true;
-
-            if(!flag) return false;
-        }
-
-        return true;
-    }
-
-    private boolean checkContiguity(java.util.function.ToIntFunction<Point> lambda, Point...points){
-        int[] tmp = Arrays.stream(points)
-                .mapToInt(lambda)
-                .sorted()
-                .toArray();
-        for(int i = 1; i < tmp.length; i++){
-            if(tmp[i] != (tmp[i-1] + 1))
-                return false;
-        }
-        return true;
-    }
-
-    private boolean checkIfColumnHasEnoughSpace(int column, int tilesNum){
-        Tile[][] tempMatrix = this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix();
-        int counter = 0;
-        for(int i = Constants.bookshelfY; i >= 0; i--){
-            if(tempMatrix[column][i] == null){
-                counter++;
-                if(counter == tilesNum)
-                    return true;
-            } else return false;
-        }
-        return false;
-    }
 
     private Tile[] takeTiles(Point...points) {
         Tile[] tiles = new Tile[points.length];

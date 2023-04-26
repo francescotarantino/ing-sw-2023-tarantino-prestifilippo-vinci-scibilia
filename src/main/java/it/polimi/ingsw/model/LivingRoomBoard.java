@@ -2,10 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
 
-import java.io.Serializable;
 import java.util.Set;
 
-public class LivingRoomBoard implements Serializable {
+public class LivingRoomBoard {
     private final Tile[][] board;
 
     /**
@@ -49,6 +48,10 @@ public class LivingRoomBoard implements Serializable {
         }
 
         board[p.getX()][p.getY()] = null;
+    }
+
+    public Tile[][] getMatrix() {
+        return this.board;
     }
 
     /**

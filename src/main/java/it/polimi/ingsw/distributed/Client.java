@@ -1,6 +1,6 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.rmi.Remote;

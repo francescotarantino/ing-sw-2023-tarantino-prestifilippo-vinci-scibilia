@@ -5,6 +5,7 @@ import it.polimi.ingsw.Constants;
 import java.io.Serializable;
 
 public class Tile implements Serializable {
+    static final long serialVersionUID = 1L;
     private final Constants.TileType type;
     private final int variant;
 

@@ -3,7 +3,7 @@ package it.polimi.ingsw.distributed.socket.middleware;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.exception.InvalidChoiceException;
-import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.io.IOException;
