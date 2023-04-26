@@ -2,8 +2,10 @@ package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.StartUIListener;
+import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
@@ -12,13 +14,13 @@ public class StartUI implements Runnable {
     /**
      * List of all Listeners which listen to this class
      */
-    private final ArrayList<StartUIListener> lst = new ArrayList<>();
+    private final List<StartUIListener> lst = new ArrayList<>();
 
     private String username;
     private int numberOfPlayers;
     private int numberOfCommonGoalCards;
     private int gameID;
-    private ArrayList<String> playersNameList;
+    private List<String> playersNameList;
 
     @Override
     public void run() {
@@ -119,15 +121,28 @@ public class StartUI implements Runnable {
      * Shows the list of games on the server only if the user has inserted a username.
      * @param o array of strings representing the list of games on the server
      */
-    public void showGamesList(String[] o){
-        if(this.username != null){
-            if(o == null){
-                System.out.println("There are no games on the server.");
-            } else {
+    public void showGamesList(List<GameDetailsView> o){
+        if(this.username != null) {
+            if (o.size() != 0) {
                 System.out.println("List of games on the server:");
-                for (String game : o) {
-                    System.out.println(game);
+
+                for (GameDetailsView gameDetails : o) {
+                    StringBuilder string = new StringBuilder();
+
+                    string.append(gameDetails.gameID()).append("\t");
+                    for(String playerName : gameDetails.playerUsernames()) {
+                        string.append(playerName).append("\t");
+                    }
+                    if(gameDetails.isStarted()){
+                        string.append("(STARTED)");
+                    } else if(gameDetails.isFull()){
+                        string.append("(FULL)");
+                    }
+
+                    System.out.println(string);
                 }
+            } else {
+                System.out.println("There are no games on the server.");
             }
         }
     }
@@ -151,7 +166,7 @@ public class StartUI implements Runnable {
      * Shows the list of connected players.
      * @param o a list of players usernames
      */
-    public void showPlayersList(ArrayList<String> o) {
+    public void showPlayersList(List<String> o) {
         if (this.playersNameList == null){
             System.out.println("List of connected players:");
             for(String s : o){

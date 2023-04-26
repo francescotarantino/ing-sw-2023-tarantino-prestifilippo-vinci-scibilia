@@ -4,13 +4,14 @@ import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ClientSkeleton implements Client {
     private final ObjectOutputStream oos;
@@ -39,7 +40,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void updateGamesList(String[] o) throws RemoteException {
+    public void updateGamesList(List<GameDetailsView> o) throws RemoteException {
         try {
             oos.writeObject(Methods.UPDATE_GAMES_LIST.ordinal());
             oos.writeObject(o);
@@ -60,7 +61,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void updatePlayersList(ArrayList<String> o) throws RemoteException {
+    public void updatePlayersList(List<String> o) throws RemoteException {
         try {
             oos.writeObject(Methods.UPDATE_PLAYERS_LIST.ordinal());
             oos.writeObject(o);

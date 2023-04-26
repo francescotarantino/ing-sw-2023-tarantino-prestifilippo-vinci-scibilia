@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.goal_cards;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Tile;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static it.polimi.ingsw.Utils.checkMatrixSize;
 
@@ -18,7 +18,7 @@ public class PersonalGoalCard extends GoalCard {
         super(index);
         this.matrix = new Constants.TileType[Constants.bookshelfX][Constants.bookshelfY];
 
-        ArrayList<String> data = Constants.getPersonalGoalCards().get(index);
+        List<String> data = Constants.getPersonalGoalCards().get(index);
 
         for (int i = 0; i < Constants.bookshelfX; i++){
             for (int j = 0; j < Constants.bookshelfY; j++){

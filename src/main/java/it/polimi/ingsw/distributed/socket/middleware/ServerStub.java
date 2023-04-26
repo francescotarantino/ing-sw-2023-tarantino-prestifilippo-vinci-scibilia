@@ -3,13 +3,14 @@ package it.polimi.ingsw.distributed.socket.middleware;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ServerStub implements Server {
     private final String ip;
@@ -90,8 +91,8 @@ public class ServerStub implements Server {
             int enum_id = (Integer) ois.readObject();
 
             switch (ClientSkeleton.Methods.values()[enum_id]) {
-                case UPDATE_GAMES_LIST -> client.updateGamesList((String[]) ois.readObject());
-                case UPDATE_PLAYERS_LIST -> client.updatePlayersList((ArrayList<String>) ois.readObject());
+                case UPDATE_GAMES_LIST -> client.updateGamesList((List<GameDetailsView>) ois.readObject());
+                case UPDATE_PLAYERS_LIST -> client.updatePlayersList((List<String>) ois.readObject());
                 case SHOW_ERROR -> client.showError((String) ois.readObject(), (boolean) ois.readObject());
                 case GAME_HAS_STARTED -> client.gameHasStarted();
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());

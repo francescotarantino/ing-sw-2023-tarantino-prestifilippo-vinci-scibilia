@@ -100,20 +100,20 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
      */
     @Override
     public void getGamesList() throws RemoteException {
-        this.client.updateGamesList(GameList.getInstance().getGamesString());
+        this.client.updateGamesList(GameList.getInstance().getGamesDetails());
     }
 
     @Override
     public void newGame() throws RemoteException {
         if(this.model == null){
-            this.client.updateGamesList(GameList.getInstance().getGamesString());
+            this.client.updateGamesList(GameList.getInstance().getGamesDetails());
         }
     }
 
     @Override
     public void removedGame() throws RemoteException {
         if(this.model == null){
-            this.client.updateGamesList(GameList.getInstance().getGamesString());
+            this.client.updateGamesList(GameList.getInstance().getGamesDetails());
         }
     }
 

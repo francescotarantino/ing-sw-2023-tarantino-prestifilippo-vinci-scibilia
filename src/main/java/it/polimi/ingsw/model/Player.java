@@ -40,7 +40,7 @@ public class Player {
      * @param token the token to add
      */
     public void addScoringToken(int token){
-        if(Arrays.stream(Constants.allScoringTokens).noneMatch(x -> x == token)){
+        if(Arrays.stream(Constants.getScoringTokens(Constants.playersUpperBound)).noneMatch(x -> x == token)){
             throw new IllegalArgumentException(token + " is not a valid scoring token supported by this game");
         }
 

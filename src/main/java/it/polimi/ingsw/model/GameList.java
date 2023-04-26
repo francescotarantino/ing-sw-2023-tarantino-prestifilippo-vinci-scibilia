@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.listeners.GameListListener;
+import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
@@ -79,6 +81,7 @@ public class GameList {
      * For each game, it is called the {@link Game#toString()} method.
      * @return an array of strings containing the list of games on the server, null if there are no games
      */
+    @Deprecated
     public String[] getGamesString() throws RemoteException {
         if(games.size() != 0)
             return games
@@ -87,6 +90,18 @@ public class GameList {
                     .toArray(String[]::new);
         else
             return null;
+    }
+
+    /**
+     * This method is used to get a list of {@link GameDetailsView} objects representing the games on the server.
+     * @see GameDetailsView
+     * @return the list of {@link GameDetailsView} objects
+     */
+    public List<GameDetailsView> getGamesDetails() {
+        return games
+                .stream()
+                .map(x -> new GameDetailsView(x.getGameID(), x.playersList(), x.getTotalPlayersNumber(), x.getCommonGoalCards().length, x.isStarted(), x.isFull()))
+                .toList();
     }
 
     public void addListener(GameListListener o){

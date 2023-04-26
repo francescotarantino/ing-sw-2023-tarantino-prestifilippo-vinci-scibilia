@@ -1,17 +1,18 @@
 package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Client extends Remote {
     /**
      * This method is called by the server to notify the client of the list of games.
      * @param o the list of games
      */
-    void updateGamesList(String[] o) throws RemoteException;
+    void updateGamesList(List<GameDetailsView> o) throws RemoteException;
 
     /**
      * This method is called by the server when there is an error to show.
@@ -24,7 +25,7 @@ public interface Client extends Remote {
      * This method is called by the server when the list of players in the current game changes.
      * @param o the list of players
      */
-    void updatePlayersList(ArrayList<String> o) throws RemoteException;
+    void updatePlayersList(List<String> o) throws RemoteException;
 
     /**
      * This method is called by the server to notify the client that the game it is in has started.

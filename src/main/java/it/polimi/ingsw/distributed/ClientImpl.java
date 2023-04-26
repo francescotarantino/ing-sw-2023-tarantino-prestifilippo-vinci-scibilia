@@ -5,12 +5,13 @@ import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.view.textual.GameUI;
 import it.polimi.ingsw.view.textual.StartUI;
+import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ClientImpl extends UnicastRemoteObject implements Client, Runnable, StartUIListener {
     private final Server server;
@@ -69,7 +70,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
-    public void updateGamesList(String[] o) throws RemoteException {
+    public void updateGamesList(List<GameDetailsView> o) throws RemoteException {
         startUI.showGamesList(o);
     }
 
@@ -79,7 +80,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
-    public void updatePlayersList(ArrayList<String> o) throws RemoteException {
+    public void updatePlayersList(List<String> o) throws RemoteException {
         startUI.showPlayersList(o);
     }
 

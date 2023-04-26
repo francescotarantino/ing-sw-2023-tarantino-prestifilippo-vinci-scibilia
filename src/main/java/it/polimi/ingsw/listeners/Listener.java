@@ -2,11 +2,12 @@ package it.polimi.ingsw.listeners;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface Listener {
     /**
      * This interface is useful to define a lambda expression that can throw a RemoteException.
-     * The exception will be caught inside the {@link #notifyListeners(ArrayList, ConsumerWithRemoteException)} method.
+     * The exception will be caught inside the {@link #notifyListeners(List, ConsumerWithRemoteException)} method.
      * @param <T> type of the listener
      */
     @FunctionalInterface
@@ -21,8 +22,8 @@ public interface Listener {
      * @param lambda lambda expression that should call a method on the listener
      * @param <L> type of the listener
      */
-    static <L extends Listener> void notifyListeners(ArrayList<L> listeners, ConsumerWithRemoteException<L> lambda){
-        ArrayList<L> tmp = new ArrayList<>(listeners);
+    static <L extends Listener> void notifyListeners(List<L> listeners, ConsumerWithRemoteException<L> lambda){
+        List<L> tmp = new ArrayList<>(listeners);
 
         tmp.forEach(listener -> {
             try {
