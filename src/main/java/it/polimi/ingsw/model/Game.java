@@ -170,6 +170,14 @@ public class Game {
             return null;
     }
 
+    public Player getPlayer(int i) {
+        if (this.bookshelves[i] != null) {
+            return this.bookshelves[i].getPlayer();
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Sets the current player index
      * @param currentPlayerIndex the new current player index

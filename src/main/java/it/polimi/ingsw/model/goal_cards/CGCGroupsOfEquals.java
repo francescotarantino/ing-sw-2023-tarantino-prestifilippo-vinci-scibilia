@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.goal_cards;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 
 import java.util.HashMap;
@@ -93,7 +94,7 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
                 for (int i = 0; i < Constants.bookshelfX; i++) {
                     for (int j = 0; j < Constants.bookshelfY; j++) {
                         if(!done[i][j]) {
-                            if(Utils.findGroup(i, j, matrix, done) >= 2) {
+                            if(Utils.findGroup(new Point(i, j), matrix, done) >= 2) {
                                 groupsFound++;
                             }
                         }
@@ -108,7 +109,7 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
                 for (int i = 0; i < Constants.bookshelfX; i++) {
                     for (int j = 0; j < Constants.bookshelfY; j++) {
                         if(!done[i][j]) {
-                            if(Utils.findGroup(i, j, matrix, done) >= 4) {
+                            if(Utils.findGroup(new Point(i, j), matrix, done) >= 4) {
                                 groupsFound++;
                             }
                         }

@@ -63,6 +63,13 @@ public class Tile implements Serializable {
         return t.type.equals(this.type);
     }
 
+    /**
+     * @return true if the tile is a PLACEHOLDER, false otherwise
+     */
+    public boolean isPlaceholder() {
+        return this.type == Constants.TileType.PLACEHOLDER;
+    }
+
     @Override
     public String toString() {
         if(this.type == Constants.TileType.PLACEHOLDER)

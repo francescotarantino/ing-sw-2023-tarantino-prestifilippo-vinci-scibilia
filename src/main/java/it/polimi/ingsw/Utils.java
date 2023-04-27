@@ -24,23 +24,23 @@ public class Utils {
      * @return is the size of the group found starting from the tile in position (x,y) in the matrix
      * The method is recursive, and it builds the biggest possible block by checking the adjacent tiles in all directions
      */
-    public static int findGroup(int x, int y, Tile[][] matrix, boolean[][] done) {
-        if (done[x][y]) {
+    public static int findGroup(Point point, Tile[][] matrix, boolean[][] done) {
+        if (done[point.getX()][point.getY()]) {
             return 0;
         }
-        done[x][y] = true;
-        if(matrix[x][y] == null) {
+        done[point.getX()][point.getY()] = true;
+        if(matrix[point.getX()][point.getY()] == null) {
             return 0;
         }
         int currentSize = 1;
         for (Constants.Direction direction : Constants.Direction.values()) {
-            Tile tile = checkAdjacentTile(x, y, matrix, direction);
-            if (tile != null && tile.sameType(matrix[x][y])) {
+            Tile tile = checkAdjacentTile(point, matrix, direction);
+            if (tile != null && tile.sameType(matrix[point.getX()][point.getY()])) {
                 switch (direction) {
-                    case UP -> currentSize += findGroup(x, y + 1, matrix, done);
-                    case RIGHT -> currentSize += findGroup(x + 1, y, matrix, done);
-                    case DOWN -> currentSize += findGroup(x, y - 1, matrix, done);
-                    case LEFT -> currentSize += findGroup(x - 1, y, matrix, done);
+                    case UP -> currentSize += findGroup(new Point(point.getX(), point.getY() + 1), matrix, done);
+                    case RIGHT -> currentSize += findGroup(new Point(point.getX() + 1, point.getY()), matrix, done);
+                    case DOWN -> currentSize += findGroup(new Point(point.getX(), point.getY() - 1), matrix, done);
+                    case LEFT -> currentSize += findGroup(new Point(point.getX() - 1, point.getY()), matrix, done);
                 }
             }
         }
@@ -51,31 +51,35 @@ public class Utils {
      * @param direction is the direction in which the tile in the matrix is checked
      * @return the tile in the matrix in the direction specified
      */
-    public static Tile checkAdjacentTile(int x, int y, Tile[][] matrix, Constants.Direction direction) {
-        if (x < 0 || x >= Constants.bookshelfX || y < 0 || y >= Constants.bookshelfY) {
+    public static Tile checkAdjacentTile(Point point, Tile[][] matrix, Constants.Direction direction) {
+        if (point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY) {
             return null;
         }
         switch (direction) {
             case UP -> {
-                return matrix[x][y + 1];
+                return matrix[point.getX()][point.getY() + 1];
             }
             case RIGHT -> {
-                return matrix[x + 1][y];
+                return matrix[point.getX() + 1][point.getY()];
             }
             case DOWN -> {
-                return matrix[x][y - 1];
+                return matrix[point.getX()][point.getY() - 1];
             }
             case LEFT -> {
-                return matrix[x - 1][y];
+                return matrix[point.getX() - 1][point.getY()];
             }
             default -> throw new IllegalStateException("Invalid direction: " + direction);
         }
     }
 
-    // -- Methods exported from Controller --
-
+    /**
+     * TODO
+     * @param boardMatrix
+     * @param points
+     * @return
+     */
     public static boolean checkIfTilesCanBeTaken(Tile[][] boardMatrix, Point... points) {
-        //checks if tiles are adjacent
+        // Checks if tiles are adjacent
         if (
                 points.length != 1 &&
                         (
@@ -85,28 +89,31 @@ public class Utils {
         )
             return false;
 
-        //checks if tiles have at least one free side
+        // Checks if tiles have at least one free side
         for (Point point : points) {
             boolean flag = false;
-            //Up
+            // Up
             if (point.getX() != 0) {
                 if (boardMatrix[point.getX() - 1][point.getY()] == null ||
                         boardMatrix[point.getX() - 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
-            //Down
+
+            // Down
             if (point.getX() != Constants.livingRoomBoardX - 1) {
                 if (boardMatrix[point.getX() + 1][point.getY()] == null ||
                         boardMatrix[point.getX() + 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
-            //Left
+
+            // Left
             if (point.getY() != 0) {
                 if (boardMatrix[point.getX()][point.getY() - 1] == null ||
                         boardMatrix[point.getX()][point.getY() - 1].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
-            //Right
+
+            // Right
             if (point.getY() != Constants.livingRoomBoardY - 1) {
                 if (boardMatrix[point.getX()][point.getY() + 1] == null ||
                         boardMatrix[point.getX()][point.getY() + 1].getType().equals(Constants.TileType.PLACEHOLDER))
@@ -119,6 +126,12 @@ public class Utils {
         return true;
     }
 
+    /**
+     * TODO
+     * @param lambda
+     * @param points
+     * @return
+     */
     private static boolean checkContiguity(java.util.function.ToIntFunction<Point> lambda, Point... points) {
         int[] tmp = Arrays.stream(points)
                 .mapToInt(lambda)
@@ -131,8 +144,14 @@ public class Utils {
         return true;
     }
 
+    /**
+     * TODO
+     * @param bookshelfMatrix
+     * @param column
+     * @param tilesNum
+     * @return
+     */
     public static boolean checkIfColumnHasEnoughSpace(Tile[][] bookshelfMatrix, int column, int tilesNum) {
-        //Tile[][] tempMatrix = this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix();
         int counter = 0;
         for (int i = Constants.bookshelfY - 1; i >= 0; i--) {
             if (bookshelfMatrix[column][i] == null) {

@@ -51,15 +51,22 @@ public class LivingRoomBoard {
 
         board[p.getX()][p.getY()] = null;
     }
-    public boolean checkIsolatedTile(int x, int y, Tile[][] matrix) {
-        if(x < 0 || x >= Constants.livingRoomBoardX || y < 0 || y >= Constants.livingRoomBoardY) {
+
+    /**
+     * TODO
+     * @param point
+     * @param matrix
+     * @return
+     */
+    public boolean checkIsolatedTile(Point point, Tile[][] matrix) {
+        if(point.getX() < 0 || point.getX() >= Constants.livingRoomBoardX || point.getY() < 0 || point.getY() >= Constants.livingRoomBoardY) {
             return false;
         }
         int freeSides = 0;
         for (Constants.Direction direction : Constants.Direction.values()) {
-            Tile tile = checkAdjacentTile(x, y, matrix, direction);
-            if (tile == null || tile.sameType(new Tile(Constants.TileType.PLACEHOLDER))) {
-                freeSides ++;
+            Tile tile = checkAdjacentTile(point, matrix, direction);
+            if (tile == null || tile.isPlaceholder()) {
+                freeSides++;
             }
         }
         return (freeSides == 4);

@@ -59,7 +59,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
         GameList.getInstance().notifyPlayerJoinedGame(gameID);
 
-        this.controller = new Controller(this.model, this.client);
+        this.controller = new Controller(this.model);
 
         this.model.addListener(this);
 
@@ -90,7 +90,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
         GameList.getInstance().addGame(this.model);
 
-        this.controller = new Controller(this.model, this.client);
+        this.controller = new Controller(this.model);
 
         this.model.addListener(this);
     }
