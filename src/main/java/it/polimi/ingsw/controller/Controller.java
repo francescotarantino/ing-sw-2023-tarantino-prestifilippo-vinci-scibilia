@@ -280,7 +280,7 @@ public class Controller {
             //assigning points for same type adjacent tiles
 
             Tile [][] playerBookshelf = game.getBookshelves()[game.getCurrentPlayerIndex()].getMatrix();
-            boolean [][] checkedTiles = new boolean[0][];
+            boolean [][] checkedTiles = new boolean[Constants.bookshelfX][Constants.bookshelfY];
 
             for(int x = 0; x < Constants.bookshelfX; x++){
                 for( int y = 0; y < Constants.bookshelfY; y++){
@@ -291,7 +291,7 @@ public class Controller {
                     int confrontingColumns = y;
                     // controlling if inside the player's bookshelf, once you point a tile you can find others of the same type nearby
                     // looking for a same type tile on the successive row and eventually on all the columns after and before that tile
-                    while( (confrontingRows + 1) < Constants.bookshelfX && checkedTiles[ (confrontingRows + 1)][y] != true && playerBookshelf[(confrontingRows + 1)][y].getType() == thisTile.getType() ){
+                    while( (confrontingRows + 1) < Constants.bookshelfX  && checkedTiles[ (confrontingRows + 1)][y] != true && playerBookshelf[(confrontingRows + 1)][y].getType() == thisTile.getType() ){
                         sameType++;
                         checkedTiles[(confrontingRows + 1)][y] = true;
                         while( (confrontingColumns + 1) < Constants.bookshelfY && checkedTiles[( confrontingRows + 1)][( confrontingColumns + 1) ] != true && playerBookshelf[(confrontingRows + 1)][(confrontingColumns + 1)].getType() == thisTile.getType() ){
