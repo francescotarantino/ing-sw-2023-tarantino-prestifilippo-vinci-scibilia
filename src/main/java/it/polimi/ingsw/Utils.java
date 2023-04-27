@@ -8,16 +8,18 @@ import java.util.Arrays;
 public class Utils {
     /**
      * Checks if the matrix has the correct size of the bookshelf (Constants.bookshelfX x Constants.bookshelfY)
+     *
      * @param matrix matrix to check
-     * @param <T> type of the matrix
+     * @param <T>    type of the matrix
      */
-    public static <T> void checkMatrixSize(T[][] matrix){
-        if(matrix.length != Constants.bookshelfX)
+    public static <T> void checkMatrixSize(T[][] matrix) {
+        if (matrix.length != Constants.bookshelfX)
             throw new IllegalArgumentException("Matrix must be " + Constants.bookshelfX + "x" + Constants.bookshelfY);
         for (T[] tiles : matrix)
             if (tiles.length != Constants.bookshelfY)
                 throw new IllegalArgumentException("Matrix must be " + Constants.bookshelfX + "x" + Constants.bookshelfY);
     }
+
     /**
      * @return is the size of the group found starting from the tile in position (x,y) in the matrix
      * The method is recursive, and it builds the biggest possible block by checking the adjacent tiles in all directions
@@ -27,11 +29,15 @@ public class Utils {
             return 0;
         }
         done[x][y] = true;
+        if(matrix[x][y] == null) {
+            return 0;
+        }
         int currentSize = 1;
-        for(Constants.Direction direction: Constants.Direction.values()) {
-            if (checkAdjacentTile(x, y, matrix, direction)) {
+        for (Constants.Direction direction : Constants.Direction.values()) {
+            Tile tile = checkAdjacentTile(x, y, matrix, direction);
+            if (tile != null && tile.sameType(matrix[x][y])) {
                 switch (direction) {
-                    case UP ->  currentSize += findGroup(x, y + 1, matrix, done);
+                    case UP -> currentSize += findGroup(x, y + 1, matrix, done);
                     case RIGHT -> currentSize += findGroup(x + 1, y, matrix, done);
                     case DOWN -> currentSize += findGroup(x, y - 1, matrix, done);
                     case LEFT -> currentSize += findGroup(x - 1, y, matrix, done);
@@ -40,63 +46,35 @@ public class Utils {
         }
         return currentSize;
     }
+
     /**
      * @param direction is the direction in which the tile in the matrix is checked
-     * @return true if the tile in the matrix has the same type of the tile in the direction specified
+     * @return the tile in the matrix in the direction specified
      */
-    public static boolean checkAdjacentTile(int x, int y, Tile[][] matrix, Constants.Direction direction) {
-        if(x < 0 || x >= Constants.bookshelfX || y < 0 || y >= Constants.bookshelfY) {
-            return false;
+    public static Tile checkAdjacentTile(int x, int y, Tile[][] matrix, Constants.Direction direction) {
+        if (x < 0 || x >= Constants.bookshelfX || y < 0 || y >= Constants.bookshelfY) {
+            return null;
         }
         switch (direction) {
             case UP -> {
-                if (y == Constants.bookshelfY - 1) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x][y + 1])) {
-                        return true;
-                    }
-                }
+                return matrix[x][y + 1];
             }
             case RIGHT -> {
-                if (x == Constants.bookshelfX - 1) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x + 1][y])) {
-                        return true;
-                    }
-                }
+                return matrix[x + 1][y];
             }
             case DOWN -> {
-                if (y == 0) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x][y - 1])) {
-                        return true;
-                    }
-                }
+                return matrix[x][y - 1];
             }
             case LEFT -> {
-                if (x == 0) {
-                    return false;
-                }
-                else {
-                    if (matrix[x][y].sameType(matrix[x - 1][y])) {
-                        return true;
-                    }
-                }
+                return matrix[x - 1][y];
             }
             default -> throw new IllegalStateException("Invalid direction: " + direction);
         }
-        return false;
     }
 
     // -- Methods exported from Controller --
 
-    public static boolean checkIfTilesCanBeTaken(Tile[][] boardMatrix, Point...points){
+    public static boolean checkIfTilesCanBeTaken(Tile[][] boardMatrix, Point... points) {
         //checks if tiles are adjacent
         if (
                 points.length != 1 &&
@@ -108,58 +86,58 @@ public class Utils {
             return false;
 
         //checks if tiles have at least one free side
-        for(Point point : points){
+        for (Point point : points) {
             boolean flag = false;
             //Up
-            if(point.getX() != 0){
-                if(boardMatrix[point.getX() - 1][point.getY()] == null ||
+            if (point.getX() != 0) {
+                if (boardMatrix[point.getX() - 1][point.getY()] == null ||
                         boardMatrix[point.getX() - 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
             //Down
-            if(point.getX() != Constants.livingRoomBoardX - 1){
-                if(boardMatrix[point.getX() + 1][point.getY()] == null ||
+            if (point.getX() != Constants.livingRoomBoardX - 1) {
+                if (boardMatrix[point.getX() + 1][point.getY()] == null ||
                         boardMatrix[point.getX() + 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
             //Left
-            if(point.getY() != 0){
-                if(boardMatrix[point.getX()][point.getY() - 1] == null ||
+            if (point.getY() != 0) {
+                if (boardMatrix[point.getX()][point.getY() - 1] == null ||
                         boardMatrix[point.getX()][point.getY() - 1].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
             //Right
-            if(point.getY() != Constants.livingRoomBoardY - 1){
-                if(boardMatrix[point.getX()][point.getY() + 1] == null ||
+            if (point.getY() != Constants.livingRoomBoardY - 1) {
+                if (boardMatrix[point.getX()][point.getY() + 1] == null ||
                         boardMatrix[point.getX()][point.getY() + 1].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
 
-            if(!flag) return false;
+            if (!flag) return false;
         }
 
         return true;
     }
 
-    private static boolean checkContiguity(java.util.function.ToIntFunction<Point> lambda, Point...points){
+    private static boolean checkContiguity(java.util.function.ToIntFunction<Point> lambda, Point... points) {
         int[] tmp = Arrays.stream(points)
                 .mapToInt(lambda)
                 .sorted()
                 .toArray();
-        for(int i = 1; i < tmp.length; i++){
-            if(tmp[i] != (tmp[i-1] + 1))
+        for (int i = 1; i < tmp.length; i++) {
+            if (tmp[i] != (tmp[i - 1] + 1))
                 return false;
         }
         return true;
     }
 
-    public static boolean checkIfColumnHasEnoughSpace(Tile[][] bookshelfMatrix, int column, int tilesNum){
+    public static boolean checkIfColumnHasEnoughSpace(Tile[][] bookshelfMatrix, int column, int tilesNum) {
         //Tile[][] tempMatrix = this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix();
         int counter = 0;
-        for(int i = Constants.bookshelfY - 1; i >= 0; i--){
-            if(bookshelfMatrix[column][i] == null){
+        for (int i = Constants.bookshelfY - 1; i >= 0; i--) {
+            if (bookshelfMatrix[column][i] == null) {
                 counter++;
-                if(counter == tilesNum)
+                if (counter == tilesNum)
                     return true;
             } else return false;
         }

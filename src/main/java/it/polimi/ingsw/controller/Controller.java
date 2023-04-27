@@ -1,9 +1,11 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.*;
 
+import static it.polimi.ingsw.Constants.getAdjacentTilesPoints;
 import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
 import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
 
@@ -90,16 +92,15 @@ public class Controller {
     private void insertTiles(int column, Tile[] tiles){
         Tile[][] playersBookshelf = game.getBookshelves()[game.getCurrentPlayerIndex()].getMatrix();
         // TODO: revision of indexing policy for bookshelf
-        int freeposition = Constants.bookshelfX - 1; //using X as an Y for now
-        while( playersBookshelf[freeposition][column] != null) freeposition--;
-        int tilesindex = 0;
-        /*if( freeposition < tiles.length) throw  IndexOutOfBoundsException; // TODO: discuss about exceptions in controller
+        int freePosition = Constants.bookshelfX - 1; //using X as an Y for now
+        while( playersBookshelf[freePosition][column] != null) freePosition--;
+        int tilesIndex = 0;
+        if( freePosition < tiles.length) throw new IndexOutOfBoundsException("Column too short");
         else for( int i = 0; i < tiles.length; i++){
-                game.getBookshelves()[game.getCurrentPlayerIndex()].insertTile(new Point(freeposition,column),tiles[tilesindex]);
-                freeposition--;
-                tilesindex++;
+                game.getBookshelves()[game.getCurrentPlayerIndex()].insertTile(new Point(freePosition,column),tiles[tilesIndex]);
+                freePosition--;
+                tilesIndex++;
             }
-*/
     }
 
     /**
@@ -148,161 +149,56 @@ public class Controller {
      * @return true if a refill is needed, false otherwise
      */
     private boolean checkBoardNeedRefill() {
-        int numTile = 0;
-        int onlyTile = 0;
-
-        for (int i = 0; i < Constants.livingRoomBoardY; i++) {
-            for (int j = 0; j < Constants.livingRoomBoardX; j++) {
-                Tile currentTile = game.getLivingRoomBoard().getTile(new Point(j, i));
-                if (currentTile != null && currentTile.getType() != Constants.TileType.PLACEHOLDER) {
-                    numTile++;
-                    boolean b, c, d1, d2, d3, d4;
-                    if (j != Constants.livingRoomBoardX - 1) {
-                         b = game.getLivingRoomBoard().getTile(new Point(j + 1, i)).getType() == Constants.TileType.PLACEHOLDER;
-                         c = game.getLivingRoomBoard().getTile(new Point(j + 1, i)) == null;
-                         d1 = b || c;
-                    }else d1 =true;
-
-                    if (j != 0) {
-                        b = game.getLivingRoomBoard().getTile(new Point(j - 1, i)).getType() == Constants.TileType.PLACEHOLDER;
-                        c = game.getLivingRoomBoard().getTile(new Point(j - 1, i)) == null;
-                        d2 = b || c;
-                    }else d2=true;
-
-                    if (i != Constants.livingRoomBoardY - 1) {
-                        b = game.getLivingRoomBoard().getTile(new Point(j, i + 1)).getType() == Constants.TileType.PLACEHOLDER;
-                        c = game.getLivingRoomBoard().getTile(new Point(j, i + 1)) == null;
-                        d3 = b || c;
-                    }else d3=true;
-
-                    if (i != 0) {
-                        b = game.getLivingRoomBoard().getTile(new Point(j, i - 1)).getType() == Constants.TileType.PLACEHOLDER;
-                        c = game.getLivingRoomBoard().getTile(new Point(j, i - 1)) == null;
-                        d4 = b || c;
-                    }else d4=true;
-
-                    if(d1&&d2&&d3&&d4) onlyTile++;
-
+        for (int i = 0; i < Constants.livingRoomBoardX; i++) {
+            for (int j = 0; j < Constants.livingRoomBoardY; j++) {
+                Tile currentTile = game.getLivingRoomBoard().getTile(new Point(i, j));
+                if (currentTile != null && currentTile.sameType(new Tile(Constants.TileType.PLACEHOLDER))) {
+                    if (!game.getLivingRoomBoard().checkIsolatedTile(i, j, game.getLivingRoomBoard().getMatrix())) {
+                        return false;
+                    }
                 }
             }
         }
-        return numTile == onlyTile;
+        return true;
     }
-
-    private void endGame(){
-        // TODO: implement end game
-
-        //assigning points to each player
-        for( int i = 0; i < game.getTotalPlayersNumber(); i++){
-            int j=0;
-
-            //counting for each player point gained with tokens
-            while( game.getCurrentPlayer().getScoringTokens().isEmpty() == false ){
-                game.getCurrentPlayer().addPoints( game.getCurrentPlayer().getScoringTokens().get(j));
-                        game.getCurrentPlayer().getScoringTokens().remove(j);
-                        j++;
+    private void addTokenPoints(Player player) {
+        while(!player.getScoringTokens().isEmpty()){
+            for (int j = 0; j < player.getScoringTokens().size(); j++) {
+                player.addPoints(player.getScoringTokens().get(j));
             }
-
-            //controlling players' personal goal card
-           int pcgPoints;
-            pcgPoints = game.getBookshelves()[game.getCurrentPlayerIndex()].getPersonalGoalCard().checkValidity( game.getBookshelves()[game.getCurrentPlayerIndex()].getMatrix());
-            game.getCurrentPlayer().addPoints(pcgPoints);
-
-            //assigning points for same type adjacent tiles
-
-            Tile [][] playerBookshelf = game.getBookshelves()[game.getCurrentPlayerIndex()].getMatrix();
-            boolean [][] checkedTiles = new boolean[Constants.bookshelfX][Constants.bookshelfY];
-
-            for(int x = 0; x < Constants.bookshelfX; x++){
-                for( int y = 0; y < Constants.bookshelfY; y++){
-
-                    Tile thisTile = playerBookshelf[x][y];
-                    int sameType = 0;
-                    int confrontingRows = x;
-                    int confrontingColumns = y;
-                    // controlling if inside the player's bookshelf, once you point a tile you can find others of the same type nearby
-                    // looking for a same type tile on the successive row and eventually on all the columns after and before that tile
-                    while( (confrontingRows + 1) < Constants.bookshelfX  && checkedTiles[ (confrontingRows + 1)][y] != true && playerBookshelf[(confrontingRows + 1)][y].getType() == thisTile.getType() ){
-                        sameType++;
-                        checkedTiles[(confrontingRows + 1)][y] = true;
-                        while( (confrontingColumns + 1) < Constants.bookshelfY && checkedTiles[( confrontingRows + 1)][( confrontingColumns + 1) ] != true && playerBookshelf[(confrontingRows + 1)][(confrontingColumns + 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows + 1)][(confrontingColumns + 1)] = true;
-                            confrontingColumns++;
-                        }
-                        while( (confrontingColumns - 1) >= 0 && checkedTiles[( confrontingRows + 1)][( confrontingColumns - 1) ] != true && playerBookshelf[(confrontingRows + 1)][(confrontingColumns - 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows + 1)][(confrontingColumns - 1)] = true;
-                            confrontingColumns--;
-                        }
-
-                        confrontingRows++;
-                    }
-                    // looking for a same type tile on the previous row and eventually on all the columns after and before that tile
-                    while( (confrontingRows - 1) >= 0 && checkedTiles[ (confrontingRows - 1)][y] != true && playerBookshelf[(confrontingRows - 1)][y].getType() == thisTile.getType() ){
-                        sameType++;
-                        checkedTiles[(confrontingRows - 1)][y] = true;
-                        while( (confrontingColumns + 1) < Constants.bookshelfY && checkedTiles[( confrontingRows - 1)][( confrontingColumns + 1) ] != true && playerBookshelf[(confrontingRows - 1)][(confrontingColumns + 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows - 1)][(confrontingColumns + 1)] = true;
-                            confrontingColumns++;
-                        }
-                        while( (confrontingColumns - 1) >= 0 && checkedTiles[( confrontingRows - 1)][( confrontingColumns - 1) ] != true && playerBookshelf[(confrontingRows - 1)][(confrontingColumns - 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows - 1)][(confrontingColumns - 1)] = true;
-                            confrontingColumns--;
-                        }
-
-                        confrontingRows--;
-                    }
-
-
-                    // looking for a same type tile on the successive column and eventually on all the rows after and before that tile
-                    confrontingRows = x;
-                    confrontingColumns = y;
-                    while( (confrontingColumns + 1) < Constants.bookshelfY && checkedTiles[x][(confrontingColumns + 1)] != true && playerBookshelf[x][(confrontingColumns + 1)].getType() == thisTile.getType() ){
-                        sameType++;
-                        checkedTiles[x][(confrontingColumns + 1)] = true;
-                        while( (confrontingRows + 1) < Constants.bookshelfX && checkedTiles[( confrontingRows + 1)][( confrontingColumns + 1) ] != true && playerBookshelf[(confrontingRows + 1)][(confrontingColumns + 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows + 1)][(confrontingColumns + 1)] = true;
-                            confrontingRows++;
-                        }
-                        while( (confrontingRows - 1) >= 0 && checkedTiles[( confrontingRows - 1)][( confrontingColumns + 1) ] != true && playerBookshelf[(confrontingRows - 1)][(confrontingColumns + 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows - 1)][(confrontingColumns + 1)] = true;
-                            confrontingRows--;
-                        }
-                        confrontingColumns++;
-                    }
-
-                    // looking for a same type tile on the previous column and eventually on all the rows after and before that tile
-                    confrontingRows = x;
-                    confrontingColumns = y;
-                    while( (confrontingColumns - 1) >= 0 && checkedTiles[x][(confrontingColumns - 1)] != true && playerBookshelf[x][(confrontingColumns - 1)].getType() == thisTile.getType() ){
-                        sameType++;
-                        checkedTiles[x][(confrontingColumns - 1)] = true;
-                        while( (confrontingRows + 1) < Constants.bookshelfX && checkedTiles[( confrontingRows + 1)][( confrontingColumns - 1) ] != true && playerBookshelf[(confrontingRows + 1)][(confrontingColumns - 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows + 1)][(confrontingColumns - 1)] = true;
-                            confrontingRows++;
-                        }
-                        while( (confrontingRows - 1) >= 0 && checkedTiles[( confrontingRows - 1)][( confrontingColumns - 1) ] != true && playerBookshelf[(confrontingRows - 1)][(confrontingColumns - 1)].getType() == thisTile.getType() ){
-                            sameType++;
-                            checkedTiles[( confrontingRows - 1)][(confrontingColumns - 1)] = true;
-                            confrontingRows--;
-                        }
-                        confrontingColumns--;
-                    }
-                    if( sameType > 2) {
-                        int adjacentPoints;
-                        adjacentPoints = Constants.getAdjacentTilesPoints(sameType);
-                        game.getCurrentPlayer().addPoints(adjacentPoints);
+        }
+    }
+    private void addPGCPoints(Player player, Bookshelf bookshelf) {
+        int PCGPoints;
+        PCGPoints = bookshelf.getPersonalGoalCard().checkValidity(bookshelf.getMatrix());
+        player.addPoints(PCGPoints);
+    }
+    /**
+     * adds the points scored by the player by creating clusters of tiles
+     */
+    private void addAdjacentObjectTilesPoints(Player player, Tile[][] matrix) {
+        boolean[][] done = new boolean[Constants.bookshelfX][Constants.bookshelfY];
+        for (int i = 0; i < Constants.bookshelfX; i++) {
+            for (int j = 0; j < Constants.bookshelfY; j++) {
+                if(!done[i][j]) {
+                    int groupSize = Utils.findGroup(i, j, matrix, done);
+                    if(groupSize >= 3) {
+                        player.addPoints(getAdjacentTilesPoints(groupSize));
                     }
                 }
             }
-
+        }
+    }
+    private void assignPoints() {
+        for( int i = 0; i < game.getTotalPlayersNumber(); i++){
+            addTokenPoints(game.getCurrentPlayer());
+            addPGCPoints(game.getCurrentPlayer() , game.getBookshelves()[game.getCurrentPlayerIndex()]);
+            addAdjacentObjectTilesPoints(game.getCurrentPlayer(), game.getBookshelves()[game.getCurrentPlayerIndex()].getMatrix());
             this.nextPlayer();
         }
+    }
+    private void endGame(){
+        assignPoints();
+        // TODO: implement other aspects related to the conclusion of a game
     }
 }

@@ -4,6 +4,8 @@ import it.polimi.ingsw.Constants;
 
 import java.util.Set;
 
+import static it.polimi.ingsw.Utils.checkAdjacentTile;
+
 public class LivingRoomBoard {
     private final Tile[][] board;
 
@@ -48,6 +50,19 @@ public class LivingRoomBoard {
         }
 
         board[p.getX()][p.getY()] = null;
+    }
+    public boolean checkIsolatedTile(int x, int y, Tile[][] matrix) {
+        if(x < 0 || x >= Constants.livingRoomBoardX || y < 0 || y >= Constants.livingRoomBoardY) {
+            return false;
+        }
+        int freeSides = 0;
+        for (Constants.Direction direction : Constants.Direction.values()) {
+            Tile tile = checkAdjacentTile(x, y, matrix, direction);
+            if (tile == null || tile.sameType(new Tile(Constants.TileType.PLACEHOLDER))) {
+                freeSides ++;
+            }
+        }
+        return (freeSides == 4);
     }
 
     public Tile[][] getMatrix() {
