@@ -81,6 +81,7 @@ public class AppClient {
                 try {
                     serverStub.receive(client);
                 } catch (RemoteException e) {
+                    e.printStackTrace();
                     System.err.println("Cannot receive from server. Stopping...");
                     try {
                         serverStub.close();

@@ -24,7 +24,10 @@ public class ServerStub implements Server {
      * This enumeration contains all the methods that the client can call on the server.
      */
     public enum Methods {
-        JOIN, CREATE, GET_GAMES_LIST, PERFORM_TURN
+        JOIN,
+        CREATE,
+        GET_GAMES_LIST,
+        PERFORM_TURN
     }
 
     public ServerStub(String ip, int port) {
@@ -58,9 +61,11 @@ public class ServerStub implements Server {
     @Override
     public void addPlayerToGame(int gameID, String username) throws RemoteException {
         try {
-            oos.writeObject(Methods.JOIN.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.JOIN);
             oos.writeObject(gameID);
             oos.writeObject(username);
+            oos.flush();
         } catch (IOException e) {
             throw new RemoteException("Cannot send event", e);
         }
@@ -69,10 +74,12 @@ public class ServerStub implements Server {
     @Override
     public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
         try {
-            oos.writeObject(Methods.CREATE.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.CREATE);
             oos.writeObject(numberOfPlayers);
             oos.writeObject(numberOfCommonGoalCards);
             oos.writeObject(username);
+            oos.flush();
         } catch (IOException e) {
             throw new RemoteException("Cannot send event", e);
         }
@@ -81,7 +88,9 @@ public class ServerStub implements Server {
     @Override
     public void getGamesList() throws RemoteException {
         try {
-            oos.writeObject(Methods.GET_GAMES_LIST.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.GET_GAMES_LIST);
+            oos.flush();
         } catch (IOException e) {
             throw new RemoteException("Cannot receive event", e);
         }
@@ -90,9 +99,11 @@ public class ServerStub implements Server {
     @Override
     public void performTurn(int column, Point... points) throws RemoteException {
         try {
-            oos.writeObject(Methods.PERFORM_TURN.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.PERFORM_TURN);
             oos.writeObject(column);
             oos.writeObject(points);
+            oos.flush();
         } catch (IOException e) {
             throw new RemoteException("Cannot send event", e);
         }
@@ -100,17 +111,18 @@ public class ServerStub implements Server {
 
     public void receive(Client client) throws RemoteException {
         try {
-            int enum_id = (Integer) ois.readObject();
+            ClientSkeleton.Methods method = (ClientSkeleton.Methods) ois.readObject();
 
-            switch (ClientSkeleton.Methods.values()[enum_id]) {
+            switch (method) {
                 case UPDATE_GAMES_LIST -> client.updateGamesList((List<GameDetailsView>) ois.readObject());
                 case UPDATE_PLAYERS_LIST -> client.updatePlayersList((List<String>) ois.readObject());
-                case SHOW_ERROR -> client.showError((String) ois.readObject(), (boolean) ois.readObject());
+                case SHOW_ERROR -> client.showError((String) ois.readObject(), (Boolean) ois.readObject());
                 case GAME_HAS_STARTED -> client.gameHasStarted();
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException e) {
-            throw new RemoteException("Cannot receive event", e);
+            e.printStackTrace();
+            throw new RemoteException("Cannot receive event");
         }
     }
 

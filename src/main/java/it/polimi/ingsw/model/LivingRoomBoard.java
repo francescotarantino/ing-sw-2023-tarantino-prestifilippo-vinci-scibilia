@@ -43,8 +43,8 @@ public class LivingRoomBoard {
     public void removeTile(Point p) {
         if (p.getX() < 0|| p.getY() < 0 || p.getX() > Constants.livingRoomBoardX - 1 || p.getY() > Constants.livingRoomBoardY - 1) {
             throw new IndexOutOfBoundsException("Invalid living room board coordinates");
-        } else if (board[p.getX()][p.getY()].getType() == Constants.TileType.PLACEHOLDER) {
-            throw new IllegalArgumentException("A placeholder tile cannot be removed");
+        } else if (board[p.getX()][p.getY()] == null || board[p.getX()][p.getY()].getType() == Constants.TileType.PLACEHOLDER) {
+            throw new IllegalArgumentException("A placeholder or a null tile cannot be removed");
         }
 
         board[p.getX()][p.getY()] = null;

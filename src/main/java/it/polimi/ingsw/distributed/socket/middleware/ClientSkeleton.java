@@ -3,6 +3,7 @@ package it.polimi.ingsw.distributed.socket.middleware;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
@@ -31,7 +32,6 @@ public class ClientSkeleton implements Client {
         } catch (IOException e) {
             throw new RemoteException("Cannot create output stream", e);
         }
-
         try {
             this.ois = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
@@ -42,8 +42,10 @@ public class ClientSkeleton implements Client {
     @Override
     public void updateGamesList(List<GameDetailsView> o) throws RemoteException {
         try {
-            oos.writeObject(Methods.UPDATE_GAMES_LIST.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.UPDATE_GAMES_LIST);
             oos.writeObject(o);
+            oos.flush();
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
         }
@@ -52,9 +54,11 @@ public class ClientSkeleton implements Client {
     @Override
     public void showError(String err, boolean exit) throws RemoteException {
         try {
-            oos.writeObject(Methods.SHOW_ERROR.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.SHOW_ERROR);
             oos.writeObject(err);
             oos.writeObject(exit);
+            oos.flush();
         } catch (IOException e) {
             throw new RemoteException("Cannot send error signal", e);
         }
@@ -63,8 +67,10 @@ public class ClientSkeleton implements Client {
     @Override
     public void updatePlayersList(List<String> o) throws RemoteException {
         try {
-            oos.writeObject(Methods.UPDATE_PLAYERS_LIST.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.UPDATE_PLAYERS_LIST);
             oos.writeObject(o);
+            oos.flush();
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
         }
@@ -73,7 +79,9 @@ public class ClientSkeleton implements Client {
     @Override
     public void gameHasStarted() throws RemoteException {
         try {
-            oos.writeObject(Methods.GAME_HAS_STARTED.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.GAME_HAS_STARTED);
+            oos.flush();
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
         }
@@ -82,8 +90,10 @@ public class ClientSkeleton implements Client {
     @Override
     public void modelChanged(GameView gameView) throws RemoteException {
         try {
-            oos.writeObject(Methods.MODEL_CHANGED.ordinal());
+            oos.reset();
+            oos.writeObject(Methods.MODEL_CHANGED);
             oos.writeObject(gameView);
+            oos.flush();
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
         }
@@ -91,14 +101,16 @@ public class ClientSkeleton implements Client {
 
     public void receive(Server server) throws RemoteException {
         try {
-            int enum_id = (Integer) ois.readObject();
+            ServerStub.Methods method = (ServerStub.Methods) ois.readObject();
 
-            switch (ServerStub.Methods.values()[enum_id]) {
-                case JOIN -> server.addPlayerToGame((int) ois.readObject(), (String) ois.readObject());
-                case CREATE -> server.create((int) ois.readObject(), (int) ois.readObject(), (String) ois.readObject());
+            switch (method) {
+                case JOIN -> server.addPlayerToGame((Integer) ois.readObject(), (String) ois.readObject());
+                case CREATE -> server.create((Integer) ois.readObject(), (Integer) ois.readObject(), (String) ois.readObject());
                 case GET_GAMES_LIST -> server.getGamesList();
+                case PERFORM_TURN -> server.performTurn((Integer) ois.readObject(), (Point[]) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (InvalidChoiceException e) {
             this.showError(e.getMessage(), false);

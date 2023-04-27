@@ -22,7 +22,7 @@ public class CGCEightOf  extends CommonGoalCard{
                 .toArray(Constants.TileType[]::new)) {
             for (int i = 0; i < Constants.bookshelfX; i++) {
                 for (int j = 0; j < Constants.bookshelfY; j++) {
-                    if (matrix[i][j].getType() == type)  {
+                    if (matrix[i][j] != null && matrix[i][j].getType() == type)  {
                         tilesOcc++;
                     }
                 }
