@@ -1,6 +1,10 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
+
+import java.util.Arrays;
+
 public class Utils {
     /**
      * Checks if the matrix has the correct size of the bookshelf (Constants.bookshelfX x Constants.bookshelfY)
@@ -86,6 +90,78 @@ public class Utils {
                 }
             }
             default -> throw new IllegalStateException("Invalid direction: " + direction);
+        }
+        return false;
+    }
+
+    // -- Methods exported from Controller --
+
+    public static boolean checkIfTilesCanBeTaken(Tile[][] boardMatrix, Point...points){
+        //checks if tiles are adjacent
+        if (
+                points.length != 1 &&
+                        (
+                                (!(points[0].getX() == points[1].getX() && checkContiguity(Point::getY, points))) ||
+                                        (!(points[0].getY() == points[1].getY() && checkContiguity(Point::getX, points)))
+                        )
+        )
+            return false;
+
+        //checks if tiles have at least one free side
+        for(Point point : points){
+            boolean flag = false;
+            //Up
+            if(point.getX() != 0){
+                if(boardMatrix[point.getX() - 1][point.getY()] == null ||
+                        boardMatrix[point.getX() - 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+            //Down
+            if(point.getX() != Constants.livingRoomBoardX - 1){
+                if(boardMatrix[point.getX() + 1][point.getY()] == null ||
+                        boardMatrix[point.getX() + 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+            //Left
+            if(point.getY() != 0){
+                if(boardMatrix[point.getX()][point.getY() - 1] == null ||
+                        boardMatrix[point.getX()][point.getY() - 1].getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+            //Right
+            if(point.getY() != Constants.livingRoomBoardY - 1){
+                if(boardMatrix[point.getX()][point.getY() + 1] == null ||
+                        boardMatrix[point.getX()][point.getY() + 1].getType().equals(Constants.TileType.PLACEHOLDER))
+                    flag = true;
+            } else flag = true;
+
+            if(!flag) return false;
+        }
+
+        return true;
+    }
+
+    private static boolean checkContiguity(java.util.function.ToIntFunction<Point> lambda, Point...points){
+        int[] tmp = Arrays.stream(points)
+                .mapToInt(lambda)
+                .sorted()
+                .toArray();
+        for(int i = 1; i < tmp.length; i++){
+            if(tmp[i] != (tmp[i-1] + 1))
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean checkIfColumnHasEnoughSpace(Tile[][] bookshelfMatrix, int column, int tilesNum){
+        //Tile[][] tempMatrix = this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix();
+        int counter = 0;
+        for(int i = Constants.bookshelfY - 1; i >= 0; i--){
+            if(bookshelfMatrix[column][i] == null){
+                counter++;
+                if(counter == tilesNum)
+                    return true;
+            } else return false;
         }
         return false;
     }

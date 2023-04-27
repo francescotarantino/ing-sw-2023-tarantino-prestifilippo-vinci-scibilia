@@ -2,14 +2,20 @@ package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameUIListener;
-import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.model.Point;
 
+import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
+import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
+import static it.polimi.ingsw.listeners.Listener.notifyListeners;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameUI implements Runnable {
-    private final ArrayList<GameUIListener> lst = new ArrayList<>();
+    private final List<GameUIListener> lst = new ArrayList<>();
 
     private enum State {
         MY_TURN,
@@ -17,6 +23,9 @@ public class GameUI implements Runnable {
     }
     private State state = State.NOT_MY_TURN;
     private final Object lock = new Object();
+
+    private Tile[][] currentBoard;
+    private Tile[][] currentBookshelf;
 
     private State getState() {
         synchronized (lock) {
@@ -53,6 +62,8 @@ public class GameUI implements Runnable {
      */
     public void update(GameView gameView){
         this.updateBoard(gameView);
+        this.currentBoard = gameView.getLivingRoomBoardMatrix();
+        this.currentBookshelf = gameView.getBookshelfMatrix();
 
         if(gameView.isMyTurn()) {
             System.out.println("It's now your turn!");
@@ -82,36 +93,67 @@ public class GameUI implements Runnable {
 
 
         Point[] points = new Point[howManyPick];
-        System.out.println("Now it's time to pick the tiles in order.");
-        for(int i = 0; i < howManyPick; i++){
-            System.out.println("Tile #" + i);
+        System.out.println("Pick " + howManyPick + " tiles in the order you want them to be inserted inside the bookshelf.");
+        boolean inputValidity = true;
+        int column;
+        do {
+            for (int i = 0; i < howManyPick; i++) {
+                int x, y;
+                do {
+                    System.out.println("Tile #" + i);
 
-            System.out.print("x: ");
-            int x = input.nextInt();
+                    System.out.print("x: ");
+                    x = input.nextInt() - 1;
+                    if (x < 0 || x > Constants.bookshelfX)
+                        System.out.println("X coordinate must be between 1 and " + Constants.bookshelfX);
 
-            System.out.print("y: ");
-            int y = input.nextInt();
+                    System.out.print("y: ");
+                    y = input.nextInt() - 1;
+                    if (y < 0 || y > Constants.bookshelfY)
+                        System.out.println("Y coordinate must be between 1 and " + Constants.bookshelfY);
 
-            points[i] = new Point(x, y);
-        }
+                } while (x < 0 || x > Constants.livingRoomBoardX || y < 0 || y > Constants.livingRoomBoardY);
+                points[i] = new Point(x, y);
+            }
 
-        // TODO: check if the tiles are valid
+            do {
+                System.out.print("In which column do you want to put the tiles? ");
+                column = input.nextInt() - 1;
+                if(column < 0 || column > Constants.bookshelfX)
+                    System.out.println("Column must be between 1 and " + Constants.bookshelfX + ".");
+            } while(column < 0 || column > Constants.bookshelfX);
 
-        System.out.print("In which column do you want to put the tiles? ");
-        int column = input.nextInt();
+            if(!checkIfTilesCanBeTaken(currentBoard, points)){
+                System.out.println("Invalid selection. Taken tiles must form a straight line and have at least one free side.");
+                inputValidity = false;
+            }
 
-        // TODO: invoke the listener
+            if(!checkIfColumnHasEnoughSpace(currentBookshelf, column, points.length)){
+                System.out.println("Chosen column does not have enough space.");
+                inputValidity = false;
+            }
+
+        } while(!inputValidity);
+
+        int finalColumn = column;
+        notifyListeners(lst, x -> x.performTurn(finalColumn, points));
+
+        setState(State.NOT_MY_TURN);
     }
 
     /**
      * This method prints the actual living room board
      */
     private void updateBoard(GameView gameView){
-        System.out.println("Stato attuale del soggiorno:");
-        for(int i = 0; i < Constants.livingRoomBoardX; i++){
-            for(int j=0; j < Constants.livingRoomBoardY; j++){
+        System.out.println("Current living room board:");
 
-                System.out.print(gameView.getBoard().getTile(new Point(i, j)).toString().charAt(0) + "\t");
+        for(int j = Constants.livingRoomBoardY - 1; j >= 0; j--){
+            for(int i = 0; i < Constants.livingRoomBoardX; i++){
+                if(gameView.getLivingRoomBoardMatrix()[i][j] != null) {
+                    System.out.print(gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0) + "\t");
+                } else {
+                    System.out.print(" \t");
+                }
             }
             System.out.println();
         }

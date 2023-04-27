@@ -1,6 +1,7 @@
 package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.model.Point;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -31,7 +32,9 @@ public interface Server extends Remote {
 
     /**
      * This method is called by the client to get the list of games.
-     * The client will be notified of the list of games using the {@link Client#updateGamesList(String[])} method.
+     * The client will be notified of the list of games using the {@link Client#updateGamesList(java.util.List)} method.
      */
     void getGamesList() throws RemoteException;
+
+    void performTurn(int column, Point...points) throws RemoteException;
 }

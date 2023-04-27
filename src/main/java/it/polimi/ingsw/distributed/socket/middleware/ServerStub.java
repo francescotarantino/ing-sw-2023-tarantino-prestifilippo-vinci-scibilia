@@ -2,14 +2,16 @@ package it.polimi.ingsw.distributed.socket.middleware;
 
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
-import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.viewmodel.GameView;
+import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ServerStub implements Server {
     private final String ip;
@@ -22,7 +24,7 @@ public class ServerStub implements Server {
      * This enumeration contains all the methods that the client can call on the server.
      */
     public enum Methods {
-        JOIN, CREATE, GET_GAMES_LIST
+        JOIN, CREATE, GET_GAMES_LIST, PERFORM_TURN
     }
 
     public ServerStub(String ip, int port) {
@@ -85,13 +87,24 @@ public class ServerStub implements Server {
         }
     }
 
+    @Override
+    public void performTurn(int column, Point... points) throws RemoteException {
+        try {
+            oos.writeObject(Methods.PERFORM_TURN.ordinal());
+            oos.writeObject(column);
+            oos.writeObject(points);
+        } catch (IOException e) {
+            throw new RemoteException("Cannot send event", e);
+        }
+    }
+
     public void receive(Client client) throws RemoteException {
         try {
             int enum_id = (Integer) ois.readObject();
 
             switch (ClientSkeleton.Methods.values()[enum_id]) {
-                case UPDATE_GAMES_LIST -> client.updateGamesList((String[]) ois.readObject());
-                case UPDATE_PLAYERS_LIST -> client.updatePlayersList((ArrayList<String>) ois.readObject());
+                case UPDATE_GAMES_LIST -> client.updateGamesList((List<GameDetailsView>) ois.readObject());
+                case UPDATE_PLAYERS_LIST -> client.updatePlayersList((List<String>) ois.readObject());
                 case SHOW_ERROR -> client.showError((String) ois.readObject(), (boolean) ois.readObject());
                 case GAME_HAS_STARTED -> client.gameHasStarted();
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());

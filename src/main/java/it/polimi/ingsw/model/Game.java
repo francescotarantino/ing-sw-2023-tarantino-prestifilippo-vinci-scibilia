@@ -4,6 +4,8 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
+
+import java.util.List;
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class Game {
     /**
      * List of listeners that are notified when the game model changes.
      */
-    private final ArrayList<GameListener> lst = new ArrayList<>();
+    private final List<GameListener> lst = new ArrayList<>();
 
 
     // Constructor
@@ -210,6 +212,14 @@ public class Game {
     }
 
     /**
+     * Checks if the game has started.
+     * @return true if the game has already started, false otherwise
+     */
+    public boolean isStarted() {
+        return this.currentPlayerIndex != -1;
+    }
+
+    /**
      * This method return the list of players in the game
      * @return an ArrayList of Strings containing the usernames of the players in the game
      */
@@ -265,7 +275,9 @@ public class Game {
                 string.append(this.getBookshelves()[i].getPlayer().getUsername()).append("\t");
         }
 
-        if(this.isFull()){
+        if(this.isStarted()){
+            string.append("(STARTED)");
+        } else if(this.isFull()){
             string.append("(FULL)");
         }
 
