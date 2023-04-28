@@ -78,14 +78,19 @@ public class Utils {
      * @return true if the tiles can be taken, false otherwise
      */
     public static boolean checkIfTilesCanBeTaken(Tile[][] boardMatrix, Point... points) {
-        // Checks if tiles are adjacent
+        // Check if the tiles are not null or placeholders
+        for (Point point : points) {
+            if (boardMatrix[point.getX()][point.getY()] == null || boardMatrix[point.getX()][point.getY()].isPlaceholder()) return false;
+        }
+
+        // Check if tiles are adjacent
         if(points.length != 1){
             if(points[0].getX() == points[1].getX() && !checkContiguity(Point::getY, points)) return false;
 
             if(points[0].getY() == points[1].getY() && !checkContiguity(Point::getX, points)) return false;
         }
 
-        // Checks if tiles have at least one free side
+        // Check if tiles have at least one free side
         for (Point point : points) {
             boolean flag = false;
             // Up

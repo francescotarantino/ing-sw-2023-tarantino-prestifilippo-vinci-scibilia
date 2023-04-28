@@ -88,15 +88,16 @@ public class GameUI implements Runnable {
             howManyPick = input.nextInt();
 
             if(howManyPick < Constants.minPick || howManyPick > Constants.maxPick)
-                System.out.print("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
+                System.out.println("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
         } while (howManyPick < Constants.minPick || howManyPick > Constants.maxPick);
 
 
         Point[] points = new Point[howManyPick];
         System.out.println("Pick " + howManyPick + " tiles in the order you want them to be inserted inside the bookshelf.");
-        boolean inputValidity = true;
+        boolean inputValidity;
         int column;
         do {
+            inputValidity = true;
             for (int i = 0; i < howManyPick; i++) {
                 int x, y;
                 do {
@@ -104,13 +105,13 @@ public class GameUI implements Runnable {
 
                     System.out.print("x: ");
                     x = input.nextInt() - 1;
-                    if (x < 0 || x > Constants.bookshelfX)
-                        System.out.println("X coordinate must be between 1 and " + Constants.bookshelfX);
+                    if (x < 0 || x > Constants.livingRoomBoardX)
+                        System.out.println("X coordinate must be between 1 and " + Constants.livingRoomBoardX);
 
                     System.out.print("y: ");
                     y = input.nextInt() - 1;
-                    if (y < 0 || y > Constants.bookshelfY)
-                        System.out.println("Y coordinate must be between 1 and " + Constants.bookshelfY);
+                    if (y < 0 || y > Constants.livingRoomBoardY)
+                        System.out.println("Y coordinate must be between 1 and " + Constants.livingRoomBoardY);
 
                 } while (x < 0 || x > Constants.livingRoomBoardX || y < 0 || y > Constants.livingRoomBoardY);
                 points[i] = new Point(x, y);
@@ -132,7 +133,6 @@ public class GameUI implements Runnable {
                 System.out.println("Chosen column does not have enough space.");
                 inputValidity = false;
             }
-
         } while(!inputValidity);
 
         int finalColumn = column;
@@ -142,7 +142,7 @@ public class GameUI implements Runnable {
     }
 
     /**
-     * This method prints the actual living room board
+     * This method prints the actual living room board and the player's bookshelf.
      */
     private void updateBoard(GameView gameView){
         System.out.println("Current living room board:");
@@ -151,6 +151,18 @@ public class GameUI implements Runnable {
             for(int i = 0; i < Constants.livingRoomBoardX; i++){
                 if(gameView.getLivingRoomBoardMatrix()[i][j] != null) {
                     System.out.print(gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0) + "\t");
+                } else {
+                    System.out.print(" \t");
+                }
+            }
+            System.out.println();
+        }
+
+        System.out.println("Your bookshelf:");
+        for(int j = Constants.bookshelfY - 1; j >= 0; j--){
+            for(int i = 0; i < Constants.bookshelfX; i++){
+                if(gameView.getBookshelfMatrix()[i][j] != null) {
+                    System.out.print(gameView.getBookshelfMatrix()[i][j].toString().charAt(0) + "\t");
                 } else {
                     System.out.print(" \t");
                 }
