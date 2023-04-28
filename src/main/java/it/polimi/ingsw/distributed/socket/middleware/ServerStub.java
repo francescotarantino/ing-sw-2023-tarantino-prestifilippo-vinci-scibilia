@@ -3,8 +3,8 @@ package it.polimi.ingsw.distributed.socket.middleware;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.model.Point;
-import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
+import it.polimi.ingsw.viewmodel.GameView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -119,6 +119,7 @@ public class ServerStub implements Server {
                 case SHOW_ERROR -> client.showError((String) ois.readObject(), (Boolean) ois.readObject());
                 case GAME_HAS_STARTED -> client.gameHasStarted();
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());
+                case GAME_FINISHED -> client.gameFinished((GameView) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

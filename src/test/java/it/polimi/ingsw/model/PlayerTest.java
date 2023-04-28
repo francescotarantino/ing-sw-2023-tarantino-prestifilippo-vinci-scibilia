@@ -22,10 +22,10 @@ public class PlayerTest {
 
     @Test
     void checkAddScoringToken(){
-        assertThrows(IllegalArgumentException.class, () -> player.addScoringToken(10));
+        assertThrows(IllegalArgumentException.class, () -> player.addScoringToken(10, 4));
         assertEquals(player.getScoringTokens().size(), 0);
 
-        player.addScoringToken(2);
+        player.addScoringToken(2, 4);
         assertEquals(player.getScoringTokens().get(0), 2);
     }
 }

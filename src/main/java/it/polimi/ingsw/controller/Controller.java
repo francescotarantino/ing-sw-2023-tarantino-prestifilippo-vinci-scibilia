@@ -6,11 +6,12 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
 import static it.polimi.ingsw.Constants.getAdjacentTilesPoints;
-import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
 import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
+import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
 
 public class Controller {
     private final Game game;
+    int x = 0;
 
     public Controller(Game game){
         this.game = game;
@@ -54,13 +55,19 @@ public class Controller {
         if (checkBoardNeedRefill(this.game.getLivingRoomBoard())) {
             this.fillLivingRoomBoard(this.game.getLivingRoomBoard(), this.game.getBag());
         }
-
+        x++;
         // Check if the current player has achieved common goals
-        this.checkCommonGoal(this.game.getCurrentPlayer(), this.game.getBookshelves()[this.game.getCurrentPlayerIndex()], this.game.getCommonGoalCards());
+        // this.checkCommonGoal(this.game.getCurrentPlayer(), this.game.getBookshelves()[this.game.getCurrentPlayerIndex()], this.game.getCommonGoalCards());
 
         // Check if the current player has completed the bookshelf
         if(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].isFull() && this.game.getFinalPlayerIndex() == -1){
             this.game.setFinalPlayerIndex(this.game.getCurrentPlayerIndex());
+            this.game.getCurrentPlayer().addScoringToken(Constants.endGameToken, this.game.getTotalPlayersNumber());
+        }
+
+        if(x > 4){
+            this.endGame();
+            return;
         }
 
         if(
@@ -119,7 +126,8 @@ public class Controller {
         for(int i = 0; i < commonGoalCards.length; i++){
             if(!bookshelf.isCommonGoalCardCompleted(i)){
                 player.addScoringToken(
-                        commonGoalCards[i].checkValidity(bookshelf.getMatrix())
+                        commonGoalCards[i].checkValidity(bookshelf.getMatrix()),
+                        this.game.getTotalPlayersNumber()
                 );
 
                 bookshelf.setCommonGoalCardCompleted(i);
@@ -226,5 +234,6 @@ public class Controller {
     private void endGame(){
         assignPoints();
         // TODO: implement other aspects related to the conclusion of a game
+        this.game.setGameFinished();
     }
 }

@@ -56,15 +56,19 @@ public class Utils {
         }
         switch (direction) {
             case UP -> {
+                if(point.getY() == Constants.bookshelfY - 1) return null;
                 return matrix[point.getX()][point.getY() + 1];
             }
             case RIGHT -> {
+                if(point.getX() == Constants.bookshelfX - 1) return null;
                 return matrix[point.getX() + 1][point.getY()];
             }
             case DOWN -> {
+                if(point.getY() == 0) return null;
                 return matrix[point.getX()][point.getY() - 1];
             }
             case LEFT -> {
+                if(point.getX() == 0) return null;
                 return matrix[point.getX() - 1][point.getY()];
             }
             default -> throw new IllegalStateException("Invalid direction: " + direction);

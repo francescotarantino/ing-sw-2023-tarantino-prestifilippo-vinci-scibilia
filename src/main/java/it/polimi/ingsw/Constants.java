@@ -184,6 +184,11 @@ public class Constants {
     }
 
     /**
+     * TODO
+     */
+    public static final int endGameToken = 1;
+
+    /**
      * This private attribute stores temporarily the list of all the Personal Goal Cards read from the JSON file.
      */
     private static List<List<String>> personalGoalCards;

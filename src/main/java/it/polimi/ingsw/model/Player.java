@@ -38,13 +38,14 @@ public class Player {
     /**
      * Adds a scoring token to the player's scoring tokens list
      * @param token the token to add
+     * @param numberOfPlayers the current number of players in the game
      */
-    public void addScoringToken(int token){
+    public void addScoringToken(int token, int numberOfPlayers){
         if(token == 0){
             return;
         }
 
-        if(Arrays.stream(Constants.getScoringTokens(Constants.playersUpperBound)).noneMatch(x -> x == token)){
+        if(token != Constants.endGameToken && Arrays.stream(Constants.getScoringTokens(numberOfPlayers)).noneMatch(x -> x == token)){
             throw new IllegalArgumentException(token + " is not a valid scoring token supported by this game");
         }
 

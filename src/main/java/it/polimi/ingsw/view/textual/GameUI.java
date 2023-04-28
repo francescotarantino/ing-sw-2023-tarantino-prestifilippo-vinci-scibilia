@@ -2,17 +2,17 @@ package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameUIListener;
+import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.viewmodel.GameView;
-import it.polimi.ingsw.model.Point;
-
-import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
-import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
-import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
+import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
+import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 public class GameUI implements Runnable {
     private final List<GameUIListener> lst = new ArrayList<>();
@@ -76,6 +76,15 @@ public class GameUI implements Runnable {
         }
     }
 
+    public void gameFinished(GameView gameView){
+        System.out.println("Game has finished. Final points:");
+        gameView.getFinalScores().forEach((username, points) -> {
+            System.out.println(username + ": " + points);
+        });
+
+        System.out.println("The winner is: " + gameView.getFinalScores().keySet().toArray()[0]);
+    }
+
     /**
      * This method obtains the things that the player wants to do
      */
@@ -101,17 +110,17 @@ public class GameUI implements Runnable {
             for (int i = 0; i < howManyPick; i++) {
                 int x, y;
                 do {
-                    System.out.println("Tile #" + i);
+                    System.out.println("Tile #" + (i + 1));
 
-                    System.out.print("x: ");
+                    System.out.print("Riga: ");
+                    y = Constants.livingRoomBoardY - input.nextInt();
+                    if (y < 0 || y > Constants.livingRoomBoardY)
+                        System.out.println("Row coordinate must be between 1 and " + Constants.livingRoomBoardY);
+
+                    System.out.print("Colonna: ");
                     x = input.nextInt() - 1;
                     if (x < 0 || x > Constants.livingRoomBoardX)
-                        System.out.println("X coordinate must be between 1 and " + Constants.livingRoomBoardX);
-
-                    System.out.print("y: ");
-                    y = input.nextInt() - 1;
-                    if (y < 0 || y > Constants.livingRoomBoardY)
-                        System.out.println("Y coordinate must be between 1 and " + Constants.livingRoomBoardY);
+                        System.out.println("Column coordinate must be between 1 and " + Constants.livingRoomBoardX);
 
                 } while (x < 0 || x > Constants.livingRoomBoardX || y < 0 || y > Constants.livingRoomBoardY);
                 points[i] = new Point(x, y);
@@ -147,17 +156,46 @@ public class GameUI implements Runnable {
     private void updateBoard(GameView gameView){
         System.out.println("Current living room board:");
 
-        for(int j = Constants.livingRoomBoardY - 1; j >= 0; j--){
-            for(int i = 0; i < Constants.livingRoomBoardX; i++){
-                if(gameView.getLivingRoomBoardMatrix()[i][j] != null) {
-                    System.out.print(gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0) + "\t");
-                } else {
-                    System.out.print(" \t");
-                }
-            }
-            System.out.println();
+        System.out.print("   ");
+        for(int i = 0; i < Constants.livingRoomBoardX; i++){
+            System.out.print("   " + (i + 1) + "  ");
         }
+        System.out.println();
+        for (int j = Constants.livingRoomBoardY - 1; j >= 0; j--) {
+            for(int rowByHalves = 0; rowByHalves < 2; rowByHalves++) {
+                if(rowByHalves == 1)
+                    System.out.print(" " + (Constants.livingRoomBoardY - j) + " ");
+                else
+                    System.out.print("   ");
+                /*if(Constants.livingRoomBoardY - j >= 4){
 
+                }*/
+                for (int i = 0; i < Constants.livingRoomBoardX; i++) {
+
+                    if(rowByHalves == 0){
+                        if(j == Constants.livingRoomBoardY - 1)
+                            System.out.print("│" + "▔▔▔▔▔");
+                        else
+                            System.out.print("│" + "━━━━━");
+                    }
+                    else {
+                        if (gameView.getLivingRoomBoardMatrix()[i][j] != null) {
+                            System.out.print("│  " + gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0) + "  ");
+                        } else {
+                            System.out.print("     ");
+                        }
+                    }
+                }
+                System.out.println("│");
+            }
+        }
+        System.out.print("   ");
+        for (int j = Constants.livingRoomBoardY - 1; j >= 0; j--) {
+            System.out.print("│" + "▁▁▁▁▁");
+        }
+        System.out.print("│");
+
+        System.out.println();
         System.out.println("Your bookshelf:");
         for(int j = Constants.bookshelfY - 1; j >= 0; j--){
             for(int i = 0; i < Constants.bookshelfX; i++){

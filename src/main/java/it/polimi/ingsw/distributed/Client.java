@@ -38,4 +38,9 @@ public interface Client extends Remote {
      * @param gameView the new model-view object of the game
      */
     void modelChanged(GameView gameView) throws RemoteException;
+
+    /**
+     * TODO
+     */
+    void gameFinished(GameView gameView) throws RemoteException;
 }

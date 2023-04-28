@@ -51,7 +51,10 @@ public class Game {
      * List of listeners that are notified when the game model changes.
      */
     private final List<GameListener> lst = new ArrayList<>();
-
+    /**
+     * Boolean representing whether the game has finished or not
+     */
+    private boolean gameFinished = false;
 
     // Constructor
     /**
@@ -255,12 +258,23 @@ public class Game {
         return players;
     }
 
+    public void setGameFinished(){
+        this.gameFinished = true;
+        notifyListeners(lst, listener -> listener.gameFinished());
+    }
+
+    public boolean isFinished(){
+        return this.gameFinished;
+    }
+
     // Private methods
     /**
      * Extracts random numbers without duplicates from 0 to bound-1
      * @param amount the amount of random numbers to be extracted
      * @param bound the upper bound (exclusive) of the random numbers to be extracted
      */
+
+    //TODO move to utils
     protected static int[] extractRandomIDsWithoutDuplicates(int amount, int bound){
         if(amount > bound)
             throw new IllegalArgumentException("Amount cannot be greater than bound");

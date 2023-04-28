@@ -7,4 +7,9 @@ public interface GameListener extends Listener {
      * This method is invoked by the {@link it.polimi.ingsw.model.Game} class when the model has a significant change.
      */
     void modelChanged() throws RemoteException;
+
+    /**
+     * TODO
+     */
+    void gameFinished() throws RemoteException;
 }

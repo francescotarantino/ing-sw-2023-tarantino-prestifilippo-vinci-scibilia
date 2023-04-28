@@ -99,6 +99,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
+    public void gameFinished(GameView gameView) throws RemoteException {
+        //TODO
+    }
+
+    @Override
     public void performTurn(int column, Point...points) throws RemoteException {
         this.server.performTurn(column, points);
     }

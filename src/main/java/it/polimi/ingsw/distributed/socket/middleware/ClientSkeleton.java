@@ -23,7 +23,8 @@ public class ClientSkeleton implements Client {
         UPDATE_PLAYERS_LIST,
         SHOW_ERROR,
         GAME_HAS_STARTED,
-        MODEL_CHANGED
+        MODEL_CHANGED,
+        GAME_FINISHED
     }
 
     public ClientSkeleton(Socket socket) throws RemoteException {
@@ -92,6 +93,18 @@ public class ClientSkeleton implements Client {
         try {
             oos.reset();
             oos.writeObject(Methods.MODEL_CHANGED);
+            oos.writeObject(gameView);
+            oos.flush();
+        } catch (IOException e1) {
+            throw new RemoteException("Cannot send object", e1);
+        }
+    }
+
+    @Override
+    public void gameFinished(GameView gameView) throws RemoteException {
+        try {
+            oos.reset();
+            oos.writeObject(Methods.GAME_FINISHED);
             oos.writeObject(gameView);
             oos.flush();
         } catch (IOException e1) {
