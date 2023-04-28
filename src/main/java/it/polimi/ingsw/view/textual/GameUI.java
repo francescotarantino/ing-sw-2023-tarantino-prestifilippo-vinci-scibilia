@@ -92,20 +92,22 @@ public class GameUI implements Runnable {
         Scanner input = new Scanner(System.in);
 
         int howManyPick;
-        do {
-            System.out.print("How many tiles do you want to pick? ");
-            howManyPick = TextualUtils.nextInt(input);
-
-            if(howManyPick < Constants.minPick || howManyPick > Constants.maxPick)
-                System.out.println("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
-        } while (howManyPick < Constants.minPick || howManyPick > Constants.maxPick);
-
-
-        Point[] points = new Point[howManyPick];
-        System.out.println("Pick " + howManyPick + " tiles in the order you want them to be inserted inside the bookshelf.");
         boolean inputValidity;
         int column;
+        Point[] points;
         do {
+            do {
+                System.out.print("How many tiles do you want to pick? ");
+                howManyPick = TextualUtils.nextInt(input);
+
+                if(howManyPick < Constants.minPick || howManyPick > Constants.maxPick)
+                    System.out.println("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
+            } while (howManyPick < Constants.minPick || howManyPick > Constants.maxPick);
+
+            points = new Point[howManyPick];
+
+            System.out.println("Pick " + howManyPick + " tiles in the order you want them to be inserted inside the bookshelf.");
+
             inputValidity = true;
             for (int i = 0; i < howManyPick; i++) {
                 int x, y;
@@ -145,17 +147,22 @@ public class GameUI implements Runnable {
         } while(!inputValidity);
 
         int finalColumn = column;
-        notifyListeners(lst, x -> x.performTurn(finalColumn, points));
+        Point[] finalPoints = points;
+        notifyListeners(lst, x -> x.performTurn(finalColumn, finalPoints));
 
         setState(State.NOT_MY_TURN);
+        input.close();
     }
 
     /**
      * This method prints the actual living room board and the player's bookshelf.
      */
     private void updateBoard(GameView gameView){
+        System.out.println("Common Goal Cards:");
+        for(int i = 0; i < gameView.getCGCDescriptions().size(); i++){
+            System.out.println(" " + (i+1) + ". " + gameView.getCGCDescriptions().get(i));
+        }
         System.out.println("Current living room board:");
-
         System.out.print("   ");
         for(int i = 0; i < Constants.livingRoomBoardX; i++){
             System.out.print("   " + (i + 1) + "  ");
@@ -189,14 +196,13 @@ public class GameUI implements Runnable {
                     System.out.println("╷");
                 else if(Constants.livingRoomBoardY - j >= 4)
                     System.out.print("│");
-                else if(Constants.livingRoomBoardY - j >= 2 && rowByHalves == 1)
+                else if(Constants.livingRoomBoardY - j >= 3)
                     System.out.print("│");
                 else
                     System.out.println("│");
 
-
-                //Printing bookshelf
-                if(Constants.livingRoomBoardY - j == 2 && rowByHalves == 1){
+                //Printing bookshelf and personal goal card
+                if(Constants.livingRoomBoardY - j == 3 && rowByHalves == 0){
                     System.out.print("             ");
                     System.out.println("Your bookshelf:");
                 }
@@ -205,7 +211,8 @@ public class GameUI implements Runnable {
                     for(int l = 0; l < Constants.bookshelfX; l++){
                         System.out.print("   " + (l+1) + "  ");
                     }
-                    System.out.println();
+                    System.out.print("              ");
+                    System.out.println("Your personal goal card:");
                 }
                 if(Constants.livingRoomBoardY - j >= 4){
                     System.out.print("             ");
@@ -227,9 +234,30 @@ public class GameUI implements Runnable {
                         }
                     }
                     if(Constants.livingRoomBoardY - j == 4 && rowByHalves == 0)
+                        System.out.print("╷");
+                    else
+                        System.out.print("│");
+                    System.out.print("             ");
+                    for (int k = 0; k < Constants.bookshelfX; k++) {
+                        if(rowByHalves == 0){
+                            if(h == Constants.bookshelfY - 1)
+                                System.out.print("╷" + "━━━━━");
+                            else
+                                System.out.print("│" + "━━━━━");
+                        }
+                        else {
+                            if(gameView.getPersonalGoalCardMatrix()[k][h] != null) {
+                                System.out.print("│  " + gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0) + "  ");
+                            } else {
+                                System.out.print("│     ");
+                            }
+                        }
+                    }
+                    if(Constants.livingRoomBoardY - j == 4 && rowByHalves == 0)
                         System.out.println("╷");
                     else
                         System.out.println("│");
+
                 }
             }
         }
@@ -243,19 +271,11 @@ public class GameUI implements Runnable {
             System.out.print("╵" + "━━━━━");
         }
         System.out.print("╵");
-        System.out.println();
-
-        /*System.out.println("Your bookshelf:");
-        for(int j = Constants.bookshelfY - 1; j >= 0; j--){
-            for(int i = 0; i < Constants.bookshelfX; i++){
-                if(gameView.getBookshelfMatrix()[i][j] != null) {
-                    System.out.print(gameView.getBookshelfMatrix()[i][j].toString().charAt(0) + "\t");
-                } else {
-                    System.out.print(" \t");
-                }
-            }
-            System.out.println();
-        }*/
+        System.out.print("             ");
+        for (int j = Constants.bookshelfX - 1; j >= 0; j--) {
+            System.out.print("╵" + "━━━━━");
+        }
+        System.out.println("╵");
     }
 
     public synchronized void addListener(GameUIListener o){

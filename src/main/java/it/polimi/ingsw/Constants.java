@@ -212,6 +212,30 @@ public class Constants {
     }
 
     /**
+     * This private attribute stores temporarily the descriptions of all the Common Goal Cards from the JSON file.
+     */
+    private static Map<String, String> commonGoalCardsDescriptions;
+
+    /**
+     * Returns the description of a Common Goal Card given its ID.
+     * @param ID the id of the Common Goal Card
+     * @return the description of the Common Goal Card
+     */
+    public static String getCGCDescriptionByID(int ID) {
+        if(commonGoalCardsDescriptions != null){
+            commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
+        }
+
+        File file = new File("src/main/resources/CommonGoalCardsDescriptions.json");
+        try {
+            commonGoalCardsDescriptions = ((Map<String, String>) new Gson().fromJson(new FileReader(file), Map.class));
+            return commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Returns the number of points a player gets for a given number of tile matches
      * @param matches number of tile matches
      * @return points

@@ -1,14 +1,14 @@
 package it.polimi.ingsw.viewmodel;
 
+import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +29,8 @@ public class GameView implements Serializable {
      * The matrix of the player's bookshelf.
      */
     private final Tile[][] bookshelfMatrix;
+
+    private final Constants.TileType[][] personalGoalCardMatrix;
     /**
      * The index of the current player who's playing.
      */
@@ -37,6 +39,8 @@ public class GameView implements Serializable {
      * The current player's username.
      */
     private final String currentPlayerUsername;
+
+    private final List<String> cgcDescriptions = new ArrayList<>();
 
     private final boolean gameFinished;
 
@@ -48,9 +52,14 @@ public class GameView implements Serializable {
 
         this.livingRoomBoardMatrix = game.getLivingRoomBoard().getMatrix();
         this.bookshelfMatrix = game.getBookshelves()[this.playerIndex].getMatrix();
+        this.personalGoalCardMatrix = game.getBookshelves()[this.playerIndex].getPersonalGoalCard().getMatrix();
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
         this.gameFinished = game.isFinished();
+
+        for (CommonGoalCard commonGoalCard : game.getCommonGoalCards()) {
+            cgcDescriptions.add(commonGoalCard.getDescription());
+        }
 
         Map<String, Integer> scoresTmp = new HashMap<>();
         if(this.gameFinished) {
@@ -93,5 +102,13 @@ public class GameView implements Serializable {
 
     public Map<String, Integer> getFinalScores() {
         return finalScores;
+    }
+
+    public List<String> getCGCDescriptions(){
+        return cgcDescriptions;
+    }
+
+    public Constants.TileType[][] getPersonalGoalCardMatrix() {
+        return personalGoalCardMatrix;
     }
 }

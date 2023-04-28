@@ -3,11 +3,11 @@ package it.polimi.ingsw.model.goal_cards;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Tile;
 
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
 
 public abstract class CommonGoalCard extends GoalCard {
     private final Stack<Integer> scoringTokenStack;
+    private final String description;
 
     /**
      * Creates a common goal card with the given ID
@@ -19,6 +19,7 @@ public abstract class CommonGoalCard extends GoalCard {
         this.scoringTokenStack = new Stack<>();
 
         Arrays.stream(Constants.getScoringTokens(numberOfPlayers)).forEach(this.scoringTokenStack::push);
+        this.description = Constants.getCGCDescriptionByID(ID);
     }
 
     /**
@@ -106,4 +107,8 @@ public abstract class CommonGoalCard extends GoalCard {
      * @return true if the matrix satisfies the requirements, false otherwise
      */
     public abstract boolean check(Tile[][] matrix);
+
+    public String getDescription(){
+        return this.description;
+    }
 }
