@@ -36,5 +36,10 @@ public interface Server extends Remote {
      */
     void getGamesList() throws RemoteException;
 
+    /**
+     * This method is called by the client to perform a turn.
+     * @param column the column where to put the tiles
+     * @param points the points of the tiles from the living room board
+     */
     void performTurn(int column, Point...points) throws RemoteException;
 }

@@ -21,7 +21,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     private Client client;
     private int playerIndex;
 
-
     public ServerImpl() throws RemoteException {
         super();
     }
@@ -141,6 +140,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
     @Override
     public void performTurn(int column, Point... points) throws RemoteException {
-        this.controller.performTurn(column, points);
+        if(this.playerIndex == this.model.getCurrentPlayerIndex()){
+            this.controller.performTurn(column, points);
+        } else {
+            throw new RemoteException("It's not your turn.");
+        }
     }
 }
