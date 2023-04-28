@@ -5,10 +5,7 @@ import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
 
-import java.util.List;
-import java.util.Random;
-
-import java.util.ArrayList;
+import java.util.*;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
@@ -170,12 +167,28 @@ public class Game {
             return null;
     }
 
+    /**
+     * This method returns a player from the bookshelves, given its index.
+     * @param i the index
+     * @return the player at the given index
+     */
     public Player getPlayer(int i) {
         if (this.bookshelves[i] != null) {
             return this.bookshelves[i].getPlayer();
         } else {
             return null;
         }
+    }
+
+    /**
+     * This method returns a list of all the players in the game, from the bookshelves.
+     * @return a list of players
+     */
+    public List<Player> getPlayers() {
+        return Arrays.stream(this.bookshelves)
+                .filter(Objects::nonNull)
+                .map(Bookshelf::getPlayer)
+                .toList();
     }
 
     /**

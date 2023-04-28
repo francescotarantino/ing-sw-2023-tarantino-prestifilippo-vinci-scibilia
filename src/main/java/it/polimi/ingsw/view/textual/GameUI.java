@@ -70,7 +70,7 @@ public class GameUI implements Runnable {
 
             setState(State.MY_TURN);
         } else {
-            System.out.println("Now is player " + gameView.getPlayerUsernames()[gameView.getCurrentPlayerIndex()] + "'s turn.");
+            System.out.println("Now is player " + gameView.getCurrentPlayerUsername() + "'s turn.");
 
             setState(State.NOT_MY_TURN);
         }

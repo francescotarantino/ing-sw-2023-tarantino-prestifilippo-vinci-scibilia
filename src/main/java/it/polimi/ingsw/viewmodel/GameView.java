@@ -3,19 +3,35 @@ package it.polimi.ingsw.viewmodel;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Tile;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Arrays;
 
+/**
+ * This class is used to send the current relevant data from model of the game to the client.
+ */
 public class GameView implements Serializable {
-    static final long serialVersionUID = 1L;
-    private final Tile[][] livingRoomBoardMatrix;
-    private final Tile[][] bookshelfMatrix;
-    private final int currentPlayerIndex;
+    @Serial
+    private static final long serialVersionUID = 1L;
     /**
      * The index of the player who is receiving this GameView.
      */
     private final int playerIndex;
-    private final String[] playerUsernames;
+    /**
+     * The matrix of the actual living room board.
+     */
+    private final Tile[][] livingRoomBoardMatrix;
+    /**
+     * The matrix of the player's bookshelf.
+     */
+    private final Tile[][] bookshelfMatrix;
+    /**
+     * The index of the current player who's playing.
+     */
+    private final int currentPlayerIndex;
+    /**
+     * The current player's username.
+     */
+    private final String currentPlayerUsername;
 
     public GameView(Game game, int playerIndex){
         this.playerIndex = playerIndex;
@@ -23,7 +39,7 @@ public class GameView implements Serializable {
         this.livingRoomBoardMatrix = game.getLivingRoomBoard().getMatrix();
         this.bookshelfMatrix = game.getBookshelves()[this.playerIndex].getMatrix();
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
-        this.playerUsernames = Arrays.stream(game.getBookshelves()).map(x -> x.getPlayer().getUsername()).toArray(String[]::new);
+        this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
     }
 
     public Tile[][] getBookshelfMatrix() {
@@ -42,7 +58,7 @@ public class GameView implements Serializable {
         return this.currentPlayerIndex == this.playerIndex;
     }
 
-    public String[] getPlayerUsernames() {
-        return playerUsernames;
+    public String getCurrentPlayerUsername() {
+        return currentPlayerUsername;
     }
 }

@@ -8,9 +8,8 @@ import java.util.Arrays;
 public class Utils {
     /**
      * Checks if the matrix has the correct size of the bookshelf (Constants.bookshelfX x Constants.bookshelfY)
-     *
      * @param matrix matrix to check
-     * @param <T>    type of the matrix
+     * @param <T> type of the matrix
      */
     public static <T> void checkMatrixSize(T[][] matrix) {
         if (matrix.length != Constants.bookshelfX)
@@ -73,21 +72,18 @@ public class Utils {
     }
 
     /**
-     * TODO
-     * @param boardMatrix
-     * @param points
-     * @return
+     * This method checks if the tiles at the given positions can be taken from the board matrix.
+     * @param boardMatrix the matrix of the board
+     * @param points the positions of the tiles to check
+     * @return true if the tiles can be taken, false otherwise
      */
     public static boolean checkIfTilesCanBeTaken(Tile[][] boardMatrix, Point... points) {
         // Checks if tiles are adjacent
-        if (
-                points.length != 1 &&
-                        (
-                                (!(points[0].getX() == points[1].getX() && checkContiguity(Point::getY, points))) ||
-                                        (!(points[0].getY() == points[1].getY() && checkContiguity(Point::getX, points)))
-                        )
-        )
-            return false;
+        if(points.length != 1){
+            if(points[0].getX() == points[1].getX() && !checkContiguity(Point::getY, points)) return false;
+
+            if(points[0].getY() == points[1].getY() && !checkContiguity(Point::getX, points)) return false;
+        }
 
         // Checks if tiles have at least one free side
         for (Point point : points) {
@@ -127,10 +123,10 @@ public class Utils {
     }
 
     /**
-     * TODO
-     * @param lambda
-     * @param points
-     * @return
+     * This method checks if the tiles at the given are contiguous.
+     * @param lambda the lambda function used to get the x or y coordinate of the tile
+     * @param points the positions of the tiles to check
+     * @return true if the tiles are contiguous, false otherwise
      */
     private static boolean checkContiguity(java.util.function.ToIntFunction<Point> lambda, Point... points) {
         int[] tmp = Arrays.stream(points)
@@ -145,11 +141,11 @@ public class Utils {
     }
 
     /**
-     * TODO
-     * @param bookshelfMatrix
-     * @param column
-     * @param tilesNum
-     * @return
+     * This method checks if the column of the bookshelf where the user wants to place the tiles has enough space.
+     * @param bookshelfMatrix the matrix of the bookshelf
+     * @param column the column of the bookshelf
+     * @param tilesNum the number of tiles to place
+     * @return true if the column has enough space, false otherwise
      */
     public static boolean checkIfColumnHasEnoughSpace(Tile[][] bookshelfMatrix, int column, int tilesNum) {
         int counter = 0;

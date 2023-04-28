@@ -98,7 +98,7 @@ public class Controller {
     private void insertTiles(Bookshelf bookshelf, int column, Tile[] tiles){
         int freePosition = Constants.bookshelfY;
 
-        while(bookshelf.getTile(new Point(column, freePosition - 1)) == null) {
+        while(freePosition > 0 && bookshelf.getTile(new Point(column, freePosition - 1)) == null){
             freePosition--;
         }
 

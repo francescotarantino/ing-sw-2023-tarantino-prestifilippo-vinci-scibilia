@@ -17,20 +17,26 @@ public class CGCDiagonals extends CommonGoalCard {
         checkMatrixSize(matrix);
         for (int i = 0; i < Constants.bookshelfY - Constants.bookshelfX + 1; i++) {
             for (int j = 1; j < Constants.bookshelfX; j++) {
-                if(!(matrix[j][Constants.bookshelfY - (1 + j + i)].sameType(matrix[0][Constants.bookshelfY - (1 + i)]))) {
+                if(
+                        matrix[j][Constants.bookshelfY - (1 + j + i)] == null ||
+                        matrix[0][Constants.bookshelfY - (1 + i)] == null ||
+                        !(matrix[j][Constants.bookshelfY - (1 + j + i)].sameType(matrix[0][Constants.bookshelfY - (1 + i)]))
+                ) {
                     break;
-                }
-                else if (j == Constants.bookshelfX - 1) {
+                } else if (j == Constants.bookshelfX - 1) {
                     return true;
                 }
             }
         }
         for (int i = 0; i < Constants.bookshelfY - Constants.bookshelfX + 1; i++) {
             for (int j = 1; j < Constants.bookshelfX; j++) {
-                if (!(matrix[j][i + j].sameType(matrix[0][i]))) {
+                if (
+                        matrix[j][i + j] == null ||
+                        matrix[0][i] == null ||
+                        !(matrix[j][i + j].sameType(matrix[0][i]))
+                ) {
                     break;
-                }
-                else if (j == Constants.bookshelfX - 1) {
+                } else if (j == Constants.bookshelfX - 1) {
                     return true;
                 }
             }
