@@ -112,12 +112,12 @@ public class GameUI implements Runnable {
                 do {
                     System.out.println("Tile #" + (i + 1));
 
-                    System.out.print("Riga: ");
+                    System.out.print("Row: ");
                     y = Constants.livingRoomBoardY - TextualUtils.nextInt(input);
                     if (y < 0 || y > Constants.livingRoomBoardY)
                         System.out.println("Row coordinate must be between 1 and " + Constants.livingRoomBoardY);
 
-                    System.out.print("Colonna: ");
+                    System.out.print("Column: ");
                     x = TextualUtils.nextInt(input) - 1;
                     if (x < 0 || x > Constants.livingRoomBoardX)
                         System.out.println("Column coordinate must be between 1 and " + Constants.livingRoomBoardX);
@@ -173,7 +173,7 @@ public class GameUI implements Runnable {
 
                     if(rowByHalves == 0){
                         if(j == Constants.livingRoomBoardY - 1)
-                            System.out.print("│" + "▔▔▔▔▔");
+                            System.out.print("╷" + "━━━━━");
                         else
                             System.out.print("│" + "━━━━━");
                     }
@@ -185,7 +185,9 @@ public class GameUI implements Runnable {
                         }
                     }
                 }
-                if(Constants.livingRoomBoardY - j >= 4)
+                if(j == Constants.livingRoomBoardY - 1 && rowByHalves == 0)
+                    System.out.println("╷");
+                else if(Constants.livingRoomBoardY - j >= 4)
                     System.out.print("│");
                 else if(Constants.livingRoomBoardY - j >= 2 && rowByHalves == 1)
                     System.out.print("│");
@@ -212,7 +214,7 @@ public class GameUI implements Runnable {
                     for (int k = 0; k < Constants.bookshelfX; k++) {
                         if(rowByHalves == 0){
                             if(h == Constants.bookshelfY - 1)
-                                System.out.print("│" + "▔▔▔▔▔");
+                                System.out.print("╷" + "━━━━━");
                             else
                                 System.out.print("│" + "━━━━━");
                         }
@@ -224,20 +226,23 @@ public class GameUI implements Runnable {
                             }
                         }
                     }
-                    System.out.println("│");
+                    if(Constants.livingRoomBoardY - j == 4 && rowByHalves == 0)
+                        System.out.println("╷");
+                    else
+                        System.out.println("│");
                 }
             }
         }
         System.out.print("   ");
         for (int j = Constants.livingRoomBoardY - 1; j >= 0; j--) {
-            System.out.print("│" + "▁▁▁▁▁");
+            System.out.print("╵" + "━━━━━");
         }
-        System.out.print("│");
+        System.out.print("╵");
         System.out.print("             ");
         for (int j = Constants.bookshelfX - 1; j >= 0; j--) {
-            System.out.print("│" + "▁▁▁▁▁");
+            System.out.print("╵" + "━━━━━");
         }
-        System.out.print("│");
+        System.out.print("╵");
         System.out.println();
 
         /*System.out.println("Your bookshelf:");
