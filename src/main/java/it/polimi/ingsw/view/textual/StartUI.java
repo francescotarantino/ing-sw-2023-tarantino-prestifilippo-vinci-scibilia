@@ -53,7 +53,7 @@ public class StartUI implements Runnable {
                      2. Join an existing game
                      3. Exit""");
 
-        int choice = s.nextInt();
+        int choice = TextualUtils.nextInt(s);
 
         switch (choice) {
             case 1 -> createGame();
@@ -73,7 +73,7 @@ public class StartUI implements Runnable {
         Scanner s = new Scanner(System.in);
         do {
             System.out.print("How many players? ");
-            numberOfPlayers = s.nextInt();
+            numberOfPlayers = TextualUtils.nextInt(s);
             if(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound)
                 System.out.println("Number of players should be between " + Constants.playersLowerBound
                         + " and " + Constants.playersUpperBound + ".");
@@ -81,7 +81,7 @@ public class StartUI implements Runnable {
 
         do {
             System.out.print("How many common goal cards? ");
-            numberOfCommonGoalCards = s.nextInt();
+            numberOfCommonGoalCards = TextualUtils.nextInt(s);
             if(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards)
                 System.out.println("Number of common goal cards should be between " + Constants.minCommonGoalCards
                         + " and " + Constants.maxCommonGoalCards + ".");
@@ -105,7 +105,7 @@ public class StartUI implements Runnable {
         Scanner s = new Scanner(System.in);
         do {
             System.out.print("Which game do you want to join? ");
-            gameID = s.nextInt();
+            gameID = TextualUtils.nextInt(s);
             if(gameID <= Constants.IDLowerBound)
                 System.out.println("GameID is a positive number!");
         } while(gameID <= Constants.IDLowerBound);

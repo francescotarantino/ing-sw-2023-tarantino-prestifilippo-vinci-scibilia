@@ -94,7 +94,7 @@ public class GameUI implements Runnable {
         int howManyPick;
         do {
             System.out.print("How many tiles do you want to pick? ");
-            howManyPick = input.nextInt();
+            howManyPick = TextualUtils.nextInt(input);
 
             if(howManyPick < Constants.minPick || howManyPick > Constants.maxPick)
                 System.out.println("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
@@ -113,12 +113,12 @@ public class GameUI implements Runnable {
                     System.out.println("Tile #" + (i + 1));
 
                     System.out.print("Riga: ");
-                    y = Constants.livingRoomBoardY - input.nextInt();
+                    y = Constants.livingRoomBoardY - TextualUtils.nextInt(input);
                     if (y < 0 || y > Constants.livingRoomBoardY)
                         System.out.println("Row coordinate must be between 1 and " + Constants.livingRoomBoardY);
 
                     System.out.print("Colonna: ");
-                    x = input.nextInt() - 1;
+                    x = TextualUtils.nextInt(input) - 1;
                     if (x < 0 || x > Constants.livingRoomBoardX)
                         System.out.println("Column coordinate must be between 1 and " + Constants.livingRoomBoardX);
 
@@ -128,7 +128,7 @@ public class GameUI implements Runnable {
 
             do {
                 System.out.print("In which column do you want to put the tiles? ");
-                column = input.nextInt() - 1;
+                column = TextualUtils.nextInt(input) - 1;
                 if(column < 0 || column > Constants.bookshelfX)
                     System.out.println("Column must be between 1 and " + Constants.bookshelfX + ".");
             } while(column < 0 || column > Constants.bookshelfX);
@@ -161,15 +161,14 @@ public class GameUI implements Runnable {
             System.out.print("   " + (i + 1) + "  ");
         }
         System.out.println();
+        int h = Constants.bookshelfY;
         for (int j = Constants.livingRoomBoardY - 1; j >= 0; j--) {
             for(int rowByHalves = 0; rowByHalves < 2; rowByHalves++) {
                 if(rowByHalves == 1)
                     System.out.print(" " + (Constants.livingRoomBoardY - j) + " ");
                 else
                     System.out.print("   ");
-                /*if(Constants.livingRoomBoardY - j >= 4){
 
-                }*/
                 for (int i = 0; i < Constants.livingRoomBoardX; i++) {
 
                     if(rowByHalves == 0){
@@ -179,14 +178,54 @@ public class GameUI implements Runnable {
                             System.out.print("│" + "━━━━━");
                     }
                     else {
-                        if (gameView.getLivingRoomBoardMatrix()[i][j] != null) {
+                        if (gameView.getLivingRoomBoardMatrix()[i][j] != null && !gameView.getLivingRoomBoardMatrix()[i][j].isPlaceholder()) {
                             System.out.print("│  " + gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0) + "  ");
                         } else {
-                            System.out.print("     ");
+                            System.out.print("│     ");
                         }
                     }
                 }
-                System.out.println("│");
+                if(Constants.livingRoomBoardY - j >= 4)
+                    System.out.print("│");
+                else if(Constants.livingRoomBoardY - j >= 2 && rowByHalves == 1)
+                    System.out.print("│");
+                else
+                    System.out.println("│");
+
+
+                //Printing bookshelf
+                if(Constants.livingRoomBoardY - j == 2 && rowByHalves == 1){
+                    System.out.print("             ");
+                    System.out.println("Your bookshelf:");
+                }
+                if(Constants.livingRoomBoardY - j == 3 && rowByHalves == 1){
+                    System.out.print("             ");
+                    for(int l = 0; l < Constants.bookshelfX; l++){
+                        System.out.print("   " + (l+1) + "  ");
+                    }
+                    System.out.println();
+                }
+                if(Constants.livingRoomBoardY - j >= 4){
+                    System.out.print("             ");
+                    if(rowByHalves == 0)
+                        h--;
+                    for (int k = 0; k < Constants.bookshelfX; k++) {
+                        if(rowByHalves == 0){
+                            if(h == Constants.bookshelfY - 1)
+                                System.out.print("│" + "▔▔▔▔▔");
+                            else
+                                System.out.print("│" + "━━━━━");
+                        }
+                        else {
+                            if(gameView.getBookshelfMatrix()[k][h] != null) {
+                                System.out.print("│  " + gameView.getBookshelfMatrix()[k][h].toString().charAt(0) + "  ");
+                            } else {
+                                System.out.print("│     ");
+                            }
+                        }
+                    }
+                    System.out.println("│");
+                }
             }
         }
         System.out.print("   ");
@@ -194,9 +233,14 @@ public class GameUI implements Runnable {
             System.out.print("│" + "▁▁▁▁▁");
         }
         System.out.print("│");
-
+        System.out.print("             ");
+        for (int j = Constants.bookshelfX - 1; j >= 0; j--) {
+            System.out.print("│" + "▁▁▁▁▁");
+        }
+        System.out.print("│");
         System.out.println();
-        System.out.println("Your bookshelf:");
+
+        /*System.out.println("Your bookshelf:");
         for(int j = Constants.bookshelfY - 1; j >= 0; j--){
             for(int i = 0; i < Constants.bookshelfX; i++){
                 if(gameView.getBookshelfMatrix()[i][j] != null) {
@@ -206,7 +250,7 @@ public class GameUI implements Runnable {
                 }
             }
             System.out.println();
-        }
+        }*/
     }
 
     public synchronized void addListener(GameUIListener o){

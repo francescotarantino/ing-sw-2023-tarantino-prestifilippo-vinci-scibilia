@@ -11,7 +11,6 @@ import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
 
 public class Controller {
     private final Game game;
-    int x = 0;
 
     public Controller(Game game){
         this.game = game;
@@ -55,9 +54,8 @@ public class Controller {
         if (checkBoardNeedRefill(this.game.getLivingRoomBoard())) {
             this.fillLivingRoomBoard(this.game.getLivingRoomBoard(), this.game.getBag());
         }
-        x++;
         // Check if the current player has achieved common goals
-        // this.checkCommonGoal(this.game.getCurrentPlayer(), this.game.getBookshelves()[this.game.getCurrentPlayerIndex()], this.game.getCommonGoalCards());
+        this.checkCommonGoal(this.game.getCurrentPlayer(), this.game.getBookshelves()[this.game.getCurrentPlayerIndex()], this.game.getCommonGoalCards());
 
         // Check if the current player has completed the bookshelf
         if(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].isFull() && this.game.getFinalPlayerIndex() == -1){
@@ -65,10 +63,6 @@ public class Controller {
             this.game.getCurrentPlayer().addScoringToken(Constants.endGameToken, this.game.getTotalPlayersNumber());
         }
 
-        if(x > 4){
-            this.endGame();
-            return;
-        }
 
         if(
                 this.game.getFinalPlayerIndex() != -1 &&
