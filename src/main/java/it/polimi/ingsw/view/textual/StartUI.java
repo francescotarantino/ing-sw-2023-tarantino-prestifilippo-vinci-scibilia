@@ -3,12 +3,15 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class StartUI implements Runnable {
     /**
@@ -24,7 +27,10 @@ public class StartUI implements Runnable {
 
     @Override
     public void run() {
+        AnsiConsole.systemInstall();
         askUsername();
+
+        System.out.print(ansi().eraseScreen());
 
         notifyListeners(lst, StartUIListener::refreshStartUI);
 
@@ -37,7 +43,7 @@ public class StartUI implements Runnable {
     private void askUsername() {
         Scanner s = new Scanner(System.in);
 
-        System.out.print("Insert your username: ");
+        System.out.print(ansi().bold().fg(Ansi.Color.RED).a("Insert your username: ").reset());
         this.username = s.next();
     }
 

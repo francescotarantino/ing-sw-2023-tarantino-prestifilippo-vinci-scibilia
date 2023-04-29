@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.Point;
+import org.fusesource.jansi.Ansi;
 
 import java.io.*;
 import java.util.*;
@@ -120,17 +121,27 @@ public class Constants {
      * Enumeration of all the possible Tile Types in the game.
      */
     public enum TileType {
-        CATS,
-        BOOKS,
-        GAMES,
-        FRAMES,
-        TROPHIES,
-        PLANTS,
+        CATS(Ansi.Color.GREEN),
+        BOOKS(Ansi.Color.WHITE),
+        GAMES(Ansi.Color.YELLOW),
+        FRAMES(Ansi.Color.BLUE),
+        TROPHIES(Ansi.Color.CYAN),
+        PLANTS(Ansi.Color.MAGENTA),
         /**
          * This is a placeholder for all the invalid positions in the Living Room Board.
          * When there is a PLACEHOLDER, it means that the position cannot be occupied by a tile.
          */
-        PLACEHOLDER
+        PLACEHOLDER(null);
+
+        private final Ansi.Color color;
+
+        TileType (Ansi.Color color){
+            this.color = color;
+        }
+
+        public Ansi.Color color(){
+            return color;
+        }
     }
 
     /**

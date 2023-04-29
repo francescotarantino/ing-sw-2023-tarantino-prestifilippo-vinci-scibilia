@@ -5,6 +5,7 @@ import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.viewmodel.GameView;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
 import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class GameUI implements Runnable {
     private final List<GameUIListener> lst = new ArrayList<>();
@@ -27,6 +29,42 @@ public class GameUI implements Runnable {
 
     private Tile[][] currentBoard;
     private Tile[][] currentBookshelf;
+    /**
+     * R vaulue for living room board's color in RGB format
+     */
+    private static int livingRoomBoardR = 68;
+    /**
+     * G vaulue for living room board's color in RGB format
+     */
+    private static int livingRoomBoardG = 100;
+    /**
+     * B vaulue for living room board's color in RGB format
+     */
+    private static int livingRoomBoardB = 88;
+    /**
+     * Character used by the UI to display vertical lines
+     */
+    private String wall = "|";
+    /**
+     * Character used by the UI to display horizontal lines
+     */
+    private String fiveCeilings = "-----";
+    /**
+     * Character used by the UI to display short low vertical lines 
+     */
+    private String cornerUp = ",";
+    /**
+     * Character used by the UI to display short high vertical lines
+     */
+    private String cornerDown = "'";
+    public GameUI(){
+        if(System.getProperty("os.name").contains("Mac OS X") || System.getProperty("os.name").contains("Linux")){
+            this.wall = "│";
+            this.fiveCeilings = "━━━━━";
+            this.cornerUp = "╷";
+            this.cornerDown = "╵";
+        }
+    }
 
     private State getState() {
         synchronized (lock) {
@@ -42,6 +80,10 @@ public class GameUI implements Runnable {
     }
 
     public void run() {
+        AnsiConsole.systemInstall();
+
+        System.out.print(ansi().eraseScreen());
+
         while (true) {
             while (getState() == State.NOT_MY_TURN) {
                 synchronized (lock) {
@@ -66,6 +108,7 @@ public class GameUI implements Runnable {
      * @param gameView the new model-view of the game
      */
     public void update(GameView gameView){
+
         this.updateBoard(gameView);
         this.currentBoard = gameView.getLivingRoomBoardMatrix();
         this.currentBookshelf = gameView.getBookshelfMatrix();
@@ -82,6 +125,8 @@ public class GameUI implements Runnable {
     }
 
     public void gameFinished(GameView gameView){
+        this.updateBoard(gameView);
+
         System.out.println("Game has finished. Final points:");
         gameView.getFinalScores().forEach(System.out::println);
 
@@ -164,6 +209,7 @@ public class GameUI implements Runnable {
      * This method prints the actual living room board and the player's bookshelf.
      */
     private void updateBoard(GameView gameView){
+        System.out.print(ansi().eraseScreen());
         System.out.println("Common Goal Cards:");
         for(int i = 0; i < gameView.getCGCDescriptions().size(); i++){
             System.out.println(" " + (i+1) + ". " + gameView.getCGCDescriptions().get(i).replace("\n", "\n    "));
@@ -186,26 +232,37 @@ public class GameUI implements Runnable {
 
                     if(rowByHalves == 0){
                         if(j == Constants.livingRoomBoardY - 1)
-                            System.out.print("╷" + "━━━━━");
+                            System.out.print(ansi().fgCyan()
+                                    .a(cornerUp + fiveCeilings).reset());
                         else
-                            System.out.print("│" + "━━━━━");
+                            System.out.print(ansi().fgCyan()
+                                    .a(wall + fiveCeilings).reset());
+
                     }
                     else {
                         if (gameView.getLivingRoomBoardMatrix()[i][j] != null && !gameView.getLivingRoomBoardMatrix()[i][j].isPlaceholder()) {
-                            System.out.print("│  " + gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0) + "  ");
+                            System.out.print(ansi().fgCyan()
+                                    .a(wall + "  ").reset());
+                            System.out.print(ansi().bold().fg(gameView.getLivingRoomBoardMatrix()[i][j].getType().color())
+                                    .a(gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0)).reset() + "  ");
                         } else {
-                            System.out.print("│     ");
+                            System.out.print(ansi().fgCyan()
+                                    .a(wall + "     ").reset());
                         }
                     }
                 }
                 if(j == Constants.livingRoomBoardY - 1 && rowByHalves == 0)
-                    System.out.println("╷");
+                    System.out.println(ansi().fgCyan()
+                            .a(cornerUp).reset());
                 else if(Constants.livingRoomBoardY - j >= 4)
-                    System.out.print("│");
+                    System.out.print(ansi().fgCyan()
+                            .a(wall).reset());
                 else if(Constants.livingRoomBoardY - j >= 3)
-                    System.out.print("│");
+                    System.out.print(ansi().fgCyan()
+                            .a(wall).reset());
                 else
-                    System.out.println("│");
+                    System.out.println(ansi().fgCyan()
+                            .a(wall).reset());
 
                 //Printing bookshelf and personal goal card
                 if(Constants.livingRoomBoardY - j == 3 && rowByHalves == 0){
@@ -227,61 +284,65 @@ public class GameUI implements Runnable {
                     for (int k = 0; k < Constants.bookshelfX; k++) {
                         if(rowByHalves == 0){
                             if(h == Constants.bookshelfY - 1)
-                                System.out.print("╷" + "━━━━━");
+                                System.out.print(cornerUp + fiveCeilings);
                             else
-                                System.out.print("│" + "━━━━━");
+                                System.out.print(wall + fiveCeilings);
                         }
                         else {
                             if(gameView.getBookshelfMatrix()[k][h] != null) {
-                                System.out.print("│  " + gameView.getBookshelfMatrix()[k][h].toString().charAt(0) + "  ");
+                                System.out.print(wall + "  " + ansi().bold().fg(gameView.getBookshelfMatrix()[k][h].getType().color())
+                                        .a(gameView.getBookshelfMatrix()[k][h].toString().charAt(0)).reset() + "  ");
                             } else {
-                                System.out.print("│     ");
+                                System.out.print(wall + "     ");
                             }
                         }
                     }
                     if(Constants.livingRoomBoardY - j == 4 && rowByHalves == 0)
-                        System.out.print("╷");
+                        System.out.print(cornerUp);
                     else
-                        System.out.print("│");
+                        System.out.print(wall);
                     System.out.print("             ");
                     for (int k = 0; k < Constants.bookshelfX; k++) {
                         if(rowByHalves == 0){
                             if(h == Constants.bookshelfY - 1)
-                                System.out.print("╷" + "━━━━━");
+                                System.out.print(cornerUp + fiveCeilings);
                             else
-                                System.out.print("│" + "━━━━━");
+                                System.out.print(wall + fiveCeilings);
                         }
                         else {
                             if(gameView.getPersonalGoalCardMatrix()[k][h] != null) {
-                                System.out.print("│  " + gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0) + "  ");
+                                System.out.print(wall + "  " + ansi().bold().fg(gameView.getPersonalGoalCardMatrix()[k][h].color())
+                                        .a(gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0)).reset() + "  ");
                             } else {
-                                System.out.print("│     ");
+                                System.out.print(wall + "     ");
                             }
                         }
                     }
                     if(Constants.livingRoomBoardY - j == 4 && rowByHalves == 0)
-                        System.out.println("╷");
+                        System.out.println(cornerUp);
                     else
-                        System.out.println("│");
+                        System.out.println(wall);
 
                 }
             }
         }
         System.out.print("   ");
         for (int j = Constants.livingRoomBoardY - 1; j >= 0; j--) {
-            System.out.print("╵" + "━━━━━");
+            System.out.print(ansi().fgCyan()
+                    .a(cornerDown + fiveCeilings).reset());
         }
-        System.out.print("╵");
+        System.out.print(ansi().fgCyan()
+                .a(cornerDown).reset());
         System.out.print("             ");
         for (int j = Constants.bookshelfX - 1; j >= 0; j--) {
-            System.out.print("╵" + "━━━━━");
+            System.out.print(cornerDown + fiveCeilings);
         }
-        System.out.print("╵");
+        System.out.print(cornerDown);
         System.out.print("             ");
         for (int j = Constants.bookshelfX - 1; j >= 0; j--) {
-            System.out.print("╵" + "━━━━━");
+            System.out.print(cornerDown + fiveCeilings);
         }
-        System.out.println("╵");
+        System.out.println(cornerDown);
     }
 
     public synchronized void addListener(GameUIListener o){
