@@ -184,7 +184,7 @@ public class Constants {
     }
 
     /**
-     * TODO
+     * This is the value in points of the end game token.
      */
     public static final int endGameToken = 1;
 

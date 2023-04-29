@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.Utils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,7 +86,7 @@ public class GameTest {
             in the specified boundary with no repetitions */
         int[] test;
         //the method is Static, so it is not necessary to create an instance of Game to test it
-        test = Game.extractRandomIDsWithoutDuplicates(4,10);
+        test = Utils.extractRandomIDsWithoutDuplicates(4,10);
         boolean check = true;
         assertEquals(test.length,4);
         for(int i=0; i<4; i++){

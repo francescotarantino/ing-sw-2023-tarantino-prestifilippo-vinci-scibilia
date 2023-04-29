@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Utils {
     /**
@@ -166,5 +167,34 @@ public class Utils {
             } else return false;
         }
         return false;
+    }
+
+    /**
+     * Extracts random numbers without duplicates from 0 to bound-1
+     * @param amount the amount of random numbers to be extracted
+     * @param bound the upper bound (exclusive) of the random numbers to be extracted
+     */
+    public static int[] extractRandomIDsWithoutDuplicates(int amount, int bound){
+        if(amount > bound)
+            throw new IllegalArgumentException("Amount cannot be greater than bound");
+
+        int[] numbers = new int[amount];
+        Random rand = new Random();
+
+        boolean flag;
+        for(int i = 0; i < amount; i++){
+            do {
+                flag = true;
+                numbers[i] = rand.nextInt(bound);
+                for(int j=0;j<i;j++){
+                    if (numbers[j] == numbers[i]) {
+                        flag = false;
+                        break;
+                    }
+                }
+            } while(!flag);
+        }
+
+        return numbers;
     }
 }

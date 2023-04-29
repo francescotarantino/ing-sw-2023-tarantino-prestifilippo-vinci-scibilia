@@ -7,10 +7,10 @@ import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
 
 import java.util.*;
 
+import static it.polimi.ingsw.Utils.extractRandomIDsWithoutDuplicates;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 public class Game {
-    // Attributes
     /**
      * Identifies the game with a unique and positive ID
      */
@@ -56,7 +56,6 @@ public class Game {
      */
     private boolean gameFinished = false;
 
-    // Constructor
     /**
      * Creates a new game
      * @param ID the ID of the game
@@ -103,7 +102,6 @@ public class Game {
         this.finalPlayerIndex = -1;
     }
 
-    // Public methods
     /**
      * Adds a new bookshelf to the game
      * @param player the new player that will be added to the game
@@ -195,7 +193,7 @@ public class Game {
     }
 
     /**
-     * Sets the current player index
+     * Sets the current player index.
      * @param currentPlayerIndex the new current player index
      */
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
@@ -207,6 +205,10 @@ public class Game {
         notifyListeners(lst, GameListener::modelChanged);
     }
 
+    /**
+     * Sets the final player index, that is the index of the player that has first filled its bookshelf.
+     * @param finalPlayerIndex the final player index
+     */
     public void setFinalPlayerIndex(int finalPlayerIndex) {
         if(finalPlayerIndex < 0 || finalPlayerIndex >= this.getTotalPlayersNumber())
             throw new IllegalArgumentException("Illegal player index");
@@ -258,45 +260,19 @@ public class Game {
         return players;
     }
 
+    /**
+     * This method sets the game as finished and notifies the listeners.
+     */
     public void setGameFinished(){
         this.gameFinished = true;
         notifyListeners(lst, GameListener::gameFinished);
     }
 
+    /**
+     * @return true if the game is finished, false otherwise
+     */
     public boolean isFinished(){
         return this.gameFinished;
-    }
-
-    // Private methods
-    /**
-     * Extracts random numbers without duplicates from 0 to bound-1
-     * @param amount the amount of random numbers to be extracted
-     * @param bound the upper bound (exclusive) of the random numbers to be extracted
-     */
-
-    //TODO move to utils
-    protected static int[] extractRandomIDsWithoutDuplicates(int amount, int bound){
-        if(amount > bound)
-            throw new IllegalArgumentException("Amount cannot be greater than bound");
-
-        int[] numbers = new int[amount];
-        Random rand = new Random();
-
-        boolean flag;
-        for(int i = 0; i < amount; i++){
-            do {
-                flag = true;
-                numbers[i] = rand.nextInt(bound);
-                for(int j=0;j<i;j++){
-                    if (numbers[j] == numbers[i]) {
-                        flag = false;
-                        break;
-                    }
-                }
-            } while(!flag);
-        }
-
-        return numbers;
     }
 
     @Override
