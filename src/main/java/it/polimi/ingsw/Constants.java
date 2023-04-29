@@ -3,9 +3,7 @@ package it.polimi.ingsw;
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.Point;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 public class Constants {
@@ -202,13 +200,10 @@ public class Constants {
             return new ArrayList<>(personalGoalCards);
         }
 
-        File file = new File("src/main/resources/PersonalGoalCards.json");
-        try {
-            personalGoalCards = (List<List<String>>) new Gson().fromJson(new FileReader(file), ArrayList.class);
-            return new ArrayList<>(personalGoalCards);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/PersonalGoalCards.json")));
+
+        personalGoalCards = (List<List<String>>) new Gson().fromJson(reader, ArrayList.class);
+        return new ArrayList<>(personalGoalCards);
     }
 
     /**
@@ -226,13 +221,10 @@ public class Constants {
             commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
         }
 
-        File file = new File("src/main/resources/CommonGoalCardsDescriptions.json");
-        try {
-            commonGoalCardsDescriptions = ((Map<String, String>) new Gson().fromJson(new FileReader(file), Map.class));
-            return commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/CommonGoalCardsDescriptions.json")));
+
+        commonGoalCardsDescriptions = ((Map<String, String>) new Gson().fromJson(reader, Map.class));
+        return commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
     }
 
     /**

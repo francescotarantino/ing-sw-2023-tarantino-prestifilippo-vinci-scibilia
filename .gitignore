@@ -3,6 +3,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Output directory
+out/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
