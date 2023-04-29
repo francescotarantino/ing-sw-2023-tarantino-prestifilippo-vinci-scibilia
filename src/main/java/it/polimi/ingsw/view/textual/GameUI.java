@@ -19,7 +19,8 @@ public class GameUI implements Runnable {
 
     private enum State {
         MY_TURN,
-        NOT_MY_TURN
+        NOT_MY_TURN,
+        ENDED
     }
     private State state = State.NOT_MY_TURN;
     private final Object lock = new Object();
@@ -52,7 +53,11 @@ public class GameUI implements Runnable {
                 }
             }
 
-            this.executeTurn();
+            if(getState() != State.ENDED) {
+                this.executeTurn();
+            } else {
+                break;
+            }
         }
     }
 
@@ -81,6 +86,8 @@ public class GameUI implements Runnable {
         gameView.getFinalScores().forEach((score, player) -> System.out.println(player + ": " + score));
 
         System.out.println("The winner is: " + gameView.getFinalScores().firstEntry().getValue() + "!");
+
+        setState(State.ENDED);
 
         notifyListeners(lst, GameUIListener::exit);
     }
