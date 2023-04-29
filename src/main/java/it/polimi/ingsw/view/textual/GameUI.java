@@ -71,11 +71,11 @@ public class GameUI implements Runnable {
         this.currentBookshelf = gameView.getBookshelfMatrix();
 
         if(gameView.isMyTurn()) {
-            System.out.println("It's now your turn!");
+            System.out.println("Your turn!");
 
             setState(State.MY_TURN);
         } else {
-            System.out.println("Now is player " + gameView.getCurrentPlayerUsername() + "'s turn.");
+            System.out.println("Player " + gameView.getCurrentPlayerUsername() + "'s turn.");
 
             setState(State.NOT_MY_TURN);
         }
