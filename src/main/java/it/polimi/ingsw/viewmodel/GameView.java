@@ -2,6 +2,7 @@ package it.polimi.ingsw.viewmodel;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
@@ -40,7 +41,7 @@ public class GameView implements Serializable {
     /**
      * The descriptions of the common goal cards in the game.
      */
-    private final List<String> cgcDescriptions = new ArrayList<>();
+    private final List<String> cgcDescriptions;
     /**
      * True if the game is finished, false otherwise.
      */
@@ -50,7 +51,7 @@ public class GameView implements Serializable {
      * The key is the score, the value is the username.
      * The map is sorted in descending order, so the first entry is the winner.
      */
-    private final TreeMap<Integer, String> finalScores = new TreeMap<>(Collections.reverseOrder());
+    private final List<PlayerPoints> finalScores;
 
     public GameView(Game game, int playerIndex){
         this.playerIndex = playerIndex;
@@ -62,12 +63,18 @@ public class GameView implements Serializable {
         this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
         this.gameFinished = game.isFinished();
 
-        for (CommonGoalCard commonGoalCard : game.getCommonGoalCards()) {
-            cgcDescriptions.add(commonGoalCard.getDescription());
-        }
+        this.cgcDescriptions = Arrays.stream(game.getCommonGoalCards())
+                .map(CommonGoalCard::getDescription)
+                .toList();
 
         if(this.gameFinished){
-            game.getPlayers().forEach(player -> finalScores.put(player.getPoints(), player.getUsername()));
+            this.finalScores = game.getPlayers()
+                    .stream()
+                    .sorted(Comparator.comparingInt(Player::getPoints).reversed())
+                    .map(p -> new PlayerPoints(p.getUsername(), p.getPoints()))
+                    .toList();
+        } else {
+            finalScores = null;
         }
     }
 
@@ -95,7 +102,7 @@ public class GameView implements Serializable {
         return gameFinished;
     }
 
-    public TreeMap<Integer, String> getFinalScores() {
+    public List<PlayerPoints> getFinalScores() {
         return finalScores;
     }
 

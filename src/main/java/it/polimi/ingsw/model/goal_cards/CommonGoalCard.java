@@ -17,8 +17,8 @@ public abstract class CommonGoalCard extends GoalCard {
     public CommonGoalCard(int numberOfPlayers, int ID) {
         super(ID);
         this.scoringTokenStack = new Stack<>();
-
         Arrays.stream(Constants.getScoringTokens(numberOfPlayers)).forEach(this.scoringTokenStack::push);
+
         this.description = Constants.getCGCDescriptionByID(ID);
     }
 
@@ -108,6 +108,9 @@ public abstract class CommonGoalCard extends GoalCard {
      */
     public abstract boolean check(Tile[][] matrix);
 
+    /**
+     * @return the description of the common goal card
+     */
     public String getDescription(){
         return this.description;
     }

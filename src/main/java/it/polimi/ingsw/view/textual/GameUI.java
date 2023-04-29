@@ -83,9 +83,9 @@ public class GameUI implements Runnable {
 
     public void gameFinished(GameView gameView){
         System.out.println("Game has finished. Final points:");
-        gameView.getFinalScores().forEach((score, player) -> System.out.println(player + ": " + score));
+        gameView.getFinalScores().forEach(System.out::println);
 
-        System.out.println("The winner is: " + gameView.getFinalScores().firstEntry().getValue() + "!");
+        System.out.println("The winner is: " + gameView.getFinalScores().get(0).username() + "!");
 
         setState(State.ENDED);
 
