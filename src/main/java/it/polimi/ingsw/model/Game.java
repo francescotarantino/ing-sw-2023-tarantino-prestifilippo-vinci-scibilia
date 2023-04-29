@@ -260,7 +260,7 @@ public class Game {
 
     public void setGameFinished(){
         this.gameFinished = true;
-        notifyListeners(lst, listener -> listener.gameFinished());
+        notifyListeners(lst, GameListener::gameFinished);
     }
 
     public boolean isFinished(){
@@ -303,11 +303,11 @@ public class Game {
     public String toString() {
         StringBuilder string = new StringBuilder();
 
-        string.append(this.getGameID()).append("\t");
+        string.append(this.getGameID()).append(" ");
 
         for(int i=0; i<getTotalPlayersNumber(); i++){
             if(this.getBookshelves()[i] != null)
-                string.append(this.getBookshelves()[i].getPlayer().getUsername()).append("\t");
+                string.append(this.getBookshelves()[i].getPlayer().getUsername()).append(" ");
         }
 
         if(this.isStarted()){

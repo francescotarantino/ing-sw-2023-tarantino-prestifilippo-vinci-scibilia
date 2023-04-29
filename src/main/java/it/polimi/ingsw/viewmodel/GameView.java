@@ -2,14 +2,12 @@ package it.polimi.ingsw.viewmodel;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class is used to send the current relevant data from model of the game to the client.
@@ -39,13 +37,20 @@ public class GameView implements Serializable {
      * The current player's username.
      */
     private final String currentPlayerUsername;
-
+    /**
+     * The descriptions of the common goal cards in the game.
+     */
     private final List<String> cgcDescriptions = new ArrayList<>();
-
+    /**
+     * True if the game is finished, false otherwise.
+     */
     private final boolean gameFinished;
-
-    private final Map<String, Integer> finalScores;
-
+    /**
+     * The final scores of the players in the game, if the game is finished.
+     * The key is the score, the value is the username.
+     * The map is sorted in descending order, so the first entry is the winner.
+     */
+    private final TreeMap<Integer, String> finalScores = new TreeMap<>(Collections.reverseOrder());
 
     public GameView(Game game, int playerIndex){
         this.playerIndex = playerIndex;
@@ -61,19 +66,9 @@ public class GameView implements Serializable {
             cgcDescriptions.add(commonGoalCard.getDescription());
         }
 
-        Map<String, Integer> scoresTmp = new HashMap<>();
-        if(this.gameFinished) {
-            for(Player player : game.getPlayers()) {
-                scoresTmp.put(player.getUsername(), player.getPoints());
-            }
+        if(this.gameFinished){
+            game.getPlayers().forEach(player -> finalScores.put(player.getPoints(), player.getUsername()));
         }
-
-        this.finalScores = scoresTmp
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, HashMap::new));
     }
 
     public Tile[][] getBookshelfMatrix() {
@@ -100,7 +95,7 @@ public class GameView implements Serializable {
         return gameFinished;
     }
 
-    public Map<String, Integer> getFinalScores() {
+    public TreeMap<Integer, String> getFinalScores() {
         return finalScores;
     }
 

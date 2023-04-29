@@ -140,17 +140,17 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
     @Override
     public void gameFinished() throws RemoteException {
-        int points = 0;
-        String winner = null;
-        for(Player player : this.model.getPlayers()){
-            if(player.getPoints() > points){
-                points = player.getPoints();
-                winner = player.getUsername();
-            }
+        GameView gameView = new GameView(this.model, this.playerIndex);
+
+        // If the ServerImpl's player is the winner, the game is removed from the list of games.
+        if(this.playerIndex == gameView.getFinalScores().firstKey()){
+            System.out.println("Game " + this.model.getGameID() + " has finished.");
+            System.out.println("Winner: " + gameView.getFinalScores().firstKey() + " with" + gameView.getFinalScores().firstEntry().getValue() + "points.");
+            GameList.getInstance().removeGame(this.model);
         }
-        System.out.println("Game " + this.model.getGameID() + " has finished.\n Winner: " + winner + " with" + points + "points.");
-        GameList.getInstance().removeGame(this.model);
-        this.client.gameFinished(new GameView(this.model, this.playerIndex));
+
+        this.model.removeListener(this);
+        this.client.gameFinished(gameView);
     }
 
     @Override

@@ -78,11 +78,15 @@ public class GameUI implements Runnable {
 
     public void gameFinished(GameView gameView){
         System.out.println("Game has finished. Final points:");
-        gameView.getFinalScores().forEach((username, points) -> {
-            System.out.println(username + ": " + points);
-        });
+        gameView.getFinalScores().forEach((score, player) -> System.out.println(player + ": " + score));
 
-        System.out.println("The winner is: " + gameView.getFinalScores().keySet().toArray()[0]);
+        System.out.println("The winner is: " + gameView.getFinalScores().firstEntry().getValue() + "!");
+
+        System.out.println("Press enter to exit.");
+        try {
+            System.in.read();
+        } catch (Exception ignored) {}
+        System.exit(0);
     }
 
     /**
@@ -151,7 +155,6 @@ public class GameUI implements Runnable {
         notifyListeners(lst, x -> x.performTurn(finalColumn, finalPoints));
 
         setState(State.NOT_MY_TURN);
-        input.close();
     }
 
     /**

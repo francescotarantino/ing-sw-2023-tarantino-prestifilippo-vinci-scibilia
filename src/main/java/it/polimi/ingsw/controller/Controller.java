@@ -63,7 +63,6 @@ public class Controller {
             this.game.getCurrentPlayer().addScoringToken(Constants.endGameToken, this.game.getTotalPlayersNumber());
         }
 
-
         if(
                 this.game.getFinalPlayerIndex() != -1 &&
                 ((this.game.getCurrentPlayerIndex() + 1) % this.game.getTotalPlayersNumber()) == this.game.getFinalPlayerIndex()
