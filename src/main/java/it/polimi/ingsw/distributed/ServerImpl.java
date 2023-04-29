@@ -88,6 +88,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         this.playerIndex = 0;
 
         GameList.getInstance().addGame(this.model);
+        GameList.getInstance().notifyPlayerJoinedGame(gameID);
 
         this.controller = new Controller(this.model);
 
@@ -145,12 +146,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         // If the ServerImpl's player is the winner, the game is removed from the list of games.
         if(this.playerIndex == gameView.getFinalScores().firstKey()){
             System.out.println("Game " + this.model.getGameID() + " has finished.");
-            System.out.println("Winner: " + gameView.getFinalScores().firstKey() + " with" + gameView.getFinalScores().firstEntry().getValue() + "points.");
+            System.out.println("The winner is " + gameView.getFinalScores().firstEntry().getValue() + " with " + gameView.getFinalScores().firstKey() + " points.");
             GameList.getInstance().removeGame(this.model);
         }
 
         this.model.removeListener(this);
-        this.client.gameFinished(gameView);
+        try {
+            this.client.gameFinished(gameView);
+        } catch (RemoteException ignored) {}
     }
 
     @Override

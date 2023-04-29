@@ -5,10 +5,11 @@ import it.polimi.ingsw.Constants.TileType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Bag {
-    private final ArrayList<Tile> tiles;
+    private final List<Tile> tiles;
 
     /**
      * Creates a bag filled with the right amount of tiles.

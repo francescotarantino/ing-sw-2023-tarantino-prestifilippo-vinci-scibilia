@@ -58,7 +58,7 @@ public class StartUI implements Runnable {
         switch (choice) {
             case 1 -> createGame();
             case 2 -> joinGame();
-            case 3 -> System.exit(0);
+            case 3 -> notifyListeners(lst, StartUIListener::exit);
             default -> {
                 System.out.println("Invalid choice.");
                 showMenu();
@@ -89,7 +89,6 @@ public class StartUI implements Runnable {
 
         try {
             notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCommonGoalCards, this.username));
-            System.out.println("Game created successfully");
         } catch (IllegalArgumentException e) {
             System.out.println("Error while creating the game.");
             System.err.println(e.getMessage());
@@ -113,7 +112,7 @@ public class StartUI implements Runnable {
         try {
             notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
         } catch (IllegalArgumentException | IllegalStateException e) {
-            showError(e.getMessage(), false);
+            showError(e.getMessage());
         }
     }
 
@@ -148,18 +147,13 @@ public class StartUI implements Runnable {
     }
 
     /**
-     * Shows an error message and exits the program if exit is true.
+     * Shows an error message and the menu.
      * @param err error message to show
-     * @param exit if true, client is stopped
      */
-    public void showError(String err, boolean exit) {
+    public void showError(String err) {
         System.err.println(err);
 
-        if(exit) {
-            System.exit(0);
-        } else {
-            showMenu();
-        }
+        showMenu();
     }
 
     /**
@@ -168,6 +162,7 @@ public class StartUI implements Runnable {
      */
     public void showPlayersList(List<String> o) {
         if (this.playersNameList == null){
+            System.out.println("Game created successfully");
             System.out.println("List of connected players:");
             for(String s : o){
                 System.out.println(s);

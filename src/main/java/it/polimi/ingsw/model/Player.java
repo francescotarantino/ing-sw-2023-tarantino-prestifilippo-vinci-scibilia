@@ -4,11 +4,12 @@ import it.polimi.ingsw.Constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Player {
     private final String username;
     private int points;
-    private final ArrayList<Integer> scoringTokens = new ArrayList<>();
+    private final List<Integer> scoringTokens = new ArrayList<>();
 
     /**
      * Creates a new player with the given name and 0 points
@@ -52,7 +53,7 @@ public class Player {
         this.scoringTokens.add(token);
     }
 
-    public ArrayList<Integer> getScoringTokens(){
+    public List<Integer> getScoringTokens(){
         return new ArrayList<>(this.scoringTokens);
     }
 

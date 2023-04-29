@@ -162,7 +162,7 @@ public class Controller {
                 if (
                         currentTile != null &&
                         !currentTile.isPlaceholder() &&
-                        !livingRoomBoard.checkIsolatedTile(new Point(i, j), livingRoomBoard.getMatrix())
+                        !livingRoomBoard.checkIsolatedTile(new Point(i, j))
                 ) {
                     return false;
                 }
@@ -177,10 +177,8 @@ public class Controller {
      * @param player the player who's getting the points
      */
     private void addTokenPoints(Player player) {
-        while(!player.getScoringTokens().isEmpty()){
-            for (int j = 0; j < player.getScoringTokens().size(); j++) {
-                player.addPoints(player.getScoringTokens().get(j));
-            }
+        for(int token : player.getScoringTokens()){
+            player.addPoints(token);
         }
     }
 
@@ -226,7 +224,7 @@ public class Controller {
      */
     private void endGame(){
         assignPoints();
-        // TODO: implement other aspects related to the conclusion of a game
+
         this.game.setGameFinished();
     }
 }

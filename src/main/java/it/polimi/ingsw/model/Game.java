@@ -249,8 +249,8 @@ public class Game {
      * This method return the list of players in the game
      * @return an ArrayList of Strings containing the usernames of the players in the game
      */
-    public ArrayList<String> playersList() {
-        ArrayList<String> players = new ArrayList<>();
+    public List<String> playersList() {
+        List<String> players = new ArrayList<>();
         for (Bookshelf bookshelf : bookshelves) {
             if (bookshelf != null) {
                 players.add(bookshelf.getPlayer().getUsername());

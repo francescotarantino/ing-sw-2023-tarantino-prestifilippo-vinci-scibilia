@@ -111,7 +111,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
                             clientSkeleton.receive(server);
                         }
                     } catch (RemoteException e) {
-                        System.err.println("SOCKET > Cannot receive from " + socket.getInetAddress() + ". Closing this connection...");
+                        System.err.println("SOCKET > Client " + socket.getInetAddress() + " seems to have closed the connection. Closing...");
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.err.println("SOCKET > Unexpected error. Closing connection with" + socket.getInetAddress() + "...");

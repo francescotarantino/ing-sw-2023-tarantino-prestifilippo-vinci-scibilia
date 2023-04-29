@@ -17,4 +17,9 @@ public interface StartUIListener extends Listener {
      * This method is invoked when startUI wants to join a game.
      */
     void joinGame(int gameID, String username) throws RemoteException;
+
+    /**
+     * This method is invoked when startUI wants to exit.
+     */
+    void exit() throws RemoteException;
 }

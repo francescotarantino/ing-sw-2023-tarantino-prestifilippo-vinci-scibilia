@@ -11,4 +11,9 @@ public interface GameUIListener extends Listener {
      * @param points the points of the tiles from the living room board
      */
     void performTurn(int column, Point...points) throws RemoteException;
+
+    /**
+     * This method is invoked when gameUI wants to exit.
+     */
+    void exit() throws RemoteException;
 }

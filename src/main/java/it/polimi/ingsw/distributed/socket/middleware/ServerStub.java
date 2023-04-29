@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -121,6 +122,8 @@ public class ServerStub implements Server {
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());
                 case GAME_FINISHED -> client.gameFinished((GameView) ois.readObject());
             }
+        } catch (SocketException e) {
+            System.exit(0);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             throw new RemoteException("Cannot receive event");
@@ -129,6 +132,7 @@ public class ServerStub implements Server {
 
     public void close() throws RemoteException {
         try {
+            System.out.println("Closing connection...");
             socket.close();
         } catch (IOException e) {
             throw new RemoteException("Cannot close socket", e);

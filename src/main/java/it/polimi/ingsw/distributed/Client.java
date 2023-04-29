@@ -40,7 +40,7 @@ public interface Client extends Remote {
     void modelChanged(GameView gameView) throws RemoteException;
 
     /**
-     * TODO
+     * This method is called by the server to notify the client that the game it is in has finished.
      */
     void gameFinished(GameView gameView) throws RemoteException;
 }

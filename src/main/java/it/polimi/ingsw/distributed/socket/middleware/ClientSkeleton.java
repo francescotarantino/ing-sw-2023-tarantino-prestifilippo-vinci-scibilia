@@ -123,8 +123,7 @@ public class ClientSkeleton implements Client {
                 case PERFORM_TURN -> server.performTurn((Integer) ois.readObject(), (Point[]) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new RemoteException("Connection seems to be closed", e);
         } catch (InvalidChoiceException e) {
             this.showError(e.getMessage(), false);
         }

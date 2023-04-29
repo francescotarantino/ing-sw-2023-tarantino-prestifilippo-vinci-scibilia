@@ -82,11 +82,7 @@ public class GameUI implements Runnable {
 
         System.out.println("The winner is: " + gameView.getFinalScores().firstEntry().getValue() + "!");
 
-        System.out.println("Press enter to exit.");
-        try {
-            System.in.read();
-        } catch (Exception ignored) {}
-        System.exit(0);
+        notifyListeners(lst, GameUIListener::exit);
     }
 
     /**
@@ -163,7 +159,7 @@ public class GameUI implements Runnable {
     private void updateBoard(GameView gameView){
         System.out.println("Common Goal Cards:");
         for(int i = 0; i < gameView.getCGCDescriptions().size(); i++){
-            System.out.println(" " + (i+1) + ". " + gameView.getCGCDescriptions().get(i));
+            System.out.println(" " + (i+1) + ". " + gameView.getCGCDescriptions().get(i).replace("\n", "\n    "));
         }
         System.out.println("Current living room board:");
         System.out.print("   ");

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.listeners.StartUIListener;
@@ -72,13 +73,24 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
+    public void exit() throws RemoteException {
+        closeConnection();
+
+        System.exit(0);
+    }
+
+    @Override
     public void updateGamesList(List<GameDetailsView> o) throws RemoteException {
         startUI.showGamesList(o);
     }
 
     @Override
     public void showError(String err, boolean exit) throws RemoteException {
-        startUI.showError(err, exit);
+        startUI.showError(err);
+
+        if(exit){
+            this.exit();
+        }
     }
 
     @Override
@@ -88,7 +100,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void gameHasStarted() throws RemoteException {
-        startUI.removeListener(this);
         System.out.println("Starting GameUI...");
         new Thread(gameUI).start();
         gameUI.addListener(this);
@@ -102,11 +113,19 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void gameFinished(GameView gameView) throws RemoteException {
         gameUI.gameFinished(gameView);
-        gameUI.removeListener(this);
     }
 
     @Override
     public void performTurn(int column, Point...points) throws RemoteException {
         this.server.performTurn(column, points);
+    }
+
+    /**
+     * This method closes the connection with the server if the connection is SOCKET.
+     */
+    private void closeConnection() throws RemoteException {
+        if(this.server instanceof ServerStub) {
+            ((ServerStub) this.server).close();
+        }
     }
 }

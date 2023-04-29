@@ -14,9 +14,9 @@ import static it.polimi.ingsw.listeners.Listener.notifyListeners;
  */
 public class GameList {
 
-    private final ArrayList<GameListListener> lst = new ArrayList<>();
+    private final List<GameListListener> lst = new ArrayList<>();
 
-    private static final ArrayList<Game> games = new ArrayList<>();
+    private static final List<Game> games = new ArrayList<>();
 
     private static GameList instance = null;
 
@@ -59,7 +59,7 @@ public class GameList {
      * This method is used to get the list of games on the server.
      * @return the list of games on the server
      */
-    public ArrayList<Game> getGames() {
+    public List<Game> getGames() {
         return games;
     }
 
