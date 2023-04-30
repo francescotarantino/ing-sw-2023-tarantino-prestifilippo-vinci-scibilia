@@ -178,6 +178,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         }
 
         this.model.removeListener(this);
+        this.model = null;
         try {
             this.client.gameFinished(gameView);
         } catch (RemoteException ignored) {}
@@ -197,6 +198,9 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         pong = true;
     }
 
+    /**
+     * This method is used to check if the client is still connected to the server.
+     */
     private void pingpong() {
         while (true) {
             pong = false;
@@ -218,6 +222,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         }
 
         if (this.model != null) {
+            // Client is linked to a game
             System.out.println("Player " + this.model.getPlayer(this.playerIndex).getUsername() + " disconnected in game " + this.model.getGameID() + ".");
 
             if(!this.model.isStarted()) {
@@ -236,6 +241,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
                 }
             }
         } else {
+            // Client is not linked to a game
             System.out.println("A client disconnected.");
 
             GameList.getInstance().removeListener(this);

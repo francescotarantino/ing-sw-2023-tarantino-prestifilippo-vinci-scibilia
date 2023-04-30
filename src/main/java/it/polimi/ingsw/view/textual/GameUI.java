@@ -28,6 +28,8 @@ public class GameUI implements Runnable {
     private State state = State.NOT_MY_TURN;
     private final Object lock = new Object();
 
+    private Thread inputThread;
+
     private Tile[][] currentBoard;
     private Tile[][] currentBookshelf;
     /** Integer representing living room board color */
@@ -161,6 +163,7 @@ public class GameUI implements Runnable {
 
     public void run() {
         AnsiConsole.systemInstall();
+
         while (true) {
             while (getState() == State.NOT_MY_TURN) {
                 synchronized (lock) {
@@ -173,7 +176,15 @@ public class GameUI implements Runnable {
             }
 
             if(getState() != State.ENDED) {
-                this.executeTurn();
+                inputThread = new Thread(() -> {
+                    try {
+                        executeTurn();
+                    } catch (InterruptedException ignored) {}
+                });
+                inputThread.start();
+                try {
+                    inputThread.join();
+                } catch (InterruptedException ignored) {}
             } else {
                 break;
             }
@@ -227,12 +238,13 @@ public class GameUI implements Runnable {
     public void gamePaused(){
         System.out.println();
         System.out.println(ansi().bold().a("Game has been paused since you're the only player left in the game.").reset());
+        if(inputThread != null) inputThread.interrupt();
     }
 
     /**
      * This method obtains the things that the player wants to do
      */
-    private void executeTurn() {
+    private void executeTurn() throws InterruptedException {
         Scanner input = new Scanner(System.in);
 
         int howManyPick;
@@ -242,7 +254,7 @@ public class GameUI implements Runnable {
         do {
             do {
                 System.out.print("How many tiles do you want to pick? ");
-                howManyPick = TextualUtils.nextInt(input);
+                howManyPick = TextualUtils.nextIntInterruptible(input);
 
                 if(howManyPick < Constants.minPick || howManyPick > Constants.maxPick)
                     System.out.println("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
@@ -259,12 +271,12 @@ public class GameUI implements Runnable {
                     System.out.println("Tile #" + (i + 1));
 
                     System.out.print("Row: ");
-                    y = Constants.livingRoomBoardY - TextualUtils.nextInt(input);
+                    y = Constants.livingRoomBoardY - TextualUtils.nextIntInterruptible(input);
                     if (y < 0 || y > Constants.livingRoomBoardY)
                         System.out.println("Row coordinate must be between 1 and " + Constants.livingRoomBoardY);
 
                     System.out.print("Column: ");
-                    x = TextualUtils.nextInt(input) - 1;
+                    x = TextualUtils.nextIntInterruptible(input) - 1;
                     if (x < 0 || x > Constants.livingRoomBoardX)
                         System.out.println("Column coordinate must be between 1 and " + Constants.livingRoomBoardX);
 
@@ -274,7 +286,7 @@ public class GameUI implements Runnable {
 
             do {
                 System.out.print("In which column do you want to put the tiles? ");
-                column = TextualUtils.nextInt(input) - 1;
+                column = TextualUtils.nextIntInterruptible(input) - 1;
                 if(column < 0 || column > Constants.bookshelfX)
                     System.out.println("Column must be between 1 and " + Constants.bookshelfX + ".");
             } while(column < 0 || column > Constants.bookshelfX);
