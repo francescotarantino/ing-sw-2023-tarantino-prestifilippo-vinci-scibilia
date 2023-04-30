@@ -144,6 +144,27 @@ public class Constants {
         }
     }
 
+    public enum ShortTileType{
+        C(TileType.CATS),
+        B(TileType.BOOKS),
+        G(TileType.GAMES),
+        F(TileType.FRAMES),
+        T(TileType.TROPHIES),
+        P(TileType.PLANTS);
+
+
+        private TileType type;
+
+        private ShortTileType(TileType t ){
+            type = t;
+        }
+        public TileType getType(){
+            return type;
+        }
+    }
+
+
+
     /**
      * Minimum number of Common Goal Cards in a game.
      */

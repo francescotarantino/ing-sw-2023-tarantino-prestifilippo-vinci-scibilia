@@ -38,7 +38,7 @@ public class Controller {
         if (points.length > Constants.maxPick || points.length == 0)
             throw new IllegalArgumentException("Invalid number of tiles.");
         if(!checkIfTilesCanBeTaken(this.game.getLivingRoomBoard().getMatrix(), points))
-            throw new IllegalArgumentException("Provided tiles can't be taken.");
+            throw new IllegalArgumentException("ProvFided tiles can't be taken.");
         if(!checkIfColumnHasEnoughSpace(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix(), column, points.length))
             throw new IllegalArgumentException("Provided column doesn't have enough space.");
 
@@ -86,6 +86,44 @@ public class Controller {
             game.getLivingRoomBoard().removeTile(points[i]);
         }
         return tiles;
+    }
+
+
+
+    /**
+    * This method receive the Tiles taken from the living room board and reorder them according to players' directives.
+     * @param tiles indicate the tiles that need to be reordered
+     * @param order indicate the order desired, asked directly to the player
+    * @return the tiles ordered
+    */
+    private Tile[] reshuffleTiles(Tile[] tiles, Constants.ShortTileType[] order){
+        Tile[] orderedTiles = new Tile[tiles.length];
+        int [] checkedTile = new int[tiles.length];
+        int j = order.length;
+        for( int i = 0; i < tiles.length; i++){
+            switch (j){
+                case 2 -> {
+                    if(tiles[i].getType()!= order[j - 1].getType() && tiles[i].getType()!= order[j - 2].getType()) throw new IllegalArgumentException("The inserted tiles are different from those taken");
+                }
+
+                case 3 -> {
+                    if(tiles[i].getType()!= order[j - 1].getType() && tiles[i].getType()!= order[j - 2].getType() && tiles[i].getType()!= order[j - 3].getType()) throw new IllegalArgumentException("The inserted tiles are different from those taken");
+                }
+            }
+            if( tiles[i].getType() == order[0].getType()) checkedTile[0] = i + 1;
+            if( tiles[i].getType() == order[1].getType()) checkedTile[1] = i + 1;
+            if(j == 3){
+                if( tiles[i].getType() == order[2].getType()) checkedTile[2] = i + 1;
+            }
+        }
+        for( int i = 0; i < tiles.length; i++){
+            if(checkedTile[i] == 0) throw new IllegalArgumentException("The inserted tiles are different from those taken");
+        }
+        orderedTiles[0] = tiles[ (checkedTile[0] - 1)];
+        orderedTiles[1] = tiles[ (checkedTile[1] - 1)];
+        orderedTiles[2] = tiles[ (checkedTile[2] - 1)];
+        return orderedTiles;
+
     }
 
     /**
@@ -230,7 +268,7 @@ public class Controller {
     /**
      * This method is called to end a game.
      */
-    private void endGame(){
+    public void endGame(){
         assignPoints();
 
         this.game.setGameFinished();
