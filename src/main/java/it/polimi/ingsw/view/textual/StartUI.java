@@ -28,9 +28,10 @@ public class StartUI implements Runnable {
     @Override
     public void run() {
         AnsiConsole.systemInstall();
+
         askUsername();
 
-        System.out.print(ansi().eraseScreen());
+        System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
 
         notifyListeners(lst, StartUIListener::refreshStartUI);
 
@@ -43,7 +44,7 @@ public class StartUI implements Runnable {
     private void askUsername() {
         Scanner s = new Scanner(System.in);
 
-        System.out.print(ansi().bold().fg(Ansi.Color.RED).a("Insert your username: ").reset());
+        System.out.print(ansi().bold().fg(Ansi.Color.GREEN).a("Insert your username: ").reset());
         this.username = s.next();
     }
 
@@ -56,18 +57,16 @@ public class StartUI implements Runnable {
         System.out.println("""
                     Select an option:
                      1. Create a new game
-                     2. Join an existing game
-                     3. Exit""");
+                     2. Join an existing game""");
 
         int choice = TextualUtils.nextInt(s);
 
         switch (choice) {
             case 1 -> createGame();
             case 2 -> joinGame();
-            case 3 -> notifyListeners(lst, StartUIListener::exit);
             default -> {
                 System.out.println("Invalid choice.");
-                showMenu();
+                notifyListeners(lst, StartUIListener::exit);
             }
         }
     }
@@ -96,10 +95,9 @@ public class StartUI implements Runnable {
         try {
             notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCommonGoalCards, this.username));
         } catch (IllegalArgumentException e) {
-            System.out.println("Error while creating the game.");
-            System.err.println(e.getMessage());
+            showError(e.getMessage());
 
-            showMenu();
+            notifyListeners(lst, StartUIListener::exit);
         }
     }
 
@@ -119,6 +117,8 @@ public class StartUI implements Runnable {
             notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
         } catch (IllegalArgumentException | IllegalStateException e) {
             showError(e.getMessage());
+
+            notifyListeners(lst, StartUIListener::exit);
         }
     }
 
@@ -157,9 +157,7 @@ public class StartUI implements Runnable {
      * @param err error message to show
      */
     public void showError(String err) {
-        System.err.println(err);
-
-        showMenu();
+        System.out.println(ansi().bold().fg(Ansi.Color.RED).a(err).reset());
     }
 
     /**

@@ -24,7 +24,8 @@ public class ClientSkeleton implements Client {
         SHOW_ERROR,
         GAME_HAS_STARTED,
         MODEL_CHANGED,
-        GAME_FINISHED
+        GAME_FINISHED,
+        PING
     }
 
     public ClientSkeleton(Socket socket) throws RemoteException {
@@ -41,7 +42,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void updateGamesList(List<GameDetailsView> o) throws RemoteException {
+    public synchronized void updateGamesList(List<GameDetailsView> o) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.UPDATE_GAMES_LIST);
@@ -53,7 +54,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void showError(String err, boolean exit) throws RemoteException {
+    public synchronized void showError(String err, boolean exit) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.SHOW_ERROR);
@@ -66,7 +67,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void updatePlayersList(List<String> o) throws RemoteException {
+    public synchronized void updatePlayersList(List<String> o) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.UPDATE_PLAYERS_LIST);
@@ -78,7 +79,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void gameHasStarted() throws RemoteException {
+    public synchronized void gameHasStarted() throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.GAME_HAS_STARTED);
@@ -89,7 +90,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void modelChanged(GameView gameView) throws RemoteException {
+    public synchronized void modelChanged(GameView gameView) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.MODEL_CHANGED);
@@ -101,11 +102,22 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void gameFinished(GameView gameView) throws RemoteException {
+    public synchronized void gameFinished(GameView gameView) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.GAME_FINISHED);
             oos.writeObject(gameView);
+            oos.flush();
+        } catch (IOException e1) {
+            throw new RemoteException("Cannot send object", e1);
+        }
+    }
+
+    @Override
+    public synchronized void ping() throws RemoteException {
+        try {
+            oos.reset();
+            oos.writeObject(Methods.PING);
             oos.flush();
         } catch (IOException e1) {
             throw new RemoteException("Cannot send object", e1);
@@ -121,11 +133,12 @@ public class ClientSkeleton implements Client {
                 case CREATE -> server.create((Integer) ois.readObject(), (Integer) ois.readObject(), (String) ois.readObject());
                 case GET_GAMES_LIST -> server.getGamesList();
                 case PERFORM_TURN -> server.performTurn((Integer) ois.readObject(), (Point[]) ois.readObject());
+                case PONG -> server.pong();
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RemoteException("Connection seems to be closed", e);
         } catch (InvalidChoiceException e) {
-            this.showError(e.getMessage(), false);
+            this.showError(e.getMessage(), true);
         }
     }
 }

@@ -146,8 +146,16 @@ public class Controller {
     /**
      * This method changes the current player to the next one
      */
-    private void nextPlayer(){
-        this.game.setCurrentPlayerIndex((this.game.getCurrentPlayerIndex() + 1) % this.game.getTotalPlayersNumber());
+    public void nextPlayer(){
+        if(this.game.getConnectedPlayersNumber() > 1){
+            int i = (this.game.getCurrentPlayerIndex() + 1) % this.game.getTotalPlayersNumber();
+            while(!this.game.getPlayer(i).isConnected()){
+                i = (i + 1) % this.game.getTotalPlayersNumber();
+            }
+            this.game.setCurrentPlayerIndex(i);
+        } else {
+            this.game.setPaused(true);
+        }
     }
 
     /**

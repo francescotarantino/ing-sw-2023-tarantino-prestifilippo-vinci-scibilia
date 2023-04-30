@@ -52,9 +52,14 @@ public class Game {
      */
     private final List<GameListener> lst = new ArrayList<>();
     /**
-     * Boolean representing whether the game has finished or not
+     * Boolean representing whether the game has finished or not.
      */
     private boolean gameFinished = false;
+    /**
+     * Boolean representing whether the game is paused or not.
+     * A game is paused when there is only one player connected to the game.
+     */
+    private boolean isPaused = false;
 
     /**
      * Creates a new game
@@ -293,6 +298,30 @@ public class Game {
         }
 
         return string.toString();
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void setPaused(boolean paused) {
+        isPaused = paused;
+    }
+
+    public long getConnectedPlayersNumber() {
+        return this.getPlayers().stream().filter(Player::isConnected).count();
+    }
+
+    public void setPlayerConnected(int playerIndex, boolean connected) {
+        if(playerIndex < 0 || playerIndex >= this.getTotalPlayersNumber())
+            throw new IllegalArgumentException("Illegal player index");
+
+        this.getPlayer(playerIndex).setConnected(connected);
+
+        // Set game paused only if there is only one player left
+        this.setPaused(getConnectedPlayersNumber() == 1);
+
+        notifyListeners(lst, GameListener::modelChanged);
     }
 
     public void addListener(GameListener o){

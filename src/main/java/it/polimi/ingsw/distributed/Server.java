@@ -42,4 +42,10 @@ public interface Server extends Remote {
      * @param points the points of the tiles from the living room board
      */
     void performTurn(int column, Point...points) throws RemoteException;
+
+    /**
+     * This method is called by the client to respond to a ping sent by the server.
+     * @see Client#ping()
+     */
+    void pong() throws RemoteException;
 }

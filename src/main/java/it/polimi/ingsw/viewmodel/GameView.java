@@ -47,6 +47,10 @@ public class GameView implements Serializable {
      */
     private final boolean gameFinished;
     /**
+     * True if the game is paused (there is only one player connected), false otherwise.
+     */
+    private final boolean gamePaused;
+    /**
      * The final scores of the players in the game, if the game is finished.
      * The key is the score, the value is the username.
      * The map is sorted in descending order, so the first entry is the winner.
@@ -62,6 +66,7 @@ public class GameView implements Serializable {
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
         this.gameFinished = game.isFinished();
+        this.gamePaused = game.isPaused();
 
         this.cgcDescriptions = Arrays.stream(game.getCommonGoalCards())
                 .map(CommonGoalCard::getDescription)
@@ -112,5 +117,9 @@ public class GameView implements Serializable {
 
     public Constants.TileType[][] getPersonalGoalCardMatrix() {
         return personalGoalCardMatrix;
+    }
+
+    public boolean isGamePaused() {
+        return gamePaused;
     }
 }

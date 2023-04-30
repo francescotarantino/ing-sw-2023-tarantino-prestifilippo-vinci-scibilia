@@ -1,5 +1,6 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.listeners.GameListener;
@@ -20,6 +21,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     private Controller controller;
     private Client client;
     private int playerIndex;
+    /**
+     * This boolean is used in the ping-pong mechanism to check if the client is still connected to the server.
+     * It is set to false before the ping is sent. If the server receives a pong, it is set to true.
+     */
+    boolean pong;
 
     public ServerImpl() throws RemoteException {
         super();
@@ -39,6 +45,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         GameList.getInstance().addListener(this);
 
         System.out.println("A client is registering to the server...");
+
+        new Thread(this::pingpong).start();
     }
 
     @Override
@@ -50,22 +58,39 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
             throw new InvalidChoiceException("Game not found.");
         }
 
-        try {
-            this.playerIndex = this.model.addBookshelf(new Player(username));
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            throw new InvalidChoiceException(e.getMessage());
-        }
+        if(this.model.isFull() && this.model.playersList().contains(username) && !this.model.getPlayer(this.model.playersList().indexOf(username)).isConnected()){
+            this.playerIndex = this.model.playersList().indexOf(username);
+            this.model.setPlayerConnected(this.playerIndex, true);
 
-        GameList.getInstance().notifyPlayerJoinedGame(gameID);
+            this.controller = new Controller(this.model);
 
-        this.controller = new Controller(this.model);
+            this.model.addListener(this);
 
-        this.model.addListener(this);
+            this.client.gameHasStarted();
+            this.client.modelChanged(new GameView(this.model, this.playerIndex));
 
-        if(this.model.isFull()){
-            GameList.getInstance().notifyGameFull(gameID);
+            if(this.model.isPaused() && this.model.getConnectedPlayersNumber() <= 2){
+                this.model.setCurrentPlayerIndex(this.playerIndex);
+            }
+        } else {
+            try {
+                this.playerIndex = this.model.addBookshelf(new Player(username));
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                this.model = null;
+                throw new InvalidChoiceException(e.getMessage());
+            }
 
-            this.controller.start();
+            GameList.getInstance().notifyPlayerJoinedGame(gameID);
+
+            this.controller = new Controller(this.model);
+
+            this.model.addListener(this);
+
+            if(this.model.isFull()){
+                GameList.getInstance().notifyGameFull(gameID);
+
+                this.controller.start();
+            }
         }
     }
 
@@ -115,6 +140,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     public void removedGame() throws RemoteException {
         if(this.model == null){
             this.client.updateGamesList(GameList.getInstance().getGamesDetails());
+        } else if(GameList.getInstance().getGame(this.model.getGameID()) == null){
+            this.client.showError("The game you were waiting for has been removed.", true);
         }
     }
 
@@ -162,6 +189,56 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
             this.controller.performTurn(column, points);
         } else {
             throw new RemoteException("It's not your turn.");
+        }
+    }
+
+    @Override
+    public void pong() throws RemoteException {
+        pong = true;
+    }
+
+    private void pingpong() {
+        while (true) {
+            pong = false;
+            try {
+                this.client.ping();
+            } catch (RemoteException e) {
+                break;
+            }
+
+            try {
+                Thread.sleep(Constants.pingpongTimeout);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (!pong) {
+                break;
+            }
+        }
+
+        if (this.model != null) {
+            System.out.println("Player " + this.model.getPlayer(this.playerIndex).getUsername() + " disconnected in game " + this.model.getGameID() + ".");
+
+            if(!this.model.isStarted()) {
+                System.out.println("The game is removed.");
+                this.model.removeListener(this);
+                GameList.getInstance().removeListener(this);
+
+                GameList.getInstance().removeGame(this.model);
+            } else {
+                System.out.println("The game will continue.");
+                this.model.removeListener(this);
+                this.model.setPlayerConnected(this.playerIndex, false);
+
+                if (this.model.getCurrentPlayerIndex() == this.playerIndex) {
+                    this.controller.nextPlayer();
+                }
+            }
+        } else {
+            System.out.println("A client disconnected.");
+
+            GameList.getInstance().removeListener(this);
         }
     }
 }

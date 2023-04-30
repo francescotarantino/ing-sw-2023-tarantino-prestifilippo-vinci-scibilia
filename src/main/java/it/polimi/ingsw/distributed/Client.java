@@ -43,4 +43,10 @@ public interface Client extends Remote {
      * This method is called by the server to notify the client that the game it is in has finished.
      */
     void gameFinished(GameView gameView) throws RemoteException;
+
+    /**
+     * This method is called by the server to check if the client is still connected.
+     * The client should respond with a {@link Server#pong()}.
+     */
+    void ping() throws RemoteException;
 }

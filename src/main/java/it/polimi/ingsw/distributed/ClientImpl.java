@@ -59,7 +59,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         try {
             this.server.create(numberOfPlayers, numberOfCommonGoalCards, username);
         } catch (InvalidChoiceException e) {
-            this.showError(e.getMessage(), false);
+            this.showError(e.getMessage(), true);
         }
     }
 
@@ -68,7 +68,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         try {
             this.server.addPlayerToGame(gameID, username);
         } catch (InvalidChoiceException e) {
-            this.showError(e.getMessage(), false);
+            this.showError(e.getMessage(), true);
         }
     }
 
@@ -127,5 +127,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         if(this.server instanceof ServerStub) {
             ((ServerStub) this.server).close();
         }
+    }
+
+    @Override
+    public void ping() throws RemoteException {
+        this.server.pong();
     }
 }

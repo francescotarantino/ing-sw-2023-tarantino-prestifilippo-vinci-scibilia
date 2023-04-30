@@ -5,6 +5,7 @@ import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.viewmodel.GameView;
+import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
@@ -184,6 +185,16 @@ public class GameUI implements Runnable {
      * @param gameView the new model-view of the game
      */
     public void update(GameView gameView){
+        if(gameView.isGamePaused()){
+            this.gamePaused();
+            setState(State.NOT_MY_TURN);
+            return;
+        }
+
+        // If it's my turn and I'm already in my turn, I don't need to update the board
+        if(gameView.isMyTurn() && getState() == State.MY_TURN){
+            return;
+        }
 
         this.updateBoard(gameView);
         this.currentBoard = gameView.getLivingRoomBoardMatrix();
@@ -211,6 +222,11 @@ public class GameUI implements Runnable {
         setState(State.ENDED);
 
         notifyListeners(lst, GameUIListener::exit);
+    }
+
+    public void gamePaused(){
+        System.out.println();
+        System.out.println(ansi().bold().a("Game has been paused since you're the only player left in the game.").reset());
     }
 
     /**
@@ -276,7 +292,7 @@ public class GameUI implements Runnable {
 
         int finalColumn = column;
         Point[] finalPoints = points;
-        notifyListeners(lst, x -> x.performTurn(finalColumn, finalPoints));
+        if(getState() == State.MY_TURN) notifyListeners(lst, x -> x.performTurn(finalColumn, finalPoints));
 
         setState(State.NOT_MY_TURN);
     }
@@ -285,7 +301,8 @@ public class GameUI implements Runnable {
      * This method prints the actual living room board and the player's bookshelf.
      */
     private void updateBoard(GameView gameView){
-        System.out.print(ansi().eraseScreen());
+        System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
         System.out.println("Common Goal Cards:");
         for(int i = 0; i < gameView.getCGCDescriptions().size(); i++){
             System.out.println(" " + (i+1) + ". " + gameView.getCGCDescriptions().get(i).replace("\n", "\n    "));

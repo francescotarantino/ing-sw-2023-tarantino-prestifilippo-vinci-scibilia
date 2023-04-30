@@ -321,4 +321,8 @@ public class Constants {
      * Default name used for the RMI Registry.
      */
     public static final String defaultRMIName = "myShelfie";
+    /**
+     * Timeout (in milliseconds) used in the ping-pong mechanism.
+     */
+    public static final long pingpongTimeout = 1000;
 }

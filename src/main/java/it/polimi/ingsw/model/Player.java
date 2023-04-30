@@ -10,6 +10,7 @@ public class Player {
     private final String username;
     private int points;
     private final List<Integer> scoringTokens = new ArrayList<>();
+    private boolean connected;
 
     /**
      * Creates a new player with the given name and 0 points
@@ -18,6 +19,7 @@ public class Player {
     public Player(String username){
         this.username = username;
         this.points = 0;
+        this.connected = true;
     }
 
     public String getUsername(){
@@ -57,8 +59,20 @@ public class Player {
         return new ArrayList<>(this.scoringTokens);
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean disconnected) {
+        this.connected = disconnected;
+    }
+
     @Override
     public String toString() {
-        return "@" + username + " (" + points + ")";
+        if(!isConnected()){
+            return "@" + username + " (disconnected)";
+        } else {
+            return "@" + username;
+        }
     }
 }

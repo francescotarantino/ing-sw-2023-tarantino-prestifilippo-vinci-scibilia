@@ -28,7 +28,8 @@ public class ServerStub implements Server {
         JOIN,
         CREATE,
         GET_GAMES_LIST,
-        PERFORM_TURN
+        PERFORM_TURN,
+        PONG
     }
 
     public ServerStub(String ip, int port) {
@@ -60,7 +61,7 @@ public class ServerStub implements Server {
     }
 
     @Override
-    public void addPlayerToGame(int gameID, String username) throws RemoteException {
+    public synchronized void addPlayerToGame(int gameID, String username) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.JOIN);
@@ -73,7 +74,7 @@ public class ServerStub implements Server {
     }
 
     @Override
-    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
+    public synchronized void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.CREATE);
@@ -87,7 +88,7 @@ public class ServerStub implements Server {
     }
 
     @Override
-    public void getGamesList() throws RemoteException {
+    public synchronized void getGamesList() throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.GET_GAMES_LIST);
@@ -98,12 +99,23 @@ public class ServerStub implements Server {
     }
 
     @Override
-    public void performTurn(int column, Point... points) throws RemoteException {
+    public synchronized void performTurn(int column, Point... points) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.PERFORM_TURN);
             oos.writeObject(column);
             oos.writeObject(points);
+            oos.flush();
+        } catch (IOException e) {
+            throw new RemoteException("Cannot send event", e);
+        }
+    }
+
+    @Override
+    public synchronized void pong() throws RemoteException {
+        try {
+            oos.reset();
+            oos.writeObject(Methods.PONG);
             oos.flush();
         } catch (IOException e) {
             throw new RemoteException("Cannot send event", e);
@@ -121,6 +133,7 @@ public class ServerStub implements Server {
                 case GAME_HAS_STARTED -> client.gameHasStarted();
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());
                 case GAME_FINISHED -> client.gameFinished((GameView) ois.readObject());
+                case PING -> client.ping();
             }
         } catch (SocketException e) {
             System.exit(0);
