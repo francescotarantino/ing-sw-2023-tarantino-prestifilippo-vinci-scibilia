@@ -450,11 +450,11 @@ public class GameUI implements Runnable {
                             }
                         }
                         else { //Second half of each row
-                            if(gameView.getPersonalGoalCardMatrix()[k][Constants.bookshelfY - h - 1] != null) {
+                            if(gameView.getPersonalGoalCardMatrix()[k][h] != null) {
                                 //System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
                                 fgDisambiguationPrint(wall + "  ", false, personalGoalCardColor);
-                                System.out.print(ansi().bold().fg(gameView.getPersonalGoalCardMatrix()[k][Constants.bookshelfY - h - 1].color())
-                                        .a(gameView.getPersonalGoalCardMatrix()[k][Constants.bookshelfY - h - 1].toString().charAt(0)).reset() + "  ");
+                                System.out.print(ansi().bold().fg(gameView.getPersonalGoalCardMatrix()[k][h].color())
+                                        .a(gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0)).reset() + "  ");
                             } else {
                                 fgDisambiguationPrint(wall + "     ", false, personalGoalCardColor);
                             }

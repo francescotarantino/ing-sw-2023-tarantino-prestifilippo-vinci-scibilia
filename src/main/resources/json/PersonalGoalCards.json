@@ -1,6 +1,6 @@
 [
     [
-      "PLANTS", null , "TROPHIES", null, null, null, null, null, null, "CATS", null, null, null, "BOOKS", null, null, "GAMES", null, null, null, null, null, null, null, null, null, null, "TROPHIES", null, null
+      "PLANTS", null , "FRAMES", null, null, null, null, null, null, "CATS", null, null, null, "BOOKS", null, null, "GAMES", null, null, null, null, null, null, null, null, null, null, "TROPHIES", null, null
     ],
     [
       null, null, null, null, null, null, "PLANTS", null, null, null, "CATS", null, "GAMES", null, null, null, null, null, null, "BOOKS", null, null, null, "TROPHIES", null, null, null, null, null, "FRAMES"
@@ -33,6 +33,6 @@
        null, null, "PLANTS", null, null, null, "BOOKS", null, null, null, "GAMES", null, null, null, null, null, null,"FRAMES", null, null, null, null, null, null, "CATS", null, null, null, "TROPHIES", null
     ],
     [
-      null, null, "BOOKS", null, null, null, "PLANTS", null, null, null, null, null, "PLANTS", null, null, null, null, null, "TROPHIES", null, null, null, null, null, "GAMES", "CATS", null, null, null, null
+      null, null, "BOOKS", null, null, null, "PLANTS", null, null, null, null, null, "FRAMES", null, null, null, null, null, "TROPHIES", null, null, null, null, null, "GAMES", "CATS", null, null, null, null
     ]
 ]

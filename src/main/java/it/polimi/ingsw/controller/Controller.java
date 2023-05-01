@@ -38,7 +38,7 @@ public class Controller {
         if (points.length > Constants.maxPick || points.length == 0)
             throw new IllegalArgumentException("Invalid number of tiles.");
         if(!checkIfTilesCanBeTaken(this.game.getLivingRoomBoard().getMatrix(), points))
-            throw new IllegalArgumentException("ProvFided tiles can't be taken.");
+            throw new IllegalArgumentException("Provided tiles can't be taken.");
         if(!checkIfColumnHasEnoughSpace(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix(), column, points.length))
             throw new IllegalArgumentException("Provided column doesn't have enough space.");
 

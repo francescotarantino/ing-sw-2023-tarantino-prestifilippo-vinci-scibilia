@@ -20,13 +20,16 @@ public class PersonalGoalCard extends GoalCard {
 
         List<String> data = Constants.getPersonalGoalCards().get(index);
 
-        for (int i = 0; i < Constants.bookshelfX; i++){
-            for (int j = 0; j < Constants.bookshelfY; j++){
-                if(data.get(i*Constants.bookshelfY + j) != null){
-                    this.matrix[i][j] = Constants.TileType.valueOf(data.get(i*Constants.bookshelfY + j));
+        int indexInFile = 0;
+        for (int j = Constants.bookshelfY - 1; j >= 0; j--){
+            for (int i = 0; i < Constants.bookshelfX; i++){
+                if(data.get(indexInFile) != null){
+                    this.matrix[i][j] = Constants.TileType.valueOf(data.get(indexInFile));
                 } else {
                     this.matrix[i][j] = null;
                 }
+
+                indexInFile++;
             }
         }
     }
