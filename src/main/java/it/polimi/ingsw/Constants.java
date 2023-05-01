@@ -144,6 +144,10 @@ public class Constants {
         }
     }
 
+    /**
+     * Enumeration of all the Tile Types the player can take.
+     * useful when the player wants to reorder the tiles taken and need to address them easily.
+     */
     public enum ShortTileType{
         C(TileType.CATS),
         B(TileType.BOOKS),
