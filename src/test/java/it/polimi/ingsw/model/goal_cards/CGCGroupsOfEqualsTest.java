@@ -11,7 +11,9 @@ public class CGCGroupsOfEqualsTest {
             board1, //contains no groups
             board2, //contains 6 groups of two, but no groups of four, nor squares
             board3, //contains 7 groups, that are enough to have both six of two and four of four
-            board4; //contains two squares, and nothing else
+            boardNull,
+            boardEmpty;
+
 
     @BeforeAll
     static void init() {
@@ -38,13 +40,13 @@ public class CGCGroupsOfEqualsTest {
             {new Tile(CATS), new Tile(PLANTS), new Tile(FRAMES), new Tile(CATS), new Tile(CATS), new Tile(GAMES)},
             {new Tile(GAMES), new Tile(PLANTS), new Tile(TROPHIES), new Tile(TROPHIES), new Tile(TROPHIES), new Tile(TROPHIES)},
         };
-
-        board4 = new Tile[][] {
-            {new Tile(CATS), new Tile(BOOKS), new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES), new Tile(PLANTS)},
-            {new Tile(PLANTS), new Tile(PLANTS), new Tile(CATS), new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES)},
-            {new Tile(PLANTS), new Tile(PLANTS), new Tile(CATS), new Tile(PLANTS), new Tile(PLANTS), new Tile(FRAMES)},
-            {new Tile(FRAMES), new Tile(TROPHIES), new Tile(TROPHIES), new Tile(PLANTS), new Tile(PLANTS), new Tile(GAMES)},
-            {new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES), new Tile(BOOKS), new Tile(CATS), new Tile(CATS)},
+        boardNull = null;
+        boardEmpty = new Tile[][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
         };
     }
     @Test
@@ -53,7 +55,8 @@ public class CGCGroupsOfEqualsTest {
         assertFalse(cgc.check(board1));
         assertTrue(cgc.check(board2));
         assertTrue(cgc.check(board3));
-        assertFalse(cgc.check(board4));
+        assertThrows(NullPointerException.class, () -> cgc.check(boardNull));
+        assertFalse(cgc.check(boardEmpty));
     }
     @Test
     void testCGC3() {
@@ -61,15 +64,8 @@ public class CGCGroupsOfEqualsTest {
         assertFalse(cgc.check(board1));
         assertFalse(cgc.check(board2));
         assertTrue(cgc.check(board3));
-        assertFalse(cgc.check(board4));
-    }
-    @Test
-    void testCGC4() {
-        CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 4);
-        assertFalse(cgc.check(board1));
-        assertFalse(cgc.check(board2));
-        assertFalse(cgc.check(board3));
-        assertTrue(cgc.check(board4));
+        assertThrows(NullPointerException.class, () -> cgc.check(boardNull));
+        assertFalse(cgc.check(boardEmpty));
     }
 }
 

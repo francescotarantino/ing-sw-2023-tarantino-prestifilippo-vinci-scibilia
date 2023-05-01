@@ -6,11 +6,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.Constants.TileType.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCTriangularTest {
-    static Tile[][] triangular_matrix, triangular_matrix_reverse, non_triangular_matrix;
+    static Tile[][] triangular_matrix, triangular_matrix_reverse, non_triangular_matrix, matrix_null, matrix_empty;
 
     @BeforeAll
     static void init() {
@@ -49,6 +48,14 @@ public class CGCTriangularTest {
         }, {
                 new Tile(CATS), new Tile(CATS), new Tile(FRAMES), new Tile(FRAMES), new Tile(CATS), null
         }};
+        matrix_null = null;
+        matrix_empty = new Tile[][]{
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+        };
     }
 
     @Test
@@ -59,5 +66,7 @@ public class CGCTriangularTest {
         assertTrue(cgc.check(triangular_matrix_reverse));
         assertTrue(cgc.check(triangular_matrix));
         assertFalse(cgc.check(non_triangular_matrix));
+        assertThrows(NullPointerException.class, () -> cgc.check(matrix_null));
+        assertFalse(cgc.check(matrix_empty));
     }
 }

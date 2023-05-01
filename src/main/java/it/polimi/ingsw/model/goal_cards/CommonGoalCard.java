@@ -58,7 +58,7 @@ public abstract class CommonGoalCard extends GoalCard {
                 return new CGCGroupsOfEquals(numPlayers, ID, CGCGroupsOfEquals.BlockType.FOUR_OF_FOUR);
             }
             case 4 -> {
-                return new CGCGroupsOfEquals(numPlayers, ID, CGCGroupsOfEquals.BlockType.TWO_SQUARES);
+                return new CGCSquares(numPlayers, ID, 2);
             }
             case 5 -> {
                 return new CGCLines(numPlayers, ID, CGCLines.Direction.VERTICAL, 3, 3);
