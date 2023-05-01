@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.goal_cards;
 
 import static it.polimi.ingsw.Constants.TileType.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Tile;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 
 public class CGCCrossTest {
-    static Tile[][] matrix_with_cross, matrix_without_cross;
+    static Tile[][] matrix_with_cross, matrix_without_cross, matrix_null, matrix_empty;
 
     @BeforeAll
     static void init() {
@@ -38,6 +37,14 @@ public class CGCCrossTest {
         }, {
                 new Tile(GAMES), new Tile(CATS), new Tile(PLANTS), new Tile(FRAMES), new Tile(BOOKS), new Tile(TROPHIES)
         }};
+        matrix_null = null;
+        matrix_empty = new Tile[][]{
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+        };
     }
 
     @Test
@@ -47,5 +54,7 @@ public class CGCCrossTest {
         assert cgc != null;
         assertTrue(cgc.check(matrix_with_cross));
         assertFalse(cgc.check(matrix_without_cross));
+        assertThrows(NullPointerException.class, () -> cgc.check(matrix_null));
+        assertFalse(cgc.check(matrix_empty));
     }
 }

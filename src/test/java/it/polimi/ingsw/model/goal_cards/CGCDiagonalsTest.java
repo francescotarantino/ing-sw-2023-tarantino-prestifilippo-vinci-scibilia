@@ -7,11 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.Constants.TileType.*;
 import static it.polimi.ingsw.Constants.TileType.CATS;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCDiagonalsTest {
-    static Tile[][] boardFail, boardPass, boardPass2;
+    static Tile[][] boardFail, boardPass, boardPass2, boardNull, boardEmpty;
     @BeforeAll
     static void init() {
         boardFail = new Tile[][] {
@@ -35,6 +34,14 @@ public class CGCDiagonalsTest {
                 {new Tile(PLANTS), new Tile(BOOKS), new Tile(CATS), new Tile(FRAMES), new Tile(TROPHIES), new Tile(CATS)},
                 {new Tile(PLANTS), new Tile(CATS), new Tile(GAMES), new Tile(FRAMES), new Tile(TROPHIES), new Tile(CATS)},
         };
+        boardNull = null;
+        boardEmpty = new Tile[][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+        };
     }
     @Test
     void testCGC7() {
@@ -43,5 +50,7 @@ public class CGCDiagonalsTest {
         assertFalse(cgc.check(boardFail));
         assertTrue(cgc.check(boardPass));
         assertTrue(cgc.check(boardPass2));
+        assertThrows(NullPointerException.class, () -> cgc.check(boardNull));
+        assertFalse(cgc.check(boardEmpty));
     }
 }
