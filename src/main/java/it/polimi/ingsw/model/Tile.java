@@ -75,6 +75,6 @@ public class Tile implements Serializable {
         if(this.type == Constants.TileType.PLACEHOLDER)
             return " ";
         else
-            return type + "." + variant;
+            return type.toString();
     }
 }

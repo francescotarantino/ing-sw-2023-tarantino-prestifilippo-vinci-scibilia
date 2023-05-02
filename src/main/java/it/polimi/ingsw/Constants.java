@@ -122,7 +122,7 @@ public class Constants {
      */
     public enum TileType {
         CATS(Ansi.Color.GREEN),
-        BOOKS(Ansi.Color.WHITE),
+        BOOKS(Ansi.Color.DEFAULT),
         GAMES(Ansi.Color.YELLOW),
         FRAMES(Ansi.Color.BLUE),
         TROPHIES(Ansi.Color.CYAN),

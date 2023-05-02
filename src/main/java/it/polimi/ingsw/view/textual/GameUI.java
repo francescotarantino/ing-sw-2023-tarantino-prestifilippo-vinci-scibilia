@@ -5,6 +5,7 @@ import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.viewmodel.GameView;
+import it.polimi.ingsw.viewmodel.PlayerInfo;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -226,9 +227,9 @@ public class GameUI implements Runnable {
         this.updateBoard(gameView);
 
         System.out.println("Game has finished. Final points:");
-        gameView.getFinalScores().forEach(System.out::println);
+        gameView.getPlayerInfo().forEach(System.out::println);
 
-        System.out.println("The winner is: " + gameView.getFinalScores().get(0).username() + "!");
+        System.out.println("The winner is: " + gameView.getPlayerInfo().get(0).username() + "!");
 
         setState(State.ENDED);
 
@@ -274,7 +275,6 @@ public class GameUI implements Runnable {
                     y = Constants.livingRoomBoardY - TextualUtils.nextIntInterruptible(input);
                     if (y < 0 || y > Constants.livingRoomBoardY)
                         System.out.println("Row coordinate must be between 1 and " + Constants.livingRoomBoardY);
-
                     System.out.print("Column: ");
                     x = TextualUtils.nextIntInterruptible(input) - 1;
                     if (x < 0 || x > Constants.livingRoomBoardX)
@@ -315,9 +315,43 @@ public class GameUI implements Runnable {
     private void updateBoard(GameView gameView){
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
 
+        System.out.println("Players:");
+        for(PlayerInfo playerInfo : gameView.getPlayerInfo()){
+            System.out.print(playerInfo.username() + ": ");
+            if(playerInfo.username().equals(gameView.getFirstPlayerUsername()))
+                System.out.print(ansi().fg(Ansi.Color.YELLOW).a("[FIRST] ").reset() + "| ");
+            if(playerInfo.username().equals(gameView.getCurrentPlayerUsername()))
+                System.out.print(ansi().fg(Ansi.Color.GREEN).a("[CURRENT] ").reset() + "| ");
+            if(gameView.getFinalPlayerUsername() != null && gameView.getFinalPlayerUsername().equals(playerInfo.username()))
+                System.out.print(ansi().fg(Ansi.Color.RED).a("[LAST] ").reset() + "| ");
+            if(playerInfo.tokens().isEmpty())
+                System.out.println("no tokens");
+            else
+                System.out.println(playerInfo.getTokensString());
+            System.out.print("\tLast move: ");
+            if(playerInfo.lastMovePoints() != null){
+                System.out.print("took ");
+                for(int i = 0; i < playerInfo.lastMoveTiles().length; i++){
+                    System.out.print(ansi().fg(playerInfo.lastMoveTiles()[i].getType().color())
+                            .a(playerInfo.lastMoveTiles()[i]).reset());
+                    if(i < playerInfo.lastMovePoints().length - 1)
+                        System.out.print(", ");
+                }
+                System.out.print(" from ");
+                for(int i = 0; i < playerInfo.lastMovePoints().length; i++){
+                    System.out.print(new Point(Constants.livingRoomBoardY - playerInfo.lastMovePoints()[i].getY(),
+                            playerInfo.lastMovePoints()[i].getX() + 1));
+                    if(i < playerInfo.lastMovePoints().length - 1)
+                        System.out.print(", ");
+                }
+                System.out.println(".");
+            }
+            else
+                System.out.println("hasn't played yet!");
+        }
         System.out.println("Common Goal Cards:");
-        for(int i = 0; i < gameView.getCGCDescriptions().size(); i++){
-            System.out.println(" " + (i+1) + ". " + gameView.getCGCDescriptions().get(i).replace("\n", "\n    "));
+        for(int i = 0; i < gameView.getCGCData().size(); i++){
+            System.out.println(" " + (i+1) + ". " + gameView.getCGCData().get(i).toString().replace("\n", "\n    "));
         }
         System.out.println("Current living room board:");
         System.out.print("   ");
@@ -380,16 +414,21 @@ public class GameUI implements Runnable {
                 if(Constants.livingRoomBoardY - j == 3 && rowByHalves == 0){
                     //Space between living room board and bookshelf, text
                     System.out.print("             ");
-                    System.out.println("Your bookshelf:");
+                    System.out.print("Your bookshelf:");
+                    System.out.print("                             ");
+                    System.out.println("Your personal goal card:");
                 }
-                //Printing column numbers (bookshelf)
+                //Printing column numbers (bookshelf and personal goal card)
                 if(Constants.livingRoomBoardY - j == 3 && rowByHalves == 1){
                     System.out.print("             ");
                     for(int l = 0; l < Constants.bookshelfX; l++){
                         System.out.print("   " + (l+1) + "  ");
                     }
                     System.out.print("              ");
-                    System.out.println("Your personal goal card:");
+                    for(int l = 0; l < Constants.bookshelfX; l++){
+                        System.out.print("   " + (l+1) + "  ");
+                    }
+                    System.out.println();
                 }
                 if(Constants.livingRoomBoardY - j >= 4){
                     System.out.print("             ");

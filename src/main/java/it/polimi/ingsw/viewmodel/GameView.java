@@ -4,7 +4,6 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Tile;
-import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -34,14 +33,20 @@ public class GameView implements Serializable {
      * The index of the current player who's playing.
      */
     private final int currentPlayerIndex;
+
     /**
      * The current player's username.
      */
     private final String currentPlayerUsername;
     /**
-     * The descriptions of the common goal cards in the game.
+     * The username of the player who played first.
      */
-    private final List<String> cgcDescriptions;
+    private final String firstPlayerUsername;
+    /**
+     * The descriptions and tokens of the common goal cards in the game.
+     */
+    private final String finalPlayerUsername;
+    private final List<CGCData> cgcData;
     /**
      * True if the game is finished, false otherwise.
      */
@@ -51,11 +56,11 @@ public class GameView implements Serializable {
      */
     private final boolean gamePaused;
     /**
-     * The final scores of the players in the game, if the game is finished.
-     * The key is the score, the value is the username.
+     * Data about players in the game. Contains the scores of the players in the game.
      * The map is sorted in descending order, so the first entry is the winner.
+     * The key is the score, the value is the username. Always contains scoring tokens in possession of each player.
      */
-    private final List<PlayerPoints> finalScores;
+    private final List<PlayerInfo> playersData;
 
     public GameView(Game game, int playerIndex){
         this.playerIndex = playerIndex;
@@ -65,21 +70,30 @@ public class GameView implements Serializable {
         this.personalGoalCardMatrix = game.getBookshelves()[this.playerIndex].getPersonalGoalCard().getMatrix();
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
+        this.firstPlayerUsername = game.getBookshelves()[game.getFirstPlayerIndex()].getPlayer().getUsername();
+        if(game.getFinalPlayerIndex() == -1)
+            this.finalPlayerUsername = null;
+        else
+            this.finalPlayerUsername = game.getPlayers().get(game.getFinalPlayerIndex()).getUsername();
         this.gameFinished = game.isFinished();
         this.gamePaused = game.isPaused();
-
-        this.cgcDescriptions = Arrays.stream(game.getCommonGoalCards())
-                .map(CommonGoalCard::getDescription)
+        this.cgcData = Arrays.stream(game.getCommonGoalCards())
+                .map(card -> new CGCData(card.getDescription(), card.getAvailableScores()))
                 .toList();
-
-        if(this.gameFinished){
-            this.finalScores = game.getPlayers()
+        if(!this.gameFinished){
+            this.playersData = game.getPlayers()
+                    .stream()
+                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
+                                                p.getLastMovePoints(), p.getLastMoveTiles()))
+                    .toList();
+        }
+        else{
+            this.playersData = game.getPlayers()
                     .stream()
                     .sorted(Comparator.comparingInt(Player::getPoints).reversed())
-                    .map(p -> new PlayerPoints(p.getUsername(), p.getPoints()))
+                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
+                            p.getLastMovePoints(), p.getLastMoveTiles()))
                     .toList();
-        } else {
-            finalScores = null;
         }
     }
 
@@ -102,17 +116,22 @@ public class GameView implements Serializable {
     public String getCurrentPlayerUsername() {
         return currentPlayerUsername;
     }
-
+    public String getFirstPlayerUsername(){
+        return firstPlayerUsername;
+    }
+    public String getFinalPlayerUsername(){
+        return finalPlayerUsername;
+    }
     public boolean isGameFinished() {
         return gameFinished;
     }
 
-    public List<PlayerPoints> getFinalScores() {
-        return finalScores;
+    public List<PlayerInfo> getPlayerInfo() {
+        return playersData;
     }
 
-    public List<String> getCGCDescriptions(){
-        return cgcDescriptions;
+    public List<CGCData> getCGCData(){
+        return cgcData;
     }
 
     public Constants.TileType[][] getPersonalGoalCardMatrix() {

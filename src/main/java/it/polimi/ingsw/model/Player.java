@@ -11,6 +11,8 @@ public class Player {
     private int points;
     private final List<Integer> scoringTokens = new ArrayList<>();
     private boolean connected;
+    private Point[] lastMovePoints = null;
+    private Tile[] lastMoveTiles = null;
 
     /**
      * Creates a new player with the given name and 0 points
@@ -54,6 +56,10 @@ public class Player {
 
         this.scoringTokens.add(token);
     }
+    public void setLastMove(Tile[] tiles, Point[] points){
+        this.lastMoveTiles = tiles;
+        this.lastMovePoints = points;
+    }
 
     public List<Integer> getScoringTokens(){
         return new ArrayList<>(this.scoringTokens);
@@ -65,6 +71,12 @@ public class Player {
 
     public void setConnected(boolean disconnected) {
         this.connected = disconnected;
+    }
+    public Tile[] getLastMoveTiles(){
+        return this.lastMoveTiles;
+    }
+    public Point[] getLastMovePoints(){
+        return this.lastMovePoints;
     }
 
     @Override

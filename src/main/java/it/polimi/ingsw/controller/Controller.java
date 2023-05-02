@@ -41,8 +41,9 @@ public class Controller {
             throw new IllegalArgumentException("Provided tiles can't be taken.");
         if(!checkIfColumnHasEnoughSpace(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix(), column, points.length))
             throw new IllegalArgumentException("Provided column doesn't have enough space.");
-
-        this.insertTiles(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()], column, this.takeTiles(points));
+        Tile[] tempTiles = this.takeTiles(points);
+        this.game.getCurrentPlayer().setLastMove(tempTiles, points);
+        this.insertTiles(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()], column, tempTiles);
 
         this.nextTurn();
     }
