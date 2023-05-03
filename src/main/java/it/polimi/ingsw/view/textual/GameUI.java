@@ -497,9 +497,16 @@ public class GameUI implements Runnable {
                         else { //Second half of each row
                             if(gameView.getPersonalGoalCardMatrix()[k][h] != null) {
                                 //System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-                                fgDisambiguationPrint(wall + "  ", false, personalGoalCardColor);
-                                System.out.print(ansi().bold().fg(gameView.getPersonalGoalCardMatrix()[k][h].color())
+                                fgDisambiguationPrint(wall, false, personalGoalCardColor);
+                                if(gameView.getBookshelfMatrix()[k][h] == null)
+                                    System.out.print("  " + ansi().bold().fg(gameView.getPersonalGoalCardMatrix()[k][h].color())
                                         .a(gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0)).reset() + "  ");
+                                else if(gameView.getBookshelfMatrix()[k][h].getType() == gameView.getPersonalGoalCardMatrix()[k][h])
+                                    System.out.print(" " + ansi().bold().fg(Ansi.Color.DEFAULT).bg(Ansi.Color.GREEN)
+                                            .a(" " + gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0) + " ").reset() + " ");
+                                else
+                                    System.out.print(" " + ansi().bold().fg(Ansi.Color.DEFAULT).bg(Ansi.Color.RED)
+                                            .a(" " + gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0) + " ").reset() + " ");
                             } else {
                                 fgDisambiguationPrint(wall + "     ", false, personalGoalCardColor);
                             }
