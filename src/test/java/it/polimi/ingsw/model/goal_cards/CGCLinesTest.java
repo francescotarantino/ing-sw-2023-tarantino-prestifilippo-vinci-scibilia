@@ -9,7 +9,7 @@ import static it.polimi.ingsw.Constants.TileType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCLinesTest {
-    static Tile[][] matrix_rulebook, matrix, nullMatrix, emptyMatrix;
+    static Tile[][] matrix_rulebook, matrix, aleMatrix, nullMatrix, emptyMatrix;
 
     @BeforeAll
     static void init(){
@@ -36,6 +36,13 @@ public class CGCLinesTest {
         }, {
                 new Tile(GAMES), new Tile(CATS), new Tile(PLANTS), new Tile(FRAMES), new Tile(BOOKS), new Tile(TROPHIES)
         }};
+        aleMatrix = new Tile[][] {
+                {new Tile(BOOKS), new Tile(BOOKS), new Tile(CATS), new Tile(CATS), null, null},
+                {new Tile(FRAMES), new Tile(BOOKS), new Tile(CATS), new Tile(PLANTS), new Tile(GAMES), new Tile(TROPHIES)},
+                {new Tile(GAMES), new Tile(BOOKS), new Tile(CATS), new Tile(PLANTS), new Tile(FRAMES), new Tile(TROPHIES)},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+        };
         nullMatrix = null;
         emptyMatrix = new Tile[][]{
                 {null, null, null, null, null, null},
@@ -53,6 +60,7 @@ public class CGCLinesTest {
         assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertFalse(cgc.check(matrix));
+        assertFalse(cgc.check(aleMatrix));
         assertThrows(NullPointerException.class, () -> cgc.check(nullMatrix));
         assertFalse(cgc.check(emptyMatrix));
     }
@@ -64,6 +72,7 @@ public class CGCLinesTest {
         assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertFalse(cgc.check(matrix));
+        assertFalse(cgc.check(aleMatrix));
         assertThrows(NullPointerException.class, () -> cgc.check(nullMatrix));
         assertFalse(cgc.check(emptyMatrix));
     }
@@ -75,6 +84,7 @@ public class CGCLinesTest {
         assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertTrue(cgc.check(matrix));
+        assertTrue(cgc.check(aleMatrix));
         assertThrows(NullPointerException.class, () -> cgc.check(nullMatrix));
         assertFalse(cgc.check(emptyMatrix));
     }
@@ -86,6 +96,7 @@ public class CGCLinesTest {
         assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertFalse(cgc.check(matrix));
+        assertFalse(cgc.check(aleMatrix));
         assertThrows(NullPointerException.class, () -> cgc.check(nullMatrix));
         assertFalse(cgc.check(emptyMatrix));
     }
