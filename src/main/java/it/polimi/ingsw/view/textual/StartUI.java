@@ -54,11 +54,8 @@ public class StartUI implements Runnable {
      */
     private void showMenu(){
         Scanner s = new Scanner(System.in);
-        System.out.println("""
-                    Select an option:
-                     1. Create a new game
-                     2. Join an existing game""");
-
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Select an option:").reset());
+        System.out.println(" 1. Create a new game\n 2. Join an existing game");
         int choice = TextualUtils.nextInt(s);
 
         switch (choice) {
@@ -77,7 +74,8 @@ public class StartUI implements Runnable {
     private void createGame(){
         Scanner s = new Scanner(System.in);
         do {
-            System.out.print("How many players? ");
+            System.out.print("How many players? (" + Constants.playersLowerBound + " to " + Constants.playersUpperBound
+                + ") ");
             numberOfPlayers = TextualUtils.nextInt(s);
             if(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound)
                 System.out.println("Number of players should be between " + Constants.playersLowerBound
@@ -85,7 +83,8 @@ public class StartUI implements Runnable {
         } while(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound);
 
         do {
-            System.out.print("How many common goal cards? ");
+            System.out.print("How many common goal cards? (" + Constants.minCommonGoalCards +
+                    " for a beginner game, " + Constants.maxCommonGoalCards + " for a normal game) ");
             numberOfCommonGoalCards = TextualUtils.nextInt(s);
             if(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards)
                 System.out.println("Number of common goal cards should be between " + Constants.minCommonGoalCards
@@ -129,25 +128,25 @@ public class StartUI implements Runnable {
     public void showGamesList(List<GameDetailsView> o){
         if(this.username != null) {
             if (o.size() != 0) {
-                System.out.println("List of games on the server:");
-
+                System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
+                System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
                 for (GameDetailsView gameDetails : o) {
                     StringBuilder string = new StringBuilder();
 
-                    string.append(gameDetails.gameID()).append("\t");
+                    string.append(" ").append(gameDetails.gameID()).append("\t");
                     for(String playerName : gameDetails.playerUsernames()) {
                         string.append(playerName).append("\t");
                     }
                     if(gameDetails.isStarted()){
-                        string.append("(STARTED)");
+                        string.append(ansi().fg(Ansi.Color.YELLOW).a("(STARTED)").reset());
                     } else if(gameDetails.isFull()){
-                        string.append("(FULL)");
+                        string.append(ansi().fg(Ansi.Color.RED).a("(FULL)").reset());
                     }
 
                     System.out.println(string);
                 }
             } else {
-                System.out.println("There are no games on the server.");
+                System.out.println(ansi().fg(Ansi.Color.BLUE).a("There are no games on the server.").reset());
             }
         }
     }
@@ -166,13 +165,13 @@ public class StartUI implements Runnable {
      */
     public void showPlayersList(List<String> o) {
         if (this.playersNameList == null){
-            System.out.println("Game created successfully");
-            System.out.println("List of connected players:");
+            System.out.println(ansi().fg(Ansi.Color.GREEN).a("Game created successfully.").reset());
+            System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of connected players:").reset());
             for(String s : o){
-                System.out.println(s);
+                System.out.println(" " + s);
             }
         } else {
-            o.stream().filter(s -> !this.playersNameList.contains(s)).forEach(System.out::println);
+            o.stream().filter(s -> !this.playersNameList.contains(s)).forEach(x -> System.out.println(" " + x));
         }
 
         this.playersNameList = o;

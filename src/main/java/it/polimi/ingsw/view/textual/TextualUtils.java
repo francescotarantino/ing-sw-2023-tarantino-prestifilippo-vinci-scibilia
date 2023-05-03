@@ -62,4 +62,15 @@ public class TextualUtils {
 
         return input;
     }
+
+
+    public static int getInputWithBounds(Scanner input, int lowerBound, int higherBound, String errorMessage) throws InterruptedException{
+        int temp;
+        do{
+            temp = nextIntInterruptible(input);
+            if(temp < lowerBound || temp > higherBound)
+                System.out.println(errorMessage);
+        }while(temp < lowerBound || temp > higherBound);
+        return temp;
+    }
 }

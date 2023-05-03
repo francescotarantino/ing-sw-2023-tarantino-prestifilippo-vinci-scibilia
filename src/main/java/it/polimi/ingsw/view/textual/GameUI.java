@@ -31,8 +31,7 @@ public class GameUI implements Runnable {
 
     private Thread inputThread;
 
-    private Tile[][] currentBoard;
-    private Tile[][] currentBookshelf;
+    private GameView lastGameView;
     /** Integer representing living room board color */
     private static final int[] livingRoomBoardColor = {63,99,86};
 
@@ -207,10 +206,8 @@ public class GameUI implements Runnable {
         if(gameView.isMyTurn() && getState() == State.MY_TURN){
             return;
         }
-
+        this.lastGameView = gameView;
         this.updateBoard(gameView);
-        this.currentBoard = gameView.getLivingRoomBoardMatrix();
-        this.currentBookshelf = gameView.getBookshelfMatrix();
 
         if(gameView.isMyTurn()) {
             System.out.println("Your turn!");
@@ -247,58 +244,68 @@ public class GameUI implements Runnable {
      */
     private void executeTurn() throws InterruptedException {
         Scanner input = new Scanner(System.in);
-
         int howManyPick;
         boolean inputValidity;
-        int column;
+        int column = 0;
         Point[] points;
         do {
-            do {
-                System.out.print("How many tiles do you want to pick? ");
-                howManyPick = TextualUtils.nextIntInterruptible(input);
-
-                if(howManyPick < Constants.minPick || howManyPick > Constants.maxPick)
-                    System.out.println("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles.");
-            } while (howManyPick < Constants.minPick || howManyPick > Constants.maxPick);
+            System.out.print("How many tiles do you want to pick? ");
+            howManyPick = TextualUtils.getInputWithBounds(input, Constants.minPick, Constants.maxPick,
+                    ("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles."));
 
             points = new Point[howManyPick];
-
+            updateBoard(this.lastGameView);
+            System.out.println("Enter value \"0\" at any time to reset your input.");
             System.out.println("Pick " + howManyPick + " tiles in the order you want them to be inserted inside the bookshelf.");
-
             inputValidity = true;
             for (int i = 0; i < howManyPick; i++) {
-                int x, y;
-                do {
+                if(inputValidity) {
+                    int x, y;
                     System.out.println("Tile #" + (i + 1));
-
                     System.out.print("Row: ");
-                    y = Constants.livingRoomBoardY - TextualUtils.nextIntInterruptible(input);
-                    if (y < 0 || y > Constants.livingRoomBoardY)
-                        System.out.println("Row coordinate must be between 1 and " + Constants.livingRoomBoardY);
-                    System.out.print("Column: ");
-                    x = TextualUtils.nextIntInterruptible(input) - 1;
-                    if (x < 0 || x > Constants.livingRoomBoardX)
-                        System.out.println("Column coordinate must be between 1 and " + Constants.livingRoomBoardX);
-
-                } while (x < 0 || x > Constants.livingRoomBoardX || y < 0 || y > Constants.livingRoomBoardY);
-                points[i] = new Point(x, y);
+                    y = TextualUtils.getInputWithBounds(input, 0, Constants.livingRoomBoardY,
+                            ("Row coordinate must be between 1 and " + Constants.livingRoomBoardY + "."));
+                    if (y == 0) {
+                        inputValidity = false;
+                        updateBoard(this.lastGameView);
+                    }
+                    y = Constants.livingRoomBoardY - y;
+                    if(inputValidity){
+                        System.out.print("Column: ");
+                        x = TextualUtils.getInputWithBounds(input, 0, Constants.livingRoomBoardX,
+                                ("Column coordinate must be between 1 and " + Constants.livingRoomBoardX + "."));
+                        if (x == 0){
+                            inputValidity = false;
+                            updateBoard(this.lastGameView);
+                        }
+                        x = x - 1;
+                        points[i] = new Point(x, y);
+                    }
+                }
             }
-
-            do {
+            if(inputValidity){
+                if(!checkIfTilesCanBeTaken(this.lastGameView.getLivingRoomBoardMatrix(), points)){
+                    inputValidity = false;
+                    updateBoard(this.lastGameView);
+                    System.out.println("Invalid selection. Taken tiles must form a straight line and have at least one free side.");
+                }
+            }
+            if(inputValidity){
                 System.out.print("In which column do you want to put the tiles? ");
-                column = TextualUtils.nextIntInterruptible(input) - 1;
-                if(column < 0 || column > Constants.bookshelfX)
-                    System.out.println("Column must be between 1 and " + Constants.bookshelfX + ".");
-            } while(column < 0 || column > Constants.bookshelfX);
-
-            if(!checkIfTilesCanBeTaken(currentBoard, points)){
-                System.out.println("Invalid selection. Taken tiles must form a straight line and have at least one free side.");
-                inputValidity = false;
+                column = TextualUtils.getInputWithBounds(input, 0, Constants.bookshelfX,
+                        ("Column must be between 1 and " + Constants.bookshelfX + "."));
+                if(column == 0) {
+                    inputValidity = false;
+                    updateBoard(this.lastGameView);
+                }
+                column = column - 1;
             }
-
-            if(!checkIfColumnHasEnoughSpace(currentBookshelf, column, points.length)){
-                System.out.println("Chosen column does not have enough space.");
-                inputValidity = false;
+            if(inputValidity){
+                if(!checkIfColumnHasEnoughSpace(this.lastGameView.getBookshelfMatrix(), column, points.length)){
+                    inputValidity = false;
+                    updateBoard(this.lastGameView);
+                    System.out.println("Chosen column does not have enough space.");
+                }
             }
         } while(!inputValidity);
 
@@ -315,7 +322,7 @@ public class GameUI implements Runnable {
     private void updateBoard(GameView gameView){
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
 
-        System.out.println("Players:");
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Players:").reset());
         for(PlayerInfo playerInfo : gameView.getPlayerInfo()){
             System.out.print(playerInfo.username() + ": ");
             if(playerInfo.username().equals(gameView.getFirstPlayerUsername()))
@@ -349,11 +356,11 @@ public class GameUI implements Runnable {
             else
                 System.out.println("hasn't played yet!");
         }
-        System.out.println("Common Goal Cards:");
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Common Goal Cards:").reset());
         for(int i = 0; i < gameView.getCGCData().size(); i++){
             System.out.println(" " + (i+1) + ". " + gameView.getCGCData().get(i).toString().replace("\n", "\n    "));
         }
-        System.out.println("Current living room board:");
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Current Living Room Board:").reset());
         System.out.print("   ");
         //Printing column numbers (living room board)
         for(int i = 0; i < Constants.livingRoomBoardX; i++){
@@ -414,9 +421,9 @@ public class GameUI implements Runnable {
                 if(Constants.livingRoomBoardY - j == 3 && rowByHalves == 0){
                     //Space between living room board and bookshelf, text
                     System.out.print("             ");
-                    System.out.print("Your bookshelf:");
+                    System.out.print(ansi().fg(Ansi.Color.BLUE).a("Your Bookshelf:").reset());
                     System.out.print("                             ");
-                    System.out.println("Your personal goal card:");
+                    System.out.println(ansi().fg(Ansi.Color.BLUE).a("Your Personal Goal Card:").reset());
                 }
                 //Printing column numbers (bookshelf and personal goal card)
                 if(Constants.livingRoomBoardY - j == 3 && rowByHalves == 1){
