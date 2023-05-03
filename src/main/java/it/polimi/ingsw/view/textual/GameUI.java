@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
-import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import org.fusesource.jansi.Ansi;
@@ -256,7 +255,7 @@ public class GameUI implements Runnable {
             points = new Point[howManyPick];
             updateBoard(this.lastGameView);
             System.out.println("Enter value \"0\" at any time to reset your input.");
-            System.out.println("Pick " + howManyPick + " tiles in the order you want them to be inserted inside the bookshelf.");
+            System.out.println("Pick " + howManyPick + " tile(s) in the order you want them to be inserted inside the bookshelf.");
             inputValidity = true;
             for (int i = 0; i < howManyPick; i++) {
                 if(inputValidity) {

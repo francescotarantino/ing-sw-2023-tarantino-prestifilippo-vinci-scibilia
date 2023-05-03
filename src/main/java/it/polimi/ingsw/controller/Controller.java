@@ -157,12 +157,13 @@ public class Controller {
     private void checkCommonGoal(Player player, Bookshelf bookshelf, CommonGoalCard[] commonGoalCards){
         for(int i = 0; i < commonGoalCards.length; i++){
             if(!bookshelf.isCommonGoalCardCompleted(i)){
+                int temp = commonGoalCards[i].checkValidity(bookshelf.getMatrix());
                 player.addScoringToken(
-                        commonGoalCards[i].checkValidity(bookshelf.getMatrix()),
+                        temp,
                         this.game.getTotalPlayersNumber()
                 );
-
-                bookshelf.setCommonGoalCardCompleted(i);
+                if(temp != 0)
+                    bookshelf.setCommonGoalCardCompleted(i);
             }
         }
     }

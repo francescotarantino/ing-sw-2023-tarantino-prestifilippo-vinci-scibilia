@@ -2,11 +2,14 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
+
+import java.util.Arrays;
+
 public class Bookshelf {
     private final Player player;
     private final PersonalGoalCard personalGoalCard;
     private final Tile[][] matrix;
-    private final boolean[] completedCommonGoalCards;
+    private boolean[] completedCommonGoalCards;
 
     /**
      * Creates a new Bookshelf for the specified player.
@@ -18,11 +21,13 @@ public class Bookshelf {
         this.personalGoalCard = personalGoalCard;
         this.matrix = new Tile[Constants.bookshelfX][Constants.bookshelfY];
         this.completedCommonGoalCards = new boolean[Constants.maxCommonGoalCards];
+        Arrays.fill(completedCommonGoalCards, false);
     }
 
     /**
      * @return the player who owns the bookshelf
      */
+
     public Player getPlayer() {
         return this.player;
     }
