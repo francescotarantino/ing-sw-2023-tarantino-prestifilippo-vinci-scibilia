@@ -201,13 +201,11 @@ public class GameUI implements Runnable {
             setState(State.NOT_MY_TURN);
             return;
         }
-
         // If it's my turn and I'm already in my turn, I don't need to update the board
         if(gameView.getCurrentPlayerIndex() == gameView.getMyIndex() && getState() == State.MY_TURN){
             return;
         }
         this.updateBoard(gameView);
-
         if(gameView.getCurrentPlayerIndex() == gameView.getMyIndex()) {
             System.out.println("Your turn!");
 
@@ -220,6 +218,7 @@ public class GameUI implements Runnable {
     }
 
     public void gameFinished(GameView gameView){
+        this.lastGameView = gameView;
         this.updateBoard(gameView);
 
         System.out.println("Game has finished. Final points:");
@@ -320,51 +319,11 @@ public class GameUI implements Runnable {
     /**
      * This method prints the actual living room board and the player's bookshelf.
      */
+
     private void updateBoard(GameView gameView){
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
-
-        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Players:").reset());
-        for(PlayerInfo playerInfo : gameView.getPlayerInfo()){
-            System.out.print(playerInfo.username() + ": ");
-            if(playerInfo.isConnected())
-                System.out.print(ansi().fg(Ansi.Color.GREEN).a("(CONNECTED) ").reset() + "|  ");
-            else
-                System.out.print(ansi().fg(Ansi.Color.RED).a("(DISCONNECTED) ").reset() + "|  ");
-            if(playerInfo.username().equals(gameView.getFirstPlayerUsername()))
-                System.out.print(ansi().fg(Ansi.Color.YELLOW).a("[FIRST] ").reset() + "| ");
-            if(playerInfo.username().equals(gameView.getCurrentPlayerUsername()))
-                System.out.print(ansi().fg(Ansi.Color.GREEN).a("[CURRENT] ").reset() + "| ");
-            if(gameView.getFinalPlayerUsername() != null && gameView.getFinalPlayerUsername().equals(playerInfo.username()))
-                System.out.print(ansi().fg(Ansi.Color.RED).a("[LAST] ").reset() + "| ");
-            if(playerInfo.tokens().isEmpty())
-                System.out.println("no tokens");
-            else
-                System.out.println(playerInfo.getTokensString());
-            System.out.print("\tLast move: ");
-            if(playerInfo.lastMovePoints() != null){
-                System.out.print("took ");
-                for(int i = 0; i < playerInfo.lastMoveTiles().length; i++){
-                    System.out.print(ansi().fg(playerInfo.lastMoveTiles()[i].getType().color())
-                            .a(playerInfo.lastMoveTiles()[i]).reset());
-                    if(i < playerInfo.lastMovePoints().length - 1)
-                        System.out.print(", ");
-                }
-                System.out.print(" from ");
-                for(int i = 0; i < playerInfo.lastMovePoints().length; i++){
-                    System.out.print(new Point(Constants.livingRoomBoardY - playerInfo.lastMovePoints()[i].getY(),
-                            playerInfo.lastMovePoints()[i].getX() + 1));
-                    if(i < playerInfo.lastMovePoints().length - 1)
-                        System.out.print(", ");
-                }
-                System.out.println(".");
-            }
-            else
-                System.out.println("hasn't played yet!");
-        }
-        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Common Goal Cards:").reset());
-        for(int i = 0; i < gameView.getCGCData().size(); i++){
-            System.out.println(" " + (i+1) + ". " + gameView.getCGCData().get(i).toString().replace("\n", "\n    "));
-        }
+        this.showPlayers(gameView);
+        this.showCommonGoalCards(gameView);
         System.out.println(ansi().fg(Ansi.Color.BLUE).a("Current Living Room Board:").reset());
         System.out.print("   ");
         //Printing column numbers (living room board)
@@ -554,6 +513,61 @@ public class GameUI implements Runnable {
         fgDisambiguationPrint(cornerBottomRight, true, personalGoalCardColor);
     }
 
+    /**
+     * This method prints the current status of all players connected to the game.
+     * @param gameView Current game's data from which to extract player info.
+     */
+    private void showPlayers(GameView gameView){
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Players:").reset());
+        for(PlayerInfo playerInfo : gameView.getPlayerInfo()){
+            System.out.print(playerInfo.username() + ": ");
+            if(playerInfo.isConnected())
+                System.out.print(ansi().fg(Ansi.Color.GREEN).a("(CONNECTED) ").reset() + "|  ");
+            else
+                System.out.print(ansi().fg(Ansi.Color.RED).a("(DISCONNECTED) ").reset() + "|  ");
+            if(playerInfo.username().equals(gameView.getFirstPlayerUsername()))
+                System.out.print(ansi().fg(Ansi.Color.YELLOW).a("[FIRST] ").reset() + "| ");
+            if(playerInfo.username().equals(gameView.getCurrentPlayerUsername()))
+                System.out.print(ansi().fg(Ansi.Color.GREEN).a("[CURRENT] ").reset() + "| ");
+            if(gameView.getFinalPlayerUsername() != null && gameView.getFinalPlayerUsername().equals(playerInfo.username()))
+                System.out.print(ansi().fg(Ansi.Color.RED).a("[LAST] ").reset() + "| ");
+            if(playerInfo.tokens().isEmpty())
+                System.out.println("no tokens");
+            else
+                System.out.println(playerInfo.getTokensString());
+            System.out.print("\tLast move: ");
+            if(playerInfo.lastMovePoints() != null){
+                System.out.print("took ");
+                for(int i = 0; i < playerInfo.lastMoveTiles().length; i++){
+                    System.out.print(ansi().fg(playerInfo.lastMoveTiles()[i].getType().color())
+                            .a(playerInfo.lastMoveTiles()[i]).reset());
+                    if(i < playerInfo.lastMovePoints().length - 1)
+                        System.out.print(", ");
+                }
+                System.out.print(" from ");
+                for(int i = 0; i < playerInfo.lastMovePoints().length; i++){
+                    System.out.print(new Point(Constants.livingRoomBoardY - playerInfo.lastMovePoints()[i].getY(),
+                            playerInfo.lastMovePoints()[i].getX() + 1));
+                    if(i < playerInfo.lastMovePoints().length - 1)
+                        System.out.print(", ");
+                }
+                System.out.println(".");
+            }
+            else
+                System.out.println("hasn't played yet!");
+        }
+    }
+
+    /**
+     * This method prints the common goal cards present in the current game.
+     * @param gameView Current game's data from which to extract common goal card info.
+     */
+    private void showCommonGoalCards(GameView gameView){
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("Common Goal Cards:").reset());
+        for(int i = 0; i < gameView.getCGCData().size(); i++){
+            System.out.println(" " + (i+1) + ". " + gameView.getCGCData().get(i).toString().replace("\n", "\n    "));
+        }
+    }
     /**
      * This method decides whether to print given string with default color or another given color.
      * Default color is used for Windows, other colors are used for operative systems compatible with Unicode and more colors.
