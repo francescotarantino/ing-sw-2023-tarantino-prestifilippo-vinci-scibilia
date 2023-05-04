@@ -214,23 +214,19 @@ public class Controller {
      * @return true if a refill is needed, false otherwise
      */
     private boolean checkBoardNeedRefill(LivingRoomBoard livingRoomBoard) {
-        int numtiles = 0;
-        int onlytiles = 0;
         for (int i = 0; i < Constants.livingRoomBoardX; i++) {
             for (int j = 0; j < Constants.livingRoomBoardY; j++) {
                 Tile currentTile = livingRoomBoard.getTile(new Point(i, j));
                 if (
                         currentTile != null &&
-                        !currentTile.isPlaceholder()
+                        !currentTile.isPlaceholder() &&
+                        !livingRoomBoard.checkIsolatedTile(new Point(i, j))
                 ) {
-                    numtiles++;
-                    if( !livingRoomBoard.checkIsolatedTile(new Point(i, j))) return false;
-                    else onlytiles++;
-
+                    return false;
                 }
             }
         }
-        return numtiles == onlytiles;
+        return true;
     }
 
     /**
