@@ -184,7 +184,7 @@ public class GameUI implements Runnable {
                 try {
                     inputThread.join();
                 } catch (InterruptedException ignored) {}
-            } else {
+            } else if (getState() == State.ENDED){
                 break;
             }
         }

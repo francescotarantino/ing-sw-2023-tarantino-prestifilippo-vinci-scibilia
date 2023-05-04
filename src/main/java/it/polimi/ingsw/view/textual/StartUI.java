@@ -22,7 +22,7 @@ public class StartUI implements Runnable {
     private String username;
     private int numberOfPlayers;
     private int numberOfCommonGoalCards;
-    private int gameID;
+    private int gameID = -1;
     private List<String> playersNameList;
 
     @Override
@@ -35,7 +35,16 @@ public class StartUI implements Runnable {
 
         notifyListeners(lst, StartUIListener::refreshStartUI);
 
-        showMenu();
+        Scanner s = new Scanner(System.in);
+        int choice = TextualUtils.nextInt(s);
+        switch (choice) {
+            case 1 -> createGame();
+            case 2 -> joinGame();
+            default -> {
+                System.out.println("Invalid choice.");
+                notifyListeners(lst, StartUIListener::exit);
+            }
+        }
     }
 
     /**
@@ -53,19 +62,8 @@ public class StartUI implements Runnable {
      * If the user selects an invalid option, the menu is shown again.
      */
     private void showMenu(){
-        Scanner s = new Scanner(System.in);
         System.out.println(ansi().fg(Ansi.Color.BLUE).a("Select an option:").reset());
         System.out.println(" 1. Create a new game\n 2. Join an existing game");
-        int choice = TextualUtils.nextInt(s);
-
-        switch (choice) {
-            case 1 -> createGame();
-            case 2 -> joinGame();
-            default -> {
-                System.out.println("Invalid choice.");
-                notifyListeners(lst, StartUIListener::exit);
-            }
-        }
     }
 
     /**
@@ -127,6 +125,9 @@ public class StartUI implements Runnable {
      */
     public void showGamesList(List<GameDetailsView> o){
         if(this.username != null) {
+            System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+            showMenu();
+
             if (o.size() != 0) {
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
@@ -165,7 +166,13 @@ public class StartUI implements Runnable {
      */
     public void showPlayersList(List<String> o) {
         if (this.playersNameList == null){
-            System.out.println(ansi().fg(Ansi.Color.GREEN).a("Game created successfully.").reset());
+            System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
+            if(gameID == -1){
+                System.out.println(ansi().fg(Ansi.Color.GREEN).a("Game created successfully.").reset());
+            } else {
+                System.out.println(ansi().fg(Ansi.Color.GREEN).a("Game #" + gameID).reset());
+            }
             System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of connected players:").reset());
             for(String s : o){
                 System.out.println(" " + s);

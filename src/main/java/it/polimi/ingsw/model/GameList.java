@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.listeners.GameListListener;
+import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 /**
  * This class is used to store the list of games on the server.
  */
-public class GameList {
+public class GameList implements GameListener {
 
     private final List<GameListListener> lst = new ArrayList<>();
 
@@ -41,6 +43,7 @@ public class GameList {
      * @param game the reference to the new Game class
      */
     public void addGame(Game game) {
+        game.addListener(this);
         games.add(game);
         notifyListeners(lst, GameListListener::newGame);
     }
@@ -50,6 +53,7 @@ public class GameList {
      * @param game the reference to the Game class to remove
      */
     public void removeGame(Game game) {
+        game.removeListener(this);
         games.remove(game);
         notifyListeners(lst, GameListListener::removedGame);
     }
@@ -96,4 +100,18 @@ public class GameList {
     public void removeListener(GameListListener o){
         lst.remove(o);
     }
+
+    @Override
+    public void playerJoinedGame() throws RemoteException {
+        notifyListeners(lst, GameListListener::updatedGame);
+    }
+
+    @Override
+    public void modelChanged() throws RemoteException {}
+
+    @Override
+    public void gameFinished() throws RemoteException {}
+
+    @Override
+    public void gameIsFull() throws RemoteException {}
 }

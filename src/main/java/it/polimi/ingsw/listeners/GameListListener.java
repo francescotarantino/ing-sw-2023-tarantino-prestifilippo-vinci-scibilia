@@ -12,4 +12,9 @@ public interface GameListListener extends Listener {
      * This method is invoked when a game is removed from the game list.
      */
     void removedGame() throws RemoteException;
+
+    /**
+     * This method is invoked when a game in the game list is updated (e.g. new player joined).
+     */
+    void updatedGame() throws RemoteException;
 }
