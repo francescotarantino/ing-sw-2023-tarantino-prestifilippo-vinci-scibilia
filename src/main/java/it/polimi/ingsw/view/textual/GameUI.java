@@ -174,7 +174,7 @@ public class GameUI implements Runnable {
                 }
             }
 
-            if(getState() != State.ENDED) {
+            if(getState() == State.MY_TURN) {
                 inputThread = new Thread(() -> {
                     try {
                         executeTurn();
@@ -202,13 +202,13 @@ public class GameUI implements Runnable {
         }
 
         // If it's my turn and I'm already in my turn, I don't need to update the board
-        if(gameView.isMyTurn() && getState() == State.MY_TURN){
+        if(gameView.getCurrentPlayerIndex() == gameView.getMyIndex() && getState() == State.MY_TURN){
             return;
         }
         this.lastGameView = gameView;
         this.updateBoard(gameView);
 
-        if(gameView.isMyTurn()) {
+        if(gameView.getCurrentPlayerIndex() == gameView.getMyIndex()) {
             System.out.println("Your turn!");
 
             setState(State.MY_TURN);

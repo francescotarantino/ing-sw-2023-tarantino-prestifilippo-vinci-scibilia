@@ -13,4 +13,14 @@ public interface GameListener extends Listener {
      * It should trigger the end of the game for the client.
      */
     void gameFinished() throws RemoteException;
+
+    /**
+     * This method is invoked when a player joins the game.
+     */
+    void playerJoinedGame() throws RemoteException;
+
+    /**
+     * This method is invoked when the game becomes full.
+     */
+    void gameIsFull() throws RemoteException;
 }

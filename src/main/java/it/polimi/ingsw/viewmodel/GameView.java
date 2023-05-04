@@ -15,10 +15,11 @@ import java.util.*;
 public class GameView implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+
     /**
      * The index of the player who is receiving this GameView.
      */
-    private final int playerIndex;
+    private final int myIndex;
     /**
      * The matrix of the actual living room board.
      */
@@ -62,12 +63,12 @@ public class GameView implements Serializable {
      */
     private final List<PlayerInfo> playersData;
 
-    public GameView(Game game, int playerIndex){
-        this.playerIndex = playerIndex;
+    public GameView(Game game, int receivingPlayerIndex){
+        this.myIndex = receivingPlayerIndex;
 
         this.livingRoomBoardMatrix = game.getLivingRoomBoard().getMatrix();
-        this.bookshelfMatrix = game.getBookshelves()[this.playerIndex].getMatrix();
-        this.personalGoalCardMatrix = game.getBookshelves()[this.playerIndex].getPersonalGoalCard().getMatrix();
+        this.bookshelfMatrix = game.getBookshelves()[this.myIndex].getMatrix();
+        this.personalGoalCardMatrix = game.getBookshelves()[this.myIndex].getPersonalGoalCard().getMatrix();
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
         this.firstPlayerUsername = game.getBookshelves()[game.getFirstPlayerIndex()].getPlayer().getUsername();
@@ -109,8 +110,9 @@ public class GameView implements Serializable {
         return currentPlayerIndex;
     }
 
+    @Deprecated
     public boolean isMyTurn(){
-        return this.currentPlayerIndex == this.playerIndex;
+        return this.currentPlayerIndex == this.myIndex;
     }
 
     public String getCurrentPlayerUsername() {
@@ -140,5 +142,9 @@ public class GameView implements Serializable {
 
     public boolean isGamePaused() {
         return gamePaused;
+    }
+
+    public int getMyIndex() {
+        return myIndex;
     }
 }

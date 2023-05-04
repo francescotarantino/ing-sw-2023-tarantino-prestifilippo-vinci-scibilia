@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.listeners.GameListListener;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,22 +76,6 @@ public class GameList {
     }
 
     /**
-     * This method is used to get a textual representation of the games on the server.
-     * For each game, it is called the {@link Game#toString()} method.
-     * @return an array of strings containing the list of games on the server, null if there are no games
-     */
-    @Deprecated
-    public String[] getGamesString() throws RemoteException {
-        if(games.size() != 0)
-            return games
-                    .stream()
-                    .map(Game::toString)
-                    .toArray(String[]::new);
-        else
-            return null;
-    }
-
-    /**
      * This method is used to get a list of {@link GameDetailsView} objects representing the games on the server.
      * @see GameDetailsView
      * @return the list of {@link GameDetailsView} objects
@@ -112,13 +95,5 @@ public class GameList {
 
     public void removeListener(GameListListener o){
         lst.remove(o);
-    }
-
-    public synchronized void notifyPlayerJoinedGame(int gameID) {
-        notifyListeners(lst, gameListListener -> gameListListener.playerJoinedGame(gameID));
-    }
-
-    public synchronized void notifyGameFull(int gameID) {
-        notifyListeners(lst, gameListListener -> gameListListener.gameIsFull(gameID));
     }
 }

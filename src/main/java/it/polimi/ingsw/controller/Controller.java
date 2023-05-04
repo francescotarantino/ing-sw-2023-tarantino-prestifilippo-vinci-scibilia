@@ -17,9 +17,19 @@ public class Controller {
     }
 
     /**
+     * This method is called by the server to start the game if it is full, otherwise it does nothing.
+     */
+    public void startIfFull(){
+        if(this.game.isFull()){
+            this.start();
+        }
+    }
+
+    /**
      * This method is called to start the game.
      */
-    public void start(){
+    protected void start(){
+        System.out.println("Game " + this.game.getGameID() + " is starting...");
         // Populating the LivingRoomBoard
         this.fillLivingRoomBoard(this.game.getLivingRoomBoard(), this.game.getBag());
         // Setting the current player to the first one that as to make a move
@@ -269,10 +279,57 @@ public class Controller {
 
     /**
      * This method is called to end a game.
+     * It should remain private, as it is called by the controller only when the last turn is played.
      */
-    public void endGame(){
+    private void endGame(){
         assignPoints();
 
         this.game.setGameFinished();
+    }
+
+    /**
+     * This method checks if a player is trying to reconnect.
+     * @param username the username of the player who's trying to reconnect
+     * @return true if the player can reconnect, false otherwise
+     */
+    public boolean isPlayerTryingToReconnect(String username){
+        return this.game.isFull() && this.game.playersList().contains(username) && !this.game.getPlayer(this.game.playersList().indexOf(username)).isConnected();
+    }
+
+    /**
+     * This method handles the reconnection of a player.
+     * @param username the username of the player who's trying to reconnect
+     * @return the index of the player
+     */
+    public int reconnectPlayer(String username){
+        int playerIndex = this.game.playersList().indexOf(username);
+        this.game.setPlayerConnected(playerIndex, true);
+
+        if(!this.game.getPlayer(this.game.getCurrentPlayerIndex()).isConnected()){
+            this.nextPlayer();
+        }
+
+        return playerIndex;
+    }
+
+    /**
+     * This method handles the disconnection of a player.
+     * @param playerIndex the index of the player who's trying to disconnect
+     */
+    public void handlePlayerDisconnection(int playerIndex){
+        this.game.setPlayerConnected(playerIndex, false);
+
+        if (this.game.getCurrentPlayerIndex() == playerIndex) {
+            this.nextPlayer();
+        }
+    }
+
+    /**
+     * This method is a wrapper for the {@link Game#addBookshelf(Player)}} method.
+     * @param username the username of the new player
+     * @return the index of the new player
+     */
+    public int addPlayer(String username){
+        return this.game.addBookshelf(new Player(username));
     }
 }

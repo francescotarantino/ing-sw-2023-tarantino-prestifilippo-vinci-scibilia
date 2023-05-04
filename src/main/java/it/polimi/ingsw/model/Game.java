@@ -127,6 +127,10 @@ public class Game {
         }
 
         bookshelves[i] = new Bookshelf(player, new PersonalGoalCard(randomPGCNumbers[i]));
+        notifyListeners(lst, GameListener::playerJoinedGame);
+        if(this.isFull()){
+            notifyListeners(lst, GameListener::gameIsFull);
+        }
         return i;
     }
 
@@ -312,6 +316,11 @@ public class Game {
         return this.getPlayers().stream().filter(Player::isConnected).count();
     }
 
+    /**
+     * This method sets the connected status of a player and notifies the listeners of the change.
+     * @param playerIndex index of the player to set the connected status
+     * @param connected new status
+     */
     public void setPlayerConnected(int playerIndex, boolean connected) {
         if(playerIndex < 0 || playerIndex >= this.getTotalPlayersNumber())
             throw new IllegalArgumentException("Illegal player index");

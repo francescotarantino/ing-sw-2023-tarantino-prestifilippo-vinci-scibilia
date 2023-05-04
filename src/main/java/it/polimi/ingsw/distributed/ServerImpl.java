@@ -58,39 +58,33 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
             throw new InvalidChoiceException("Game not found.");
         }
 
-        if(this.model.isFull() && this.model.playersList().contains(username) && !this.model.getPlayer(this.model.playersList().indexOf(username)).isConnected()){
-            this.playerIndex = this.model.playersList().indexOf(username);
-            this.model.setPlayerConnected(this.playerIndex, true);
+        this.controller = new Controller(this.model);
 
-            this.controller = new Controller(this.model);
-
-            this.model.addListener(this);
+        if(this.controller.isPlayerTryingToReconnect(username)){
+            GameList.getInstance().removeListener(this);
 
             this.client.gameHasStarted();
-            this.client.modelChanged(new GameView(this.model, this.playerIndex));
 
-            if(this.model.isPaused() && this.model.getConnectedPlayersNumber() <= 2){
-                this.model.setCurrentPlayerIndex(this.playerIndex);
-            }
+            this.playerIndex = this.controller.reconnectPlayer(username);
+
+            // Force update of the client
+            this.client.modelChanged(new GameView(this.model, this.playerIndex));
+            this.model.addListener(this);
         } else {
+            this.model.addListener(this);
+
             try {
-                this.playerIndex = this.model.addBookshelf(new Player(username));
+                this.playerIndex = this.controller.addPlayer(username);
             } catch (IllegalArgumentException | IllegalStateException e) {
+                this.model.removeListener(this);
                 this.model = null;
+                this.controller = null;
                 throw new InvalidChoiceException(e.getMessage());
             }
 
-            GameList.getInstance().notifyPlayerJoinedGame(gameID);
+            this.playerJoinedGame();
 
-            this.controller = new Controller(this.model);
-
-            this.model.addListener(this);
-
-            if(this.model.isFull()){
-                GameList.getInstance().notifyGameFull(gameID);
-
-                this.controller.start();
-            }
+            this.controller.startIfFull();
         }
     }
 
@@ -113,11 +107,13 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         this.playerIndex = 0;
 
         GameList.getInstance().addGame(this.model);
-        GameList.getInstance().notifyPlayerJoinedGame(gameID);
 
         this.controller = new Controller(this.model);
 
         this.model.addListener(this);
+
+        // Triggers the update of the players list on the client
+        this.playerJoinedGame();
     }
 
     /**
@@ -141,24 +137,24 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         if(this.model == null){
             this.client.updateGamesList(GameList.getInstance().getGamesDetails());
         } else if(GameList.getInstance().getGame(this.model.getGameID()) == null){
+            GameList.getInstance().removeListener(this);
+            this.model.removeListener(this);
+            this.model = null;
+
             this.client.showError("The game you were waiting for has been removed.", true);
         }
     }
 
     @Override
-    public void playerJoinedGame(int gameID) throws RemoteException {
-        if(this.model != null && this.model.getGameID() == gameID){
-            this.client.updatePlayersList(this.model.playersList());
-        }
+    public void playerJoinedGame() throws RemoteException {
+        this.client.updatePlayersList(this.model.playersList());
     }
 
     @Override
-    public void gameIsFull(int gameID) throws RemoteException {
-        if(this.model != null && this.model.getGameID() == gameID){
-            this.client.gameHasStarted();
+    public void gameIsFull() throws RemoteException {
+        GameList.getInstance().removeListener(this);
 
-            GameList.getInstance().removeListener(this);
-        }
+        this.client.gameHasStarted();
     }
 
     @Override
@@ -225,20 +221,18 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
             // Client is linked to a game
             System.out.println("Player " + this.model.getPlayer(this.playerIndex).getUsername() + " disconnected in game " + this.model.getGameID() + ".");
 
-            if(!this.model.isStarted()) {
+            // If the game is not started or there is only one player left, the game is removed from the server
+            if(!this.model.isStarted() || this.model.getConnectedPlayersNumber() == 1) {
                 System.out.println("The game is removed.");
+
                 this.model.removeListener(this);
                 GameList.getInstance().removeListener(this);
-
                 GameList.getInstance().removeGame(this.model);
             } else {
                 System.out.println("The game will continue.");
                 this.model.removeListener(this);
-                this.model.setPlayerConnected(this.playerIndex, false);
 
-                if (this.model.getCurrentPlayerIndex() == this.playerIndex) {
-                    this.controller.nextPlayer();
-                }
+                this.controller.handlePlayerDisconnection(this.playerIndex);
             }
         } else {
             // Client is not linked to a game
