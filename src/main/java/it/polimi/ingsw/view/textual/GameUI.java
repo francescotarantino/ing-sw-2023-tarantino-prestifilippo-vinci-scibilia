@@ -522,9 +522,9 @@ public class GameUI implements Runnable {
         for(PlayerInfo playerInfo : gameView.getPlayerInfo()){
             System.out.print(playerInfo.username() + ": ");
             if(playerInfo.isConnected())
-                System.out.print(ansi().fg(Ansi.Color.GREEN).a("(CONNECTED) ").reset() + "|  ");
+                System.out.print(ansi().fg(Ansi.Color.GREEN).a("(CONNECTED) ").reset() + "| ");
             else
-                System.out.print(ansi().fg(Ansi.Color.RED).a("(DISCONNECTED) ").reset() + "|  ");
+                System.out.print(ansi().fg(Ansi.Color.RED).a("(DISCONNECTED) ").reset() + "| ");
             if(playerInfo.username().equals(gameView.getFirstPlayerUsername()))
                 System.out.print(ansi().fg(Ansi.Color.YELLOW).a("[FIRST] ").reset() + "| ");
             if(playerInfo.username().equals(gameView.getCurrentPlayerUsername()))
@@ -534,7 +534,7 @@ public class GameUI implements Runnable {
             if(playerInfo.tokens().isEmpty())
                 System.out.println("no tokens");
             else
-                System.out.println(playerInfo.getTokensString());
+                System.out.println(ansi().fg(Ansi.Color.YELLOW).a(playerInfo.getTokensString()).reset());
             System.out.print("\tLast move: ");
             if(playerInfo.lastMovePoints() != null){
                 System.out.print("took ");
