@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
+import it.polimi.ingsw.viewmodel.PlayerInfo;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -135,8 +136,11 @@ public class StartUI implements Runnable {
                     StringBuilder string = new StringBuilder();
 
                     string.append(" ").append(gameDetails.gameID()).append("\t");
-                    for(String playerName : gameDetails.playerUsernames()) {
-                        string.append(playerName).append("\t");
+                    for(PlayerInfo playerInfo : gameDetails.playersInfo()) {
+                        if(playerInfo.isConnected())
+                            string.append(playerInfo.username()).append("\t");
+                        else
+                            string.append(ansi().fgBrightBlack().a(playerInfo.username()).reset()).append("\t");
                     }
                     if(gameDetails.isStarted()){
                         string.append(ansi().fg(Ansi.Color.YELLOW).a("(STARTED)").reset());

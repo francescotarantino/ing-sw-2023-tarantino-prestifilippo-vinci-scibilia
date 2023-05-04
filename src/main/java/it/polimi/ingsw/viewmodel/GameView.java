@@ -81,21 +81,7 @@ public class GameView implements Serializable {
         this.cgcData = Arrays.stream(game.getCommonGoalCards())
                 .map(card -> new CGCData(card.getDescription(), card.getAvailableScores()))
                 .toList();
-        if(!this.gameFinished){
-            this.playersData = game.getPlayers()
-                    .stream()
-                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
-                                                p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
-                    .toList();
-        }
-        else{
-            this.playersData = game.getPlayers()
-                    .stream()
-                    .sorted(Comparator.comparingInt(Player::getPoints).reversed())
-                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
-                            p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
-                    .toList();
-        }
+        this.playersData = game.getPlayerInfo();
     }
 
     public Tile[][] getBookshelfMatrix() {

@@ -8,7 +8,7 @@ import java.util.List;
  * This class is used to send the details of a specific game on the server.
  */
 public record GameDetailsView(int gameID,
-                              List<String> playerUsernames,
+                              List<PlayerInfo> playersInfo,
                               int numberOfPlayers,
                               int numberOfCommonGoalCards,
                               boolean isFull,

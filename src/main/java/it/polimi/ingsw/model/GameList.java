@@ -87,7 +87,7 @@ public class GameList implements GameListener {
     public List<GameDetailsView> getGamesDetails() {
         return games
                 .stream()
-                .map(x -> new GameDetailsView(x.getGameID(), x.playersList(), x.getTotalPlayersNumber(), x.getCommonGoalCards().length, x.isStarted(), x.isFull()))
+                .map(x -> new GameDetailsView(x.getGameID(), x.getPlayerInfo(), x.getTotalPlayersNumber(), x.getCommonGoalCards().length, x.isStarted(), x.isFull()))
                 .toList();
     }
 

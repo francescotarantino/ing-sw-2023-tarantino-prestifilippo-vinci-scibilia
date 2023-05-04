@@ -4,6 +4,7 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
+import it.polimi.ingsw.viewmodel.PlayerInfo;
 
 import java.util.*;
 
@@ -331,6 +332,24 @@ public class Game {
         this.setPaused(getConnectedPlayersNumber() == 1);
 
         notifyListeners(lst, GameListener::modelChanged);
+    }
+
+    public List<PlayerInfo> getPlayerInfo(){
+        if(!this.gameFinished){
+            return this.getPlayers()
+                    .stream()
+                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
+                            p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
+                    .toList();
+        }
+        else{
+            return this.getPlayers()
+                    .stream()
+                    .sorted(Comparator.comparingInt(Player::getPoints).reversed())
+                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
+                            p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
+                    .toList();
+        }
     }
 
     public void addListener(GameListener o){
