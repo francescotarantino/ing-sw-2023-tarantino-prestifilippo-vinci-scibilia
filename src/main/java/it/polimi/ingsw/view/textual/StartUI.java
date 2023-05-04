@@ -63,7 +63,8 @@ public class StartUI implements Runnable {
      */
     private void showMenu(){
         System.out.println(ansi().fg(Ansi.Color.BLUE).a("Select an option:").reset());
-        System.out.println(" 1. Create a new game\n 2. Join an existing game");
+        System.out.println(" 1. Create a new game");
+        System.out.println(" 2. Join an existing game");
     }
 
     /**
@@ -126,7 +127,6 @@ public class StartUI implements Runnable {
     public void showGamesList(List<GameDetailsView> o){
         if(this.username != null) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
-            showMenu();
 
             if (o.size() != 0) {
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
@@ -149,6 +149,7 @@ public class StartUI implements Runnable {
             } else {
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("There are no games on the server.").reset());
             }
+            showMenu();
         }
     }
 
