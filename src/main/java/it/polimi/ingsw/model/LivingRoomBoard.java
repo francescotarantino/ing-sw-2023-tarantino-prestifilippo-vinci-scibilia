@@ -59,16 +59,15 @@ public class LivingRoomBoard {
      */
     public boolean checkIsolatedTile(Point point) {
         if(point.getX() < 0 || point.getX() >= Constants.livingRoomBoardX || point.getY() < 0 || point.getY() >= Constants.livingRoomBoardY) {
-            return false;
+            throw new IndexOutOfBoundsException("Invalid living room board coordinates");
         }
-        int freeSides = 0;
         for (Constants.Direction direction : Constants.Direction.values()) {
             Tile tile = checkAdjacentTile(point, this.board, direction);
-            if (tile == null || tile.isPlaceholder()) {
-                freeSides++;
+            if(tile != null && !tile.isPlaceholder()) {
+                return false;
             }
         }
-        return (freeSides == 4);
+        return true;
     }
 
     public Tile[][] getMatrix() {

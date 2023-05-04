@@ -90,7 +90,7 @@ public class Controller {
      * @param points is an array of points from which the player wants to take the tiles
      * @return the tiles taken from the living room board
      */
-    private Tile[] takeTiles(Point...points) {
+    protected Tile[] takeTiles(Point...points) {
         Tile[] tiles = new Tile[points.length];
         for (int i = 0; i < points.length; i++) {
             tiles[i] = game.getLivingRoomBoard().getTile(points[i]);
@@ -98,8 +98,6 @@ public class Controller {
         }
         return tiles;
     }
-
-
 
     /**
     * This method receive the Tiles taken from the living room board and reorder them according to players' directives.
@@ -183,7 +181,7 @@ public class Controller {
      * @param livingRoomBoard the living room board to fill
      * @param bag the bag from where the tiles are taken
      */
-    private void fillLivingRoomBoard(LivingRoomBoard livingRoomBoard, Bag bag){
+    protected void fillLivingRoomBoard(LivingRoomBoard livingRoomBoard, Bag bag){
         for (int i = 0; i < Constants.livingRoomBoardX; i++) {
             for (int j = 0; j < Constants.livingRoomBoardY; j++) {
                 if (livingRoomBoard.getTile(new Point(i, j)) == null) {
@@ -213,7 +211,7 @@ public class Controller {
      * If there are only tiles without any other adjacent tile, a refill is needed.
      * @return true if a refill is needed, false otherwise
      */
-    private boolean checkBoardNeedRefill(LivingRoomBoard livingRoomBoard) {
+    protected boolean checkBoardNeedRefill(LivingRoomBoard livingRoomBoard) {
         for (int i = 0; i < Constants.livingRoomBoardX; i++) {
             for (int j = 0; j < Constants.livingRoomBoardY; j++) {
                 Tile currentTile = livingRoomBoard.getTile(new Point(i, j));
@@ -283,7 +281,6 @@ public class Controller {
      */
     private void endGame(){
         assignPoints();
-
         this.game.setGameFinished();
     }
 

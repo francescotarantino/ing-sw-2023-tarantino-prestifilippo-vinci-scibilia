@@ -52,16 +52,18 @@ public class Utils {
      * @return the tile in the matrix in the direction specified
      */
     public static Tile checkAdjacentTile(Point point, Tile[][] matrix, Constants.Direction direction) {
-        if (point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY) {
+        int xSize = matrix.length;
+        int ySize = matrix[0].length;
+        if (point.getX() < 0 || point.getX() >= xSize || point.getY() < 0 || point.getY() >= ySize) {
             return null;
         }
         switch (direction) {
             case UP -> {
-                if(point.getY() == Constants.bookshelfY - 1) return null;
+                if(point.getY() == ySize - 1) return null;
                 return matrix[point.getX()][point.getY() + 1];
             }
             case RIGHT -> {
-                if(point.getX() == Constants.bookshelfX - 1) return null;
+                if(point.getX() == xSize - 1) return null;
                 return matrix[point.getX() + 1][point.getY()];
             }
             case DOWN -> {
