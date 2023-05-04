@@ -85,7 +85,7 @@ public class GameView implements Serializable {
             this.playersData = game.getPlayers()
                     .stream()
                     .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
-                                                p.getLastMovePoints(), p.getLastMoveTiles()))
+                                                p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
                     .toList();
         }
         else{
@@ -93,7 +93,7 @@ public class GameView implements Serializable {
                     .stream()
                     .sorted(Comparator.comparingInt(Player::getPoints).reversed())
                     .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
-                            p.getLastMovePoints(), p.getLastMoveTiles()))
+                            p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
                     .toList();
         }
     }

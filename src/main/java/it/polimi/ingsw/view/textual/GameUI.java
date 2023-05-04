@@ -195,6 +195,7 @@ public class GameUI implements Runnable {
      * @param gameView the new model-view of the game
      */
     public void update(GameView gameView){
+        this.lastGameView = gameView;
         if(gameView.isGamePaused()){
             this.gamePaused();
             setState(State.NOT_MY_TURN);
@@ -205,7 +206,6 @@ public class GameUI implements Runnable {
         if(gameView.getCurrentPlayerIndex() == gameView.getMyIndex() && getState() == State.MY_TURN){
             return;
         }
-        this.lastGameView = gameView;
         this.updateBoard(gameView);
 
         if(gameView.getCurrentPlayerIndex() == gameView.getMyIndex()) {
@@ -234,7 +234,9 @@ public class GameUI implements Runnable {
 
     public void gamePaused(){
         System.out.println();
-        System.out.println(ansi().bold().a("Game has been paused since you're the only player left in the game.").reset());
+        updateBoard(lastGameView);
+        System.out.println(ansi().bold().fg(Ansi.Color.YELLOW)
+                .a("Game has been paused since you're the only player left in the game.\nWaiting for someone else to reconnect...").reset());
         if(inputThread != null) inputThread.interrupt();
     }
 
@@ -324,6 +326,10 @@ public class GameUI implements Runnable {
         System.out.println(ansi().fg(Ansi.Color.BLUE).a("Players:").reset());
         for(PlayerInfo playerInfo : gameView.getPlayerInfo()){
             System.out.print(playerInfo.username() + ": ");
+            if(playerInfo.isConnected())
+                System.out.print(ansi().fg(Ansi.Color.GREEN).a("(CONNECTED) ").reset() + "|  ");
+            else
+                System.out.print(ansi().fg(Ansi.Color.RED).a("(DISCONNECTED) ").reset() + "|  ");
             if(playerInfo.username().equals(gameView.getFirstPlayerUsername()))
                 System.out.print(ansi().fg(Ansi.Color.YELLOW).a("[FIRST] ").reset() + "| ");
             if(playerInfo.username().equals(gameView.getCurrentPlayerUsername()))
