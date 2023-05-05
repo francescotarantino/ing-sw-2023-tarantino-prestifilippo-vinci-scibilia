@@ -9,6 +9,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
+import static java.lang.Math.abs;
+
 /**
  * This class is used to send the current relevant data from model of the game to the client.
  */
@@ -74,8 +76,12 @@ public class GameView implements Serializable {
         this.firstPlayerUsername = game.getBookshelves()[game.getFirstPlayerIndex()].getPlayer().getUsername();
         if(game.getFinalPlayerIndex() == -1)
             this.finalPlayerUsername = null;
-        else
-            this.finalPlayerUsername = game.getPlayers().get(game.getFinalPlayerIndex()).getUsername();
+        else{ //Player who plays last has an index of 1 less than the one who filled the bookshelf first
+            int temp = game.getFinalPlayerIndex() - 1;
+            if(temp == -1)
+                temp = game.getTotalPlayersNumber() - 1;
+            this.finalPlayerUsername = game.getPlayers().get(temp).getUsername();
+        }
         this.gameFinished = game.isFinished();
         this.gamePaused = game.isPaused();
         this.cgcData = Arrays.stream(game.getCommonGoalCards())
