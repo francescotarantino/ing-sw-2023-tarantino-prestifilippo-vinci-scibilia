@@ -77,10 +77,9 @@ public class GameView implements Serializable {
         if(game.getFinalPlayerIndex() == -1)
             this.finalPlayerUsername = null;
         else{ //Player who plays last has an index of 1 less than the one who filled the bookshelf first
-            int temp = game.getFinalPlayerIndex() - 1;
-            if(temp == -1)
-                temp = game.getTotalPlayersNumber() - 1;
-            this.finalPlayerUsername = game.getPlayers().get(temp).getUsername();
+            this.finalPlayerUsername = game.getPlayers().get(
+                    (game.getFinalPlayerIndex() - 1) >= 0 ? (game.getFinalPlayerIndex() - 1) : (game.getTotalPlayersNumber() - 1)
+                    ).getUsername();
         }
         this.gameFinished = game.isFinished();
         this.gamePaused = game.isPaused();
