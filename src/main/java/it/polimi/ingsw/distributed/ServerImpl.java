@@ -1,6 +1,5 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.listeners.GameListener;
@@ -15,17 +14,26 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerImpl extends UnicastRemoteObject implements Server, GameListListener, GameListener {
-    private Game model;
-    private Controller controller;
-    private Client client;
-    private int playerIndex;
     /**
-     * This boolean is used in the ping-pong mechanism to check if the client is still connected to the server.
-     * It is set to false before the ping is sent. If the server receives a pong, it is set to true.
+     * The executor service used to run all the ping-pong threads.
      */
-    boolean pong;
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+
+    protected Game model;
+    protected Controller controller;
+    protected Client client;
+    /**
+     * Index of the player served by this ServerImpl.
+     */
+    protected int playerIndex;
+    /**
+     * The ping-pong thread used to check if the client is still connected.
+     */
+    private final PingPongThread pingpongThread = new PingPongThread(this);
 
     public ServerImpl() throws RemoteException {
         super();
@@ -46,7 +54,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
         System.out.println("A client is registering to the server...");
 
-        new Thread(this::pingpong).start();
+        executorService.submit(this.pingpongThread);
     }
 
     @Override
@@ -198,54 +206,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
     @Override
     public void pong() throws RemoteException {
-        pong = true;
-    }
-
-    /**
-     * This method is used to check if the client is still connected to the server.
-     */
-    private void pingpong() {
-        while (true) {
-            pong = false;
-            try {
-                this.client.ping();
-            } catch (RemoteException e) {
-                break;
-            }
-
-            try {
-                Thread.sleep(Constants.pingpongTimeout);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (!pong) {
-                break;
-            }
-        }
-
-        if (this.model != null) {
-            // Client is linked to a game
-            System.out.println("Player " + this.model.getPlayer(this.playerIndex).getUsername() + " disconnected in game " + this.model.getGameID() + ".");
-
-            // If the game is not started or there is only one player left, the game is removed from the server
-            if(!this.model.isStarted() || this.model.getConnectedPlayersNumber() == 1) {
-                System.out.println("The game is removed.");
-
-                this.model.removeListener(this);
-                GameList.getInstance().removeListener(this);
-                GameList.getInstance().removeGame(this.model);
-            } else {
-                System.out.println("The game will continue.");
-                this.model.removeListener(this);
-
-                this.controller.handlePlayerDisconnection(this.playerIndex);
-            }
-        } else {
-            // Client is not linked to a game
-            System.out.println("A client disconnected.");
-
-            GameList.getInstance().removeListener(this);
-        }
+        pingpongThread.pongReceived();
     }
 }
