@@ -4,6 +4,7 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -127,4 +128,24 @@ public class ControllerTest {
        controller.takeTiles(new Point(5, 3));
        assertTrue(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
    }
+    @Test
+    void checkPoints() {
+        game.getPlayer(0).addScoringToken(8, 2);
+        game.getPlayer(1).addScoringToken(8, 2);
+        game.getBookshelves()[0].insertTile(new Point(0, 0), new Tile(Constants.TileType.PLANTS));
+        game.getBookshelves()[0].insertTile(new Point(0, 1), new Tile(Constants.TileType.PLANTS));
+        game.getBookshelves()[0].insertTile(new Point(1, 0), new Tile(Constants.TileType.PLANTS));
+        game.getBookshelves()[0].insertTile(new Point(2, 0), new Tile(Constants.TileType.PLANTS));
+        game.getBookshelves()[1].insertTile(new Point(0, 0), new Tile(Constants.TileType.CATS));
+        game.getBookshelves()[1].insertTile(new Point(0, 1), new Tile(Constants.TileType.CATS));
+        game.getBookshelves()[1].insertTile(new Point(1, 0), new Tile(Constants.TileType.CATS));
+        game.getBookshelves()[1].insertTile(new Point(2, 0), new Tile(Constants.TileType.CATS));
+        game.getBookshelves()[1].insertTile(new Point(0, 2), new Tile(Constants.TileType.CATS));
+        int playerOnePGCPoints = game.getBookshelves()[0].getPersonalGoalCard().checkValidity(game.getBookshelves()[0].getMatrix());
+        int playerTwoPGCPoints = game.getBookshelves()[1].getPersonalGoalCard().checkValidity(game.getBookshelves()[1].getMatrix());
+        controller.endGame();
+        assertEquals(11 + playerOnePGCPoints, game.getPlayer(0).getPoints());
+        assertEquals(13 + playerTwoPGCPoints, game.getPlayer(1).getPoints());
+        assertTrue(game.isFinished());
+    }
 }

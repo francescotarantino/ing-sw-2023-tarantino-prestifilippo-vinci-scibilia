@@ -143,32 +143,6 @@ public class Constants {
             return color;
         }
     }
-
-    /**
-     * Enumeration of all the Tile Types the player can take.
-     * useful when the player wants to reorder the tiles taken and need to address them easily.
-     */
-    public enum ShortTileType{
-        C(TileType.CATS),
-        B(TileType.BOOKS),
-        G(TileType.GAMES),
-        F(TileType.FRAMES),
-        T(TileType.TROPHIES),
-        P(TileType.PLANTS);
-
-
-        private TileType type;
-
-        private ShortTileType(TileType t ){
-            type = t;
-        }
-        public TileType getType(){
-            return type;
-        }
-    }
-
-
-
     /**
      * Minimum number of Common Goal Cards in a game.
      */
