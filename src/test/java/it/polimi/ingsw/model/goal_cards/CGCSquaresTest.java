@@ -76,7 +76,7 @@ public class CGCSquaresTest {
         assertTrue(cgc.check(boardSquares));
         assertFalse(cgc.check(boardSquares2));
         assertFalse(cgc.check(boardAdjacentSquares1));
-        assertTrue(cgc.check(boardAdjacentSquares2));
+        assertFalse(cgc.check(boardAdjacentSquares2));
         assertThrows(NullPointerException.class, () -> cgc.check(boardNull));
         assertFalse(cgc.check(boardEmpty));
     }

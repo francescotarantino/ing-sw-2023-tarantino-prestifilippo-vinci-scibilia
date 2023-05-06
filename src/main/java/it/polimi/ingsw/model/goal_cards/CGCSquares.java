@@ -3,6 +3,9 @@ package it.polimi.ingsw.model.goal_cards;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
+
+import java.util.HashMap;
+
 import static it.polimi.ingsw.Utils.checkMatrixSize;
 
 public class CGCSquares extends CommonGoalCard {
@@ -76,20 +79,22 @@ public class CGCSquares extends CommonGoalCard {
             throw new NullPointerException();
         }
         boolean[][] done = new boolean[Constants.bookshelfX][Constants.bookshelfY];
-        int numOfSquares = 0;
+        HashMap<Constants.TileType, Integer> numOfSquares = new HashMap<>();
         checkMatrixSize(matrix);
         for (int i = 0; i < Constants.bookshelfX - 1; i++) {
             for (int j = 0; j < Constants.bookshelfY - 1; j++) {
                 if (checkSquare(new Point(i, j), matrix) && checkSquareEdges(new Point(i, j), matrix)) {
                     setDone(new Point(i, j), done);
-                    numOfSquares++;
-                    if(numOfSquares >= 2) {
+                    int num = numOfSquares.getOrDefault(matrix[i][j].getType(), 0);
+                    numOfSquares.put(matrix[i][j].getType(), num + 1);
+                }
+                for (Constants.TileType type : Constants.TileType.values()) {
+                    if (numOfSquares.getOrDefault(type, 0) >= 2) {
                         return true;
                     }
                 }
             }
         }
-
         return false;
     }
 }

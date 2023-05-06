@@ -9,11 +9,23 @@ import static it.polimi.ingsw.Constants.TileType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCTriangularTest {
-    static Tile[][] triangular_matrix, triangular_matrix_reverse, non_triangular_matrix, matrix_null, matrix_empty;
+    static Tile[][] triangular_matrix_ascending, triangular_matrix_descending, non_triangular_matrix, matrix_null, matrix_empty;
 
     @BeforeAll
     static void init() {
-        triangular_matrix = new Tile[][]{{
+        triangular_matrix_ascending = new Tile[][]{{
+                new Tile(CATS), null, null, null, null, null,
+        }, {
+                new Tile(CATS), new Tile(CATS), null, null, null, null
+        }, {
+                new Tile(PLANTS), new Tile(PLANTS), new Tile(PLANTS), null, null, null
+        }, {
+                new Tile(FRAMES), new Tile(FRAMES), new Tile(CATS), new Tile(CATS), null, null
+        }, {
+                new Tile(CATS), new Tile(BOOKS), new Tile(CATS), new Tile(CATS), new Tile(PLANTS), null
+        }};
+
+        triangular_matrix_descending = new Tile[][]{{
                 new Tile(CATS), new Tile(BOOKS), new Tile(CATS), new Tile(CATS), new Tile(PLANTS), null
         }, {
                 new Tile(CATS), new Tile(CATS), new Tile(FRAMES), new Tile(FRAMES), null, null
@@ -23,18 +35,6 @@ public class CGCTriangularTest {
                 new Tile(FRAMES), new Tile(FRAMES), null, null, null, null
         }, {
                 new Tile(CATS), null, null, null, null, null
-        }};
-
-        triangular_matrix_reverse = new Tile[][]{{
-            new Tile(CATS), null, null, null, null, null,
-        }, {
-            new Tile(CATS), new Tile(CATS), null, null, null, null
-        }, {
-            new Tile(PLANTS), new Tile(PLANTS), new Tile(PLANTS), null, null, null
-        }, {
-            new Tile(FRAMES), new Tile(FRAMES), new Tile(CATS), new Tile(CATS), null, null
-        }, {
-            new Tile(CATS), new Tile(BOOKS), new Tile(CATS), new Tile(CATS), new Tile(PLANTS), null
         }};
 
         non_triangular_matrix = new Tile[][]{{
@@ -48,6 +48,7 @@ public class CGCTriangularTest {
         }, {
                 new Tile(CATS), new Tile(CATS), new Tile(FRAMES), new Tile(FRAMES), new Tile(CATS), null
         }};
+
         matrix_null = null;
         matrix_empty = new Tile[][]{
                 {null, null, null, null, null, null},
@@ -63,8 +64,8 @@ public class CGCTriangularTest {
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 12);
 
         assert cgc != null;
-        assertTrue(cgc.check(triangular_matrix_reverse));
-        assertTrue(cgc.check(triangular_matrix));
+        assertTrue(cgc.check(triangular_matrix_ascending));
+        assertTrue(cgc.check(triangular_matrix_descending));
         assertFalse(cgc.check(non_triangular_matrix));
         assertThrows(NullPointerException.class, () -> cgc.check(matrix_null));
         assertFalse(cgc.check(matrix_empty));
