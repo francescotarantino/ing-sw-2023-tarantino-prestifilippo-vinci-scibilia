@@ -3,6 +3,10 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.view.textual.charset.Charset;
+import it.polimi.ingsw.view.textual.charset.DoubleLineCharset;
+import it.polimi.ingsw.view.textual.charset.FuturisticCharset;
+import it.polimi.ingsw.view.textual.charset.RoundedCharset;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import org.fusesource.jansi.Ansi;
@@ -31,6 +35,7 @@ public class GameUI implements Runnable {
     private Thread inputThread;
 
     private GameView lastGameView;
+
     /** Integer representing living room board color */
     private static final int[] livingRoomBoardColor = {63,99,86};
 
@@ -39,111 +44,35 @@ public class GameUI implements Runnable {
 
     /** Integer representing personal goal card color */
     private static final int[] personalGoalCardColor = {116,44,17};
-    /** Character used by the UI to display part of a table */
-    private String wall = "|";
 
-    /** Character used by the UI to display part of a table */
-    private String fiveCeilings = "-----";
-
-    /** Character used by the UI to display part of a table */
-    private String cornerTopLeft = "/";
-
-    /** Character used by the UI to display part of a table */
-    private String cornerTopRight = "\\";
-
-    /** Character used by the UI to display part of a table */
-    private String cornerBottomLeft = "\\";
-
-    /** Character used by the UI to display part of a table */
-    private String cornerBottomLeftAlternative = "!";
-
-    /** Character used by the UI to display part of a table */
-    private String cornerBottomRight = "/";
-
-
-    /** Character used by the UI to display part of a table */
-    private String cornerBottomRightAlternative = "!";
-
-    /** Character used by the UI to display part of a table */
-    private String edgeTop = "-";
-
-    /** Character used by the UI to display part of a table */
-    private String edgeBottom = "-";
-
-    /** Character used by the UI to display part of a table */
-    private String edgeLeft = "|";
-
-    /** Character used by the UI to display part of a table */
-    private String edgeRight = "|";
-
-    /** Character used by the UI to display part of a table */
-    private String cross = "+";
+    /** Charset used to print tables. */
+    private Charset c = new Charset();
 
     /** Boolean used to determine how to print characters */
     private boolean isUnicodeCompatible = false;
 
     public GameUI(){
-    if(System.getProperty("os.name").contains("Mac OS X") || System.getProperty("os.name").contains("Linux")){
-        this.isUnicodeCompatible = true;
-        System.out.println("OS: " + System.getProperty("os.name"));
-        System.out.println("Ultra mode activated. Choose your style:");
-        System.out.print("1. ╭─────╮\t2. ┏─────┓\t3. ╔═════╗\n" +
-                         "   │     │\t   │     │\t   ║     ║\n" +
-                         "   ╰─────╯\t   ┗─────┛\t   ╚═════╝\n");
-        Scanner s = new Scanner(System.in);
-        int choice;
-        do {
-            choice = TextualUtils.nextInt(s);
-            if(choice < 0 || choice > 3)
-                System.out.println("Invalid selection.");
-        }while(choice < 0 || choice > 3);
-        switch (choice) {
-            case 1 -> {
-                this.wall = "│";
-                this.fiveCeilings = "─────";
-                this.cornerTopLeft = "╭";
-                this.cornerTopRight = "╮";
-                this.cornerBottomLeft = "╰";
-                this.cornerBottomLeftAlternative = "┴";
-                this.cornerBottomRight = "╯";
-                this.cornerBottomRightAlternative = "┴";
-                this.edgeTop = "┬";
-                this.edgeBottom = "┴";
-                this.edgeLeft = "├";
-                this.edgeRight = "┤";
-                this.cross = "┼";
+        if(System.getProperty("os.name").contains("Mac OS X") || System.getProperty("os.name").contains("Linux")){
+            this.isUnicodeCompatible = true;
+            System.out.println("OS: " + System.getProperty("os.name"));
+            System.out.println("Ultra mode activated. Choose your style:");
+            System.out.print("""
+                1. ╭─────╮\t2. ┏─────┓\t3. ╔═════╗
+                   │     │\t   │     │\t   ║     ║
+                   ╰─────╯\t   ┗─────┛\t   ╚═════╝
+                """);
+            Scanner s = new Scanner(System.in);
+            int choice;
+            do {
+                choice = TextualUtils.nextInt(s);
+                if(choice < 0 || choice > 3)
+                    System.out.println("Invalid selection.");
+            } while(choice < 0 || choice > 3);
+            switch (choice) {
+                case 1 -> this.c = new RoundedCharset();
+                case 2 -> this.c = new FuturisticCharset();
+                case 3 -> this.c = new DoubleLineCharset();
             }
-            case 2 -> {
-                this.wall = "│";
-                this.fiveCeilings = "─────";
-                this.cornerTopLeft = "┏";
-                this.cornerTopRight = "┓";
-                this.cornerBottomLeft = "┗";
-                this.cornerBottomLeftAlternative = "┻";
-                this.cornerBottomRight = "┛";
-                this.cornerBottomRightAlternative = "┻";
-                this.edgeTop = "┳";
-                this.edgeBottom = "┻";
-                this.edgeLeft = "┣";
-                this.edgeRight = "┫";
-                this.cross = "╋";
-            }
-            case 3 -> {
-                this.wall = "║";
-                this.fiveCeilings = "═════";
-                this.cornerTopLeft = "╔";
-                this.cornerTopRight = "╗";
-                this.cornerBottomLeft = "╚";
-                this.cornerBottomLeftAlternative = "╩";
-                this.cornerBottomRight = "╝";
-                this.cornerBottomRightAlternative = "╩";
-                this.edgeTop = "╦";
-                this.edgeBottom = "╩";
-                this.edgeLeft = "╠";
-                this.edgeRight = "╣";
-                this.cross = "╬";
-            }
-        }
         }
     }
 
@@ -341,41 +270,41 @@ public class GameUI implements Runnable {
                     System.out.print("   ");
 
                 for (int i = 0; i < Constants.livingRoomBoardX; i++) {
-                //Printing rows except last character (living room board)
+                    //Printing rows except last character (living room board)
                     if(rowByHalves == 0){ //First half of each row
                         if(j == Constants.livingRoomBoardY - 1) { // First row
                             if(i == 0) //First column
-                                fgDisambiguationPrint(cornerTopLeft + fiveCeilings, false, livingRoomBoardColor);
+                                fgDisambiguationPrint(c.cornerTopLeft + c.fiveCeilings, false, livingRoomBoardColor);
                             else //Any other column
-                                fgDisambiguationPrint(edgeTop + fiveCeilings, false, livingRoomBoardColor);
+                                fgDisambiguationPrint(c.edgeTop + c.fiveCeilings, false, livingRoomBoardColor);
                         }
                         else { //Any other row
                             if(i == 0) //First column
-                                fgDisambiguationPrint(edgeLeft + fiveCeilings, false, livingRoomBoardColor);
+                                fgDisambiguationPrint(c.edgeLeft + c.fiveCeilings, false, livingRoomBoardColor);
                             else //Any other column
-                                fgDisambiguationPrint(cross + fiveCeilings, false, livingRoomBoardColor);
+                                fgDisambiguationPrint(c.cross + c.fiveCeilings, false, livingRoomBoardColor);
                         }
 
                     }
                     else { //Second half of the row
                         if (gameView.getLivingRoomBoardMatrix()[i][j] != null && !gameView.getLivingRoomBoardMatrix()[i][j].isPlaceholder()) {
-                            fgDisambiguationPrint(wall + "  ", false, livingRoomBoardColor);
+                            fgDisambiguationPrint(c.wall + "  ", false, livingRoomBoardColor);
                             System.out.print(ansi().bold().fg(gameView.getLivingRoomBoardMatrix()[i][j].getType().color())
                                     .a(gameView.getLivingRoomBoardMatrix()[i][j].toString().charAt(0)).reset() + "  ");
                         } else {
-                            fgDisambiguationPrint(wall + "     ", false, livingRoomBoardColor);
+                            fgDisambiguationPrint(c.wall + "     ", false, livingRoomBoardColor);
                         }
                     }
                 }
                 //Last character of each row
                 if(rowByHalves == 0){ //End of first halves
                     if(j == Constants.livingRoomBoardY - 1) //First row
-                        fgDisambiguationPrint(cornerTopRight, false, livingRoomBoardColor);
+                        fgDisambiguationPrint(c.cornerTopRight, false, livingRoomBoardColor);
                     else //Any other row
-                        fgDisambiguationPrint(edgeRight, false, livingRoomBoardColor);
+                        fgDisambiguationPrint(c.edgeRight, false, livingRoomBoardColor);
                 }
                 else{ //End of second halves
-                    fgDisambiguationPrint(wall, false, livingRoomBoardColor);
+                    fgDisambiguationPrint(c.wall, false, livingRoomBoardColor);
                 }
                 //Going to the next line if there are no other tables to print in this line
                 if(Constants.livingRoomBoardY - j < 3)
@@ -410,24 +339,24 @@ public class GameUI implements Runnable {
                         if(rowByHalves == 0){ //First half of each row
                             if(h == Constants.bookshelfY - 1) { //First row
                                 if(k == 0) //First column
-                                    fgDisambiguationPrint(cornerTopLeft + fiveCeilings, false, bookshelfColor);
+                                    fgDisambiguationPrint(c.cornerTopLeft + c.fiveCeilings, false, bookshelfColor);
                                 else //Any other column
-                                    fgDisambiguationPrint(edgeTop + fiveCeilings, false, bookshelfColor);
+                                    fgDisambiguationPrint(c.edgeTop + c.fiveCeilings, false, bookshelfColor);
                             }
                             else { //Any other row
                                 if(k == 0) //First column
-                                    fgDisambiguationPrint(edgeLeft + fiveCeilings, false, bookshelfColor);
+                                    fgDisambiguationPrint(c.edgeLeft + c.fiveCeilings, false, bookshelfColor);
                                 else //Any other column
-                                    fgDisambiguationPrint(cross + fiveCeilings, false, bookshelfColor);
+                                    fgDisambiguationPrint(c.cross + c.fiveCeilings, false, bookshelfColor);
                             }
                         }
                         else { //Second half of each row
                             if(gameView.getBookshelfMatrix()[k][h] != null) {
-                                fgDisambiguationPrint(wall + "  ", false, bookshelfColor);
+                                fgDisambiguationPrint(c.wall + "  ", false, bookshelfColor);
                                 System.out.print(ansi().bold().fg(gameView.getBookshelfMatrix()[k][h].getType().color())
                                         .a(gameView.getBookshelfMatrix()[k][h].toString().charAt(0)).reset() + "  ");
                             } else {
-                                fgDisambiguationPrint(wall + "     ", false, bookshelfColor);
+                                fgDisambiguationPrint(c.wall + "     ", false, bookshelfColor);
                             }
                         }
                     }
@@ -435,11 +364,11 @@ public class GameUI implements Runnable {
                     if(Constants.livingRoomBoardY - j >= 4) {
                         if (rowByHalves == 0) { //First halves
                             if (h == Constants.bookshelfY - 1) //First row
-                                fgDisambiguationPrint(cornerTopRight, false, bookshelfColor);
+                                fgDisambiguationPrint(c.cornerTopRight, false, bookshelfColor);
                             else //Any other row
-                                fgDisambiguationPrint(edgeRight, false, bookshelfColor);
+                                fgDisambiguationPrint(c.edgeRight, false, bookshelfColor);
                         } else //Second halves
-                            fgDisambiguationPrint(wall, false, bookshelfColor);
+                            fgDisambiguationPrint(c.wall, false, bookshelfColor);
                     }
                     //Space between bookshelf and personal goal card
                     System.out.print("             ");
@@ -448,24 +377,24 @@ public class GameUI implements Runnable {
                         if(rowByHalves == 0){ //First half of each row
                             if(h == Constants.bookshelfY - 1) { //First row
                                 if(k == 0) //First column
-                                    fgDisambiguationPrint(cornerTopLeft + fiveCeilings, false, personalGoalCardColor);
+                                    fgDisambiguationPrint(c.cornerTopLeft + c.fiveCeilings, false, personalGoalCardColor);
                                 else //Any other column
-                                    fgDisambiguationPrint(edgeTop + fiveCeilings, false, personalGoalCardColor);
+                                    fgDisambiguationPrint(c.edgeTop + c.fiveCeilings, false, personalGoalCardColor);
                             }
                             else { //Any other row
                                 if(k == 0) //First column
-                                    fgDisambiguationPrint(edgeLeft + fiveCeilings, false, personalGoalCardColor);
+                                    fgDisambiguationPrint(c.edgeLeft + c.fiveCeilings, false, personalGoalCardColor);
                                 else //Any other column
-                                    fgDisambiguationPrint(cross + fiveCeilings, false, personalGoalCardColor);
+                                    fgDisambiguationPrint(c.cross + c.fiveCeilings, false, personalGoalCardColor);
                             }
                         }
                         else { //Second half of each row
                             if(gameView.getPersonalGoalCardMatrix()[k][h] != null) {
                                 //System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-                                fgDisambiguationPrint(wall, false, personalGoalCardColor);
+                                fgDisambiguationPrint(c.wall, false, personalGoalCardColor);
                                 if(gameView.getBookshelfMatrix()[k][h] == null)
                                     System.out.print("  " + ansi().bold().fg(gameView.getPersonalGoalCardMatrix()[k][h].color())
-                                        .a(gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0)).reset() + "  ");
+                                            .a(gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0)).reset() + "  ");
                                 else if(gameView.getBookshelfMatrix()[k][h].getType() == gameView.getPersonalGoalCardMatrix()[k][h])
                                     System.out.print(" " + ansi().bold().fg(Ansi.Color.DEFAULT).bg(Ansi.Color.GREEN)
                                             .a(" " + gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0) + " ").reset() + " ");
@@ -473,7 +402,7 @@ public class GameUI implements Runnable {
                                     System.out.print(" " + ansi().bold().fg(Ansi.Color.DEFAULT).bg(Ansi.Color.RED)
                                             .a(" " + gameView.getPersonalGoalCardMatrix()[k][h].toString().charAt(0) + " ").reset() + " ");
                             } else {
-                                fgDisambiguationPrint(wall + "     ", false, personalGoalCardColor);
+                                fgDisambiguationPrint(c.wall + "     ", false, personalGoalCardColor);
                             }
                         }
                     }
@@ -481,36 +410,36 @@ public class GameUI implements Runnable {
                     if(Constants.livingRoomBoardY - j >= 4) {
                         if (rowByHalves == 0) { //First halves
                             if (h == Constants.bookshelfY - 1) //First row
-                                fgDisambiguationPrint(cornerTopRight, true, personalGoalCardColor);
+                                fgDisambiguationPrint(c.cornerTopRight, true, personalGoalCardColor);
                             else //Any other row
-                                fgDisambiguationPrint(edgeRight, true, personalGoalCardColor);
+                                fgDisambiguationPrint(c.edgeRight, true, personalGoalCardColor);
                         } else //Second halves
-                            fgDisambiguationPrint(wall, true, personalGoalCardColor);
+                            fgDisambiguationPrint(c.wall, true, personalGoalCardColor);
                     }
                 }
             }
         }
         System.out.print("   ");
         //Last row of living room board
-        fgDisambiguationPrint(cornerBottomLeft + fiveCeilings, false, livingRoomBoardColor);
+        fgDisambiguationPrint(c.cornerBottomLeft + c.fiveCeilings, false, livingRoomBoardColor);
         for (int j = Constants.livingRoomBoardY - 2; j >= 0; j--) {
-            fgDisambiguationPrint(edgeBottom + fiveCeilings, false, livingRoomBoardColor);
+            fgDisambiguationPrint(c.edgeBottom + c.fiveCeilings, false, livingRoomBoardColor);
         }
-        fgDisambiguationPrint(cornerBottomRight, false, livingRoomBoardColor);
+        fgDisambiguationPrint(c.cornerBottomRight, false, livingRoomBoardColor);
         System.out.print("             ");
         //Last row of bookshelf
-        fgDisambiguationPrint(cornerBottomLeftAlternative + fiveCeilings, false, bookshelfColor);
+        fgDisambiguationPrint(c.cornerBottomLeftAlternative + c.fiveCeilings, false, bookshelfColor);
         for (int j = Constants.bookshelfX - 2; j >= 0; j--) {
-            fgDisambiguationPrint(edgeBottom + fiveCeilings, false, bookshelfColor);
+            fgDisambiguationPrint(c.edgeBottom + c.fiveCeilings, false, bookshelfColor);
         }
-        fgDisambiguationPrint(cornerBottomRightAlternative, false, bookshelfColor);
+        fgDisambiguationPrint(c.cornerBottomRightAlternative, false, bookshelfColor);
         System.out.print("             ");
         //Last row of personal goal card
-        fgDisambiguationPrint(cornerBottomLeft + fiveCeilings, false, personalGoalCardColor);
+        fgDisambiguationPrint(c.cornerBottomLeft + c.fiveCeilings, false, personalGoalCardColor);
         for (int j = Constants.bookshelfX - 2; j >= 0; j--) {
-            fgDisambiguationPrint(edgeBottom + fiveCeilings, false, personalGoalCardColor);
+            fgDisambiguationPrint(c.edgeBottom + c.fiveCeilings, false, personalGoalCardColor);
         }
-        fgDisambiguationPrint(cornerBottomRight, true, personalGoalCardColor);
+        fgDisambiguationPrint(c.cornerBottomRight, true, personalGoalCardColor);
     }
 
     /**
@@ -568,6 +497,7 @@ public class GameUI implements Runnable {
             System.out.println(" " + (i+1) + ". " + gameView.getCGCData().get(i).toString().replace("\n", "\n    "));
         }
     }
+
     /**
      * This method decides whether to print given string with default color or another given color.
      * Default color is used for Windows, other colors are used for operative systems compatible with Unicode and more colors.
@@ -583,6 +513,7 @@ public class GameUI implements Runnable {
         if(endLine)
             System.out.println();
     }
+
     public synchronized void addListener(GameUIListener o){
         if(!lst.contains(o)){
             lst.add(o);

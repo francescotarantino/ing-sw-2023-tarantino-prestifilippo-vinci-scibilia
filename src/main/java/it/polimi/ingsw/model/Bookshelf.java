@@ -9,7 +9,7 @@ public class Bookshelf {
     private final Player player;
     private final PersonalGoalCard personalGoalCard;
     private final Tile[][] matrix;
-    private boolean[] completedCommonGoalCards;
+    private final boolean[] completedCommonGoalCards;
 
     /**
      * Creates a new Bookshelf for the specified player.
