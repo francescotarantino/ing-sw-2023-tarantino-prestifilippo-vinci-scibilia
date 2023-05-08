@@ -1,5 +1,6 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.listeners.GameListener;
@@ -16,12 +17,16 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ServerImpl extends UnicastRemoteObject implements Server, GameListListener, GameListener {
     /**
      * The executor service used to run all the ping-pong threads.
      */
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     protected Game model;
     protected Controller controller;
@@ -175,6 +180,17 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     @Override
     public void modelChanged() throws RemoteException {
         this.client.modelChanged(new GameView(this.model, this.playerIndex));
+
+        // If the game is paused, it will be automatically ended after a certain amount of time.
+        if(this.model.isPaused()){
+            scheduler.schedule(() -> {
+                if(this.model.isPaused()){
+                    System.out.println("Game " + this.model.getGameID() + " has been paused for too long. It will be ended.");
+
+                    this.controller.walkover();
+                }
+            }, Constants.walkoverTimeout, TimeUnit.MILLISECONDS);
+        }
     }
 
     @Override

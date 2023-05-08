@@ -182,13 +182,21 @@ public class GameUI implements Runnable {
         this.lastGameView = gameView;
         this.updateBoard(gameView);
 
-        System.out.println("Game has finished. Final points:");
-        gameView.getPlayerInfo().forEach(System.out::println);
+        String winnerUsername;
+        if(!gameView.isWalkover()){
+            System.out.println("Game has finished. Final points:");
+            gameView.getPlayerInfo().forEach(System.out::println);
 
-        System.out.println("The winner is: " + gameView.getPlayerInfo().get(0).username() + "!");
+            winnerUsername = gameView.getPlayerInfo().get(0).username();
+        } else {
+            System.out.println("Game has finished. You were the only player left in the game.");
+
+            winnerUsername = gameView.getPlayerInfo().get(gameView.getMyIndex()).username();
+        }
+
+        System.out.println("The winner is: " + winnerUsername + "!");
 
         setState(State.ENDED);
-
         notifyListeners(lst, GameUIListener::exit);
     }
 

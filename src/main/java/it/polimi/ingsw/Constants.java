@@ -324,4 +324,8 @@ public class Constants {
      * Timeout (in milliseconds) used in the ping-pong mechanism.
      */
     public static final long pingpongTimeout = 1000;
+    /**
+     * Time (in milliseconds) after which the only player left in the game wins.
+     */
+    public static final long walkoverTimeout = 30 * 1000;
 }

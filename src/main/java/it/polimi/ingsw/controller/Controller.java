@@ -292,4 +292,13 @@ public class Controller {
     public int addPlayer(String username){
         return this.game.addBookshelf(new Player(username));
     }
+
+    /**
+     * This method ends the game with a walkover.
+     * No points are assigned.
+     */
+    public void walkover(){
+        this.game.setWalkover(true);
+        this.game.setGameFinished();
+    }
 }

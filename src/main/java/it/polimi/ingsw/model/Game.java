@@ -57,6 +57,10 @@ public class Game {
      */
     private boolean gameFinished = false;
     /**
+     * Boolean representing that the game has ended because of a walkover.
+     */
+    private boolean walkover = false;
+    /**
      * Boolean representing whether the game is paused or not.
      * A game is paused when there is only one player connected to the game.
      */
@@ -335,21 +339,20 @@ public class Game {
     }
 
     public List<PlayerInfo> getPlayerInfo(){
-        if(!this.gameFinished){
-            return this.getPlayers()
-                    .stream()
-                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
-                            p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
-                    .toList();
-        }
-        else{
-            return this.getPlayers()
-                    .stream()
-                    .sorted(Comparator.comparingInt(Player::getPoints).reversed())
-                    .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
-                            p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
-                    .toList();
-        }
+        return this.getPlayers()
+                .stream()
+                .sorted(Comparator.comparingInt(Player::getPoints).reversed())
+                .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
+                        p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
+                .toList();
+    }
+
+    public boolean isWalkover() {
+        return walkover;
+    }
+
+    public void setWalkover(boolean walkover) {
+        this.walkover = walkover;
     }
 
     public void addListener(GameListener o){

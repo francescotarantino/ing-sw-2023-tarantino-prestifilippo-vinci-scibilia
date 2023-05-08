@@ -56,6 +56,10 @@ public class GameView implements Serializable {
      */
     private final boolean gamePaused;
     /**
+     * True if a walkover has occurred, false otherwise.
+     */
+    private final boolean walkover;
+    /**
      * Data about players in the game. Contains the scores of the players in the game.
      * The map is sorted in descending order, so the first entry is the winner.
      * The key is the score, the value is the username. Always contains scoring tokens in possession of each player.
@@ -80,6 +84,7 @@ public class GameView implements Serializable {
         }
         this.gameFinished = game.isFinished();
         this.gamePaused = game.isPaused();
+        this.walkover = game.isWalkover();
         this.cgcData = Arrays.stream(game.getCommonGoalCards())
                 .map(card -> new CGCData(card.getDescription(), card.getAvailableScores()))
                 .toList();
@@ -132,5 +137,9 @@ public class GameView implements Serializable {
 
     public int getMyIndex() {
         return myIndex;
+    }
+
+    public boolean isWalkover() {
+        return walkover;
     }
 }
