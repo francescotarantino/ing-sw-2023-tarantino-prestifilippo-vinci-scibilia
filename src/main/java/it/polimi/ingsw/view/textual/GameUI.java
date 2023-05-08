@@ -3,10 +3,6 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
-import it.polimi.ingsw.view.textual.charset.Charset;
-import it.polimi.ingsw.view.textual.charset.DoubleLineCharset;
-import it.polimi.ingsw.view.textual.charset.FuturisticCharset;
-import it.polimi.ingsw.view.textual.charset.RoundedCharset;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import org.fusesource.jansi.Ansi;
@@ -56,24 +52,60 @@ public class GameUI implements Runnable {
             this.isUnicodeCompatible = true;
             System.out.println("OS: " + System.getProperty("os.name"));
             System.out.println("Ultra mode activated. Choose your style:");
+
+            List<Charset> charsets = Charset.getUnicodeCharsets();
+
+            this.showUnicodeCharsets(charsets);
+
+            Scanner s = new Scanner(System.in);
+            int choice;
+            do {
+                choice = TextualUtils.nextInt(s);
+                if(choice < 0 || choice > charsets.size())
+                    System.out.println("Invalid selection.");
+            } while(choice < 0 || choice > charsets.size());
+
+            System.out.println("You chose " + charsets.get(choice - 1).name + "!");
+            this.c = charsets.get(choice - 1);
+        }
+    }
+
+    /**
+     * This method is used to print the available unicode charsets.
+     * @param charsets the list of charsets
+     */
+    private void showUnicodeCharsets(List<Charset> charsets){
+        /*  This piece of code is beautiful, so I'm leaving it here.
             System.out.print("""
                 1. ╭─────╮\t2. ┏─────┓\t3. ╔═════╗
                    │     │\t   │     │\t   ║     ║
                    ╰─────╯\t   ┗─────┛\t   ╚═════╝
                 """);
-            Scanner s = new Scanner(System.in);
-            int choice;
-            do {
-                choice = TextualUtils.nextInt(s);
-                if(choice < 0 || choice > 3)
-                    System.out.println("Invalid selection.");
-            } while(choice < 0 || choice > 3);
-            switch (choice) {
-                case 1 -> this.c = new RoundedCharset();
-                case 2 -> this.c = new FuturisticCharset();
-                case 3 -> this.c = new DoubleLineCharset();
-            }
+        */
+        for (int i = 0; i < charsets.size(); i++) {
+            System.out.print((i + 1) + ". ");
+            System.out.print(charsets.get(i).cornerTopLeft);
+            System.out.print(charsets.get(i).fiveCeilings);
+            System.out.print(charsets.get(i).cornerTopRight);
+            System.out.print("\t");
         }
+        System.out.println();
+        for (Charset charset : charsets) {
+            System.out.print("   ");
+            System.out.print(charset.wall);
+            System.out.print("     ");
+            System.out.print(charset.wall);
+            System.out.print("\t");
+        }
+        System.out.println();
+        for (Charset charset : charsets) {
+            System.out.print("   ");
+            System.out.print(charset.cornerBottomLeft);
+            System.out.print(charset.fiveCeilings);
+            System.out.print(charset.cornerBottomRight);
+            System.out.print("\t");
+        }
+        System.out.println();
     }
 
     private State getState() {

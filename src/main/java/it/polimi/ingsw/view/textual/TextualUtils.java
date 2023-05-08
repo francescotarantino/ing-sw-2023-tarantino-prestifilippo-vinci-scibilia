@@ -36,6 +36,7 @@ public class TextualUtils {
      * In this way, the method can be interrupted by the thread that is waiting for the input.
      * @param in the scanner
      * @return the input integer
+     * @throws InterruptedException if the thread is interrupted while waiting for the input
      */
     public static int nextIntInterruptible(Scanner in) throws InterruptedException {
         int input = -1;
@@ -63,14 +64,23 @@ public class TextualUtils {
         return input;
     }
 
-
-    public static int getInputWithBounds(Scanner input, int lowerBound, int higherBound, String errorMessage) throws InterruptedException{
+    /**
+     * This method gets an integer from the scanner like {@link #nextIntInterruptible(Scanner)}.
+     * If the input is not in the range [lowerBound, higherBound], an error message is shown and user can try again.
+     * @param input the scanner
+     * @param lowerBound the lower bound
+     * @param higherBound the higher bound
+     * @param errorMessage the error message to show
+     * @return the input integer
+     * @throws InterruptedException if the thread is interrupted while waiting for the input
+     */
+    public static int getInputWithBounds(Scanner input, int lowerBound, int higherBound, String errorMessage) throws InterruptedException {
         int temp;
-        do{
+        do {
             temp = nextIntInterruptible(input);
             if(temp < lowerBound || temp > higherBound)
                 System.out.println(errorMessage);
-        }while(temp < lowerBound || temp > higherBound);
+        } while(temp < lowerBound || temp > higherBound);
         return temp;
     }
 }

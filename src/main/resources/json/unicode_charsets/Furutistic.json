@@ -1,0 +1,16 @@
+{
+  "name": "Futuristic",
+  "wall": "│",
+  "fiveCeilings": "─────",
+  "cornerTopLeft": "┏",
+  "cornerTopRight": "┓",
+  "cornerBottomLeft": "┗",
+  "cornerBottomLeftAlternative": "┻",
+  "cornerBottomRight": "┛",
+  "cornerBottomRightAlternative": "┻",
+  "edgeTop": "┳",
+  "edgeBottom": "┻",
+  "edgeLeft": "┣",
+  "edgeRight": "┫",
+  "cross": "╋"
+}

@@ -2,9 +2,19 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.view.textual.Charset;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Utils {
     /**
@@ -198,5 +208,70 @@ public class Utils {
         }
 
         return numbers;
+    }
+
+    /**
+     * This method can be used to iterate in a specific resource directory.
+     * In particular, given a resource path, it will iterate in all the files contained in that directory.
+     * For each file, the consumer will be called with the path of the file as parameter.
+     * The consumer can access the file using the {@link Class#getResourceAsStream(String)} method.
+     * <br>
+     * The code is partly inspired by <a href="https://stackoverflow.com/questions/1429172/how-do-i-list-the-files-inside-a-jar-file">this StackOverflow post</a>.
+     * @param resourcePath the path of the resource directory
+     * @param consumer the consumer to be called for each file
+     * @see Charset#getUnicodeCharsets() for an example of usage
+     */
+    public static void iterateInResourceDirectory(String resourcePath, Consumer<String> consumer) {
+        try {
+            // Get the code source
+            CodeSource src = Charset.class.getProtectionDomain().getCodeSource();
+            if (src != null) {
+                URL jar = src.getLocation();
+
+                if(jar.toString().endsWith(".jar")) {
+                    // The game is running from a jar file
+
+                    // Open the jar file
+                    ZipInputStream zip = new ZipInputStream(jar.openStream());
+
+                    // For each entry in the jar file
+                    ZipEntry e = zip.getNextEntry();
+                    while (e != null) {
+                        String name = e.getName();
+                        // If the file name starts with the resource path, and it's not a directory
+                        if (name.startsWith(resourcePath) && !name.endsWith("/")) {
+                            // Call the consumer
+                            consumer.accept("/" + name);
+                        }
+
+                        e = zip.getNextEntry();
+                    }
+
+                    zip.close();
+                } else {
+                    // The game is not running from jar (e.g. it's running with IntelliJ)
+
+                    // Open the resource directory as a stream
+                    InputStream inputStream = Charset.class.getResourceAsStream("/" + resourcePath);
+                    assert inputStream != null;
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                    // For each file in the resource directory
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // Call the consumer
+                        consumer.accept("/" + resourcePath + "/" + line);
+                    }
+
+                    inputStream.close();
+                    reader.close();
+                }
+            } else {
+                // Something went wrong
+                throw new RuntimeException("Unable to read from filesystem");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

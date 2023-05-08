@@ -2,7 +2,6 @@ package it.polimi.ingsw.viewmodel;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 public record CGCData(String description, int[] tokens) implements Serializable {
     @Serial

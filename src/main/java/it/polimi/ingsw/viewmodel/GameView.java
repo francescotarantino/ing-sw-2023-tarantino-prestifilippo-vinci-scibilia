@@ -2,14 +2,11 @@ package it.polimi.ingsw.viewmodel;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Tile;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
-
-import static java.lang.Math.abs;
 
 /**
  * This class is used to send the current relevant data from model of the game to the client.
@@ -76,10 +73,10 @@ public class GameView implements Serializable {
         this.firstPlayerUsername = game.getBookshelves()[game.getFirstPlayerIndex()].getPlayer().getUsername();
         if(game.getFinalPlayerIndex() == -1)
             this.finalPlayerUsername = null;
-        else{ //Player who plays last has an index of 1 less than the one who filled the bookshelf first
+        else { //Player who plays last has an index of 1 less than the one who filled the bookshelf first
             this.finalPlayerUsername = game.getPlayers().get(
                     (game.getFinalPlayerIndex() - 1) >= 0 ? (game.getFinalPlayerIndex() - 1) : (game.getTotalPlayersNumber() - 1)
-                    ).getUsername();
+            ).getUsername();
         }
         this.gameFinished = game.isFinished();
         this.gamePaused = game.isPaused();
@@ -101,20 +98,18 @@ public class GameView implements Serializable {
         return currentPlayerIndex;
     }
 
-    @Deprecated
-    public boolean isMyTurn(){
-        return this.currentPlayerIndex == this.myIndex;
-    }
-
     public String getCurrentPlayerUsername() {
         return currentPlayerUsername;
     }
+
     public String getFirstPlayerUsername(){
         return firstPlayerUsername;
     }
+
     public String getFinalPlayerUsername(){
         return finalPlayerUsername;
     }
+
     public boolean isGameFinished() {
         return gameFinished;
     }
