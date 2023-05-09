@@ -219,7 +219,7 @@ public class GameUI implements Runnable {
         Point[] points;
         do {
             System.out.print("How many tiles do you want to pick? ");
-            howManyPick = TextualUtils.getInputWithBounds(input, Constants.minPick, Constants.maxPick,
+            howManyPick = TextualUtils.nextIntInterruptible(input, Constants.minPick, Constants.maxPick,
                     ("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles."));
 
             points = new Point[howManyPick];
@@ -232,7 +232,7 @@ public class GameUI implements Runnable {
                     int x, y;
                     System.out.println("Tile #" + (i + 1));
                     System.out.print("Row: ");
-                    y = TextualUtils.getInputWithBounds(input, 0, Constants.livingRoomBoardY,
+                    y = TextualUtils.nextIntInterruptible(input, 0, Constants.livingRoomBoardY,
                             ("Row coordinate must be between 1 and " + Constants.livingRoomBoardY + "."));
                     if (y == 0) {
                         inputValidity = false;
@@ -241,7 +241,7 @@ public class GameUI implements Runnable {
                     y = Constants.livingRoomBoardY - y;
                     if(inputValidity){
                         System.out.print("Column: ");
-                        x = TextualUtils.getInputWithBounds(input, 0, Constants.livingRoomBoardX,
+                        x = TextualUtils.nextIntInterruptible(input, 0, Constants.livingRoomBoardX,
                                 ("Column coordinate must be between 1 and " + Constants.livingRoomBoardX + "."));
                         if (x == 0){
                             inputValidity = false;
@@ -261,7 +261,7 @@ public class GameUI implements Runnable {
             }
             if(inputValidity){
                 System.out.print("In which column do you want to put the tiles? ");
-                column = TextualUtils.getInputWithBounds(input, 0, Constants.bookshelfX,
+                column = TextualUtils.nextIntInterruptible(input, 0, Constants.bookshelfX,
                         ("Column must be between 1 and " + Constants.bookshelfX + "."));
                 if(column == 0) {
                     inputValidity = false;

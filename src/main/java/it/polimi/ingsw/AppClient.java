@@ -2,52 +2,62 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.distributed.ClientImpl;
 import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
+import it.polimi.ingsw.view.textual.TextualUtils;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Scanner;
 
 public class AppClient {
-    private enum ClientType {
+    private enum ConnectionType {
         RMI,
         SOCKET
     }
+
+    private enum UIType {
+        CLI,
+        GUI
+    }
+
+    private static UIType uiType;
+    private static ConnectionType connectionType;
+    private static String ip;
+    private static int port;
+
 
     /**
      * Starts a client application.
      * @param args client type (RMI or SOCKET), server IP and server port
      */
     public static void main(String[] args) {
-        ClientType clientType = ClientType.RMI;
-        String ip = "localhost";
-        int port = Constants.defaultRMIRegistryPort;
+        Scanner in = new Scanner(System.in);
 
         if(args.length == 0) {
-            System.out.println("Starting client with default options...");
+            askArgs(in);
         } else {
-            clientType = ClientType.valueOf(args[0].toUpperCase());
-            System.out.println("Starting a " + clientType + " client...");
+            parseArgs(args);
+        }
 
-            if (clientType == ClientType.SOCKET) {
-                port = Constants.defaultSocketPort;
-            }
+        System.out.println("Select UI type:");
+        for (UIType value : UIType.values()) {
+            System.out.println((value.ordinal() + 1) + ". " + value);
+        }
+        int uiTypeInt = TextualUtils.nextInt(in, 1, UIType.values().length, "Invalid UI type. Please retry: ") - 1;
+        uiType = UIType.values()[uiTypeInt];
 
-            if(args.length == 3) {
-                ip = args[1];
-                port = Integer.parseInt(args[2]);
+        System.out.println("Connecting to " + ip + ":" + port + " using " + connectionType + "...");
 
-                System.out.println("Connecting to " + ip + ":" + port);
-            } else if(args.length != 1) {
-                System.out.println("Invalid arguments. Exiting...");
-                System.exit(1);
-            }
+        if(uiType == UIType.GUI) {
+            System.out.println("GUI not implemented yet. Exiting...");
+            System.exit(1);
         }
 
         try {
-            switch (clientType) {
-                case RMI -> startRMI(ip, port);
-                case SOCKET -> startSocket(ip, port);
+            switch (connectionType) {
+                case RMI -> startRMI();
+                case SOCKET -> startSocket();
             }
         } catch (RemoteException | NotBoundException e){
             System.err.println("Cannot connect to server. Exiting...");
@@ -55,12 +65,52 @@ public class AppClient {
         }
     }
 
+    private static void askArgs(Scanner in) {
+        System.out.println("Select connection type:");
+        for (ConnectionType value : ConnectionType.values()) {
+            System.out.println((value.ordinal() + 1) + ". " + value);
+        }
+
+        int clientTypeInt = TextualUtils.nextInt(in, 1, ConnectionType.values().length, "Invalid client type. Please retry: ") - 1;
+        connectionType = ConnectionType.values()[clientTypeInt];
+
+        // Consumes the \n left by nextInt
+        in.nextLine();
+
+        System.out.print("Enter server IP (blank for localhost): ");
+        ip = in.nextLine();
+        if (ip.isBlank()){
+            ip = "localhost";
+        }
+
+        System.out.print("Enter server port (blank for default): ");
+        String portString = in.nextLine();
+        if (portString.isBlank()){
+            switch (connectionType) {
+                case RMI -> port = Constants.defaultRMIRegistryPort;
+                case SOCKET -> port = Constants.defaultSocketPort;
+            }
+        } else {
+            port = Integer.parseInt(portString);
+        }
+    }
+
+    private static void parseArgs(String[] args) {
+        if(args.length == 3) {
+            connectionType = ConnectionType.valueOf(args[0].toUpperCase());
+            ip = args[1];
+            port = Integer.parseInt(args[2]);
+        } else {
+            System.out.println("Invalid arguments.");
+            System.out.println("Usage: java -jar myshelfie-client.jar [RMI|SOCKET] [ip] [port]");
+            System.exit(1);
+        }
+    }
+
     /**
      * Starts an RMI client.
-     * @param ip server IP
-     * @param port server port
      */
-    private static void startRMI(String ip, int port) throws RemoteException, NotBoundException {
+    private static void startRMI() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(ip, port);
         AppServer appServer = (AppServer) registry.lookup(Constants.defaultRMIName);
 
@@ -70,10 +120,8 @@ public class AppClient {
 
     /**
      * Starts a socket client.
-     * @param ip server IP
-     * @param port server port
      */
-    private static void startSocket(String ip, int port) throws RemoteException {
+    private static void startSocket() throws RemoteException {
         ServerStub serverStub = new ServerStub(ip, port);
         ClientImpl client = new ClientImpl(serverStub);
         new Thread(() -> {
