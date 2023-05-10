@@ -3,12 +3,12 @@ package it.polimi.ingsw.view.textual;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,9 +17,7 @@ import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 import static org.fusesource.jansi.Ansi.ansi;
 
-public class GameUI implements Runnable {
-    private final List<GameUIListener> lst = new ArrayList<>();
-
+public class TextualGameUI extends GameUI {
     private enum State {
         MY_TURN,
         NOT_MY_TURN,
@@ -47,7 +45,7 @@ public class GameUI implements Runnable {
     /** Boolean used to determine how to print characters */
     private boolean isUnicodeCompatible = false;
 
-    public GameUI(){
+    public TextualGameUI(){
         if(System.getProperty("os.name").contains("Mac OS X") || System.getProperty("os.name").contains("Linux")){
             this.isUnicodeCompatible = true;
             System.out.println("OS: " + System.getProperty("os.name"));
@@ -121,6 +119,7 @@ public class GameUI implements Runnable {
         }
     }
 
+    @Override
     public void run() {
         AnsiConsole.systemInstall();
 
@@ -155,6 +154,7 @@ public class GameUI implements Runnable {
      * This method should be called when there is a change in the model of the game.
      * @param gameView the new model-view of the game
      */
+    @Override
     public void update(GameView gameView){
         this.lastGameView = gameView;
         if(gameView.isGamePaused()){
@@ -178,6 +178,7 @@ public class GameUI implements Runnable {
         }
     }
 
+    @Override
     public void gameFinished(GameView gameView){
         this.lastGameView = gameView;
         this.updateBoard(gameView);
@@ -552,15 +553,5 @@ public class GameUI implements Runnable {
             System.out.print(toPrint);
         if(endLine)
             System.out.println();
-    }
-
-    public synchronized void addListener(GameUIListener o){
-        if(!lst.contains(o)){
-            lst.add(o);
-        }
-    }
-
-    public synchronized void removeListener(GameUIListener o){
-        lst.remove(o);
     }
 }

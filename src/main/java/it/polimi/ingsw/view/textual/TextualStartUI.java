@@ -2,24 +2,19 @@ package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.listeners.StartUIListener;
+import it.polimi.ingsw.view.StartUI;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 import static org.fusesource.jansi.Ansi.ansi;
 
-public class StartUI implements Runnable {
-    /**
-     * List of all Listeners which listen to this class
-     */
-    private final List<StartUIListener> lst = new ArrayList<>();
-
+public class TextualStartUI extends StartUI {
     private String username;
     private int numberOfPlayers;
     private int numberOfCommonGoalCards;
@@ -125,6 +120,7 @@ public class StartUI implements Runnable {
      * Shows the list of games on the server only if the user has inserted a username.
      * @param o array of strings representing the list of games on the server
      */
+    @Override
     public void showGamesList(List<GameDetailsView> o){
         if(this.username != null) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
@@ -161,6 +157,7 @@ public class StartUI implements Runnable {
      * Shows an error message and the menu.
      * @param err error message to show
      */
+    @Override
     public void showError(String err) {
         System.out.println(ansi().bold().fg(Ansi.Color.RED).a(err).reset());
     }
@@ -169,6 +166,7 @@ public class StartUI implements Runnable {
      * Shows the list of connected players.
      * @param o a list of players usernames
      */
+    @Override
     public void showPlayersList(List<String> o) {
         if (this.playersNameList == null){
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
@@ -187,15 +185,5 @@ public class StartUI implements Runnable {
         }
 
         this.playersNameList = o;
-    }
-
-    public synchronized void addListener(StartUIListener o){
-        if(!lst.contains(o)){
-            lst.add(o);
-        }
-    }
-
-    public synchronized void removeListener(StartUIListener o){
-        lst.remove(o);
     }
 }

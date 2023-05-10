@@ -1,13 +1,16 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.view.GameUI;
+import it.polimi.ingsw.view.StartUI;
 import it.polimi.ingsw.viewmodel.GameView;
-import it.polimi.ingsw.view.textual.GameUI;
-import it.polimi.ingsw.view.textual.StartUI;
+import it.polimi.ingsw.view.textual.TextualGameUI;
+import it.polimi.ingsw.view.textual.TextualStartUI;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.rmi.RemoteException;
@@ -18,14 +21,29 @@ import java.util.List;
 
 public class ClientImpl extends UnicastRemoteObject implements Client, Runnable, StartUIListener, GameUIListener {
     private final Server server;
-    private final StartUI startUI = new StartUI();
-    private final GameUI gameUI = new GameUI();
+    private final StartUI startUI;
+    private final GameUI gameUI;
 
-    public ClientImpl(Server server) throws RemoteException {
+    public ClientImpl(Server server, Constants.UIType uiType) throws RemoteException {
         this.server = server;
+
+        switch (uiType){
+            case CLI -> {
+                this.startUI = new TextualStartUI();
+                this.gameUI = new TextualGameUI();
+            }
+            default -> {
+                this.startUI = null;
+                this.gameUI = null;
+                System.out.println("UI type not supported");
+                exit();
+            }
+        }
+
         initialize();
     }
 
+    /*
     public ClientImpl(Server server, int port) throws RemoteException {
         super(port);
         this.server = server;
@@ -37,6 +55,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         this.server = server;
         initialize();
     }
+     */
 
     public void initialize() throws RemoteException {
         this.server.register(this);

@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Set of characters used by {@link it.polimi.ingsw.view.textual.GameUI} to print tables.
+ * Set of characters used by {@link TextualGameUI} to print tables.
  */
 public class Charset {
     /** Name of the charset */

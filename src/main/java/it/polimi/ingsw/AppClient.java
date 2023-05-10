@@ -10,17 +10,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
+import it.polimi.ingsw.Constants.UIType;
+import it.polimi.ingsw.Constants.ConnectionType;
+
 public class AppClient {
-    private enum ConnectionType {
-        RMI,
-        SOCKET
-    }
-
-    private enum UIType {
-        CLI,
-        GUI
-    }
-
     private static UIType uiType;
     private static ConnectionType connectionType;
     private static String ip;
@@ -114,7 +107,7 @@ public class AppClient {
         Registry registry = LocateRegistry.getRegistry(ip, port);
         AppServer appServer = (AppServer) registry.lookup(Constants.defaultRMIName);
 
-        ClientImpl client = new ClientImpl(appServer.connect());
+        ClientImpl client = new ClientImpl(appServer.connect(), uiType);
         client.run();
     }
 
@@ -123,7 +116,7 @@ public class AppClient {
      */
     private static void startSocket() throws RemoteException {
         ServerStub serverStub = new ServerStub(ip, port);
-        ClientImpl client = new ClientImpl(serverStub);
+        ClientImpl client = new ClientImpl(serverStub, uiType);
         new Thread(() -> {
             while(true) {
                 try {
