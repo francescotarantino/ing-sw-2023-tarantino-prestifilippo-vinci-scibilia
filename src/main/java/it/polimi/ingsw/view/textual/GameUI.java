@@ -32,13 +32,13 @@ public class GameUI implements Runnable {
 
     private GameView lastGameView;
 
-    /** Integer representing living room board color */
+    /** Integers representing living room board color */
     private static final int[] livingRoomBoardColor = {63,99,86};
 
-    /** Integer representing bookshelf color */
+    /** Integers representing bookshelf color */
     private static final int[] bookshelfColor = {116,44,17};
 
-    /** Integer representing personal goal card color */
+    /** Integers representing personal goal card color */
     private static final int[] personalGoalCardColor = {116,44,17};
 
     /** Charset used to print tables. */

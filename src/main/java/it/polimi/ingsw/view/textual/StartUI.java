@@ -129,6 +129,15 @@ public class StartUI implements Runnable {
         if(this.username != null) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
 
+            System.out.println(ansi().fg(Ansi.Color.YELLOW).a(
+                    " ____    ____ ____  ____  _______ ____  ____ _________ _____    _________ _____ _________ \n" +
+                    "|_   \\  /   _|_  _||_  _|/  ___  |_   ||   _|_   ___  |_   _|  |_   ___  |_   _|_   ___  |\n" +
+                    "  |   \\/   |   \\ \\  / / |  (__ \\_| | |__| |   | |_  \\_| | |      | |_  \\_| | |   | |_  \\_|\n" +
+                    "  | |\\  /| |    \\ \\/ /   '.___\\-.  |  __  |   |  _|  _  | |   _  |  _|     | |   |  _|  _ \n" +
+                    " _| |_\\/_| |_   _|  |_  |\\\\____) |_| |  | |_ _| |___/ |_| |__/ |_| |_     _| |_ _| |___/ |\n" +
+                    "|_____||_____| |______| |_______.'____||____|_________|________|_____|   |_____|_________|\n")
+                    .reset());
+
             if (o.size() != 0) {
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
