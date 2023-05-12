@@ -8,6 +8,7 @@ import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.view.StartUI;
+import it.polimi.ingsw.view.graphical.GraphicalStartUI;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.view.textual.TextualGameUI;
 import it.polimi.ingsw.view.textual.TextualStartUI;
@@ -31,6 +32,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             case CLI -> {
                 this.startUI = new TextualStartUI();
                 this.gameUI = new TextualGameUI();
+            }
+            case GUI -> {
+                this.startUI = new GraphicalStartUI();
+                this.gameUI = new TextualGameUI(); // TODO: change to GraphicalGameUI when implemented
             }
             default -> {
                 this.startUI = null;

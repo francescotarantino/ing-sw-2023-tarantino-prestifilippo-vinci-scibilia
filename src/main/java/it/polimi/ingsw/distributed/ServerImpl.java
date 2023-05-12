@@ -44,6 +44,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         super();
     }
 
+    /*
     public ServerImpl(int port) throws RemoteException {
         super(port);
     }
@@ -51,6 +52,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     public ServerImpl(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(port, csf, ssf);
     }
+    */
 
     @Override
     public void register(Client client) throws RemoteException {

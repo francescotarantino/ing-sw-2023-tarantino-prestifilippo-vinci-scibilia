@@ -42,11 +42,6 @@ public class AppClient {
 
         System.out.println("Connecting to " + ip + ":" + port + " using " + connectionType + "...");
 
-        if(uiType == UIType.GUI) {
-            System.out.println("GUI not implemented yet. Exiting...");
-            System.exit(1);
-        }
-
         try {
             switch (connectionType) {
                 case RMI -> startRMI();
