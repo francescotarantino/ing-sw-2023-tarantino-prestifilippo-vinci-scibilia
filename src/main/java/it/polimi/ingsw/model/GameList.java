@@ -54,8 +54,10 @@ public class GameList implements GameListener {
      */
     public void removeGame(Game game) {
         game.removeListener(this);
-        games.remove(game);
-        notifyListeners(lst, GameListListener::removedGame);
+        if(games.contains(game)){
+            games.remove(game);
+            notifyListeners(lst, GameListListener::removedGame);
+        }
     }
 
     /**

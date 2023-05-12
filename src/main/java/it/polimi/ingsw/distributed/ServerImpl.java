@@ -197,12 +197,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     public void gameFinished() throws RemoteException {
         GameView gameView = new GameView(this.model, this.playerIndex);
 
-        // In this way, only one ServerImpl instance will print the game result on the server console and remove the game from the GameList
-        if(this.playerIndex == 0){
-            System.out.println("Game " + this.model.getGameID() + " has finished.");
-            System.out.println("The winner is " + gameView.getPlayerInfo().get(0).username() + " with " + gameView.getPlayerInfo().get(0).points() + " points.");
-            GameList.getInstance().removeGame(this.model);
-        }
+        GameList.getInstance().removeGame(this.model);
 
         this.model.removeListener(this);
         this.model = null;

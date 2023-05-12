@@ -280,6 +280,11 @@ public class Game {
     public void setGameFinished(){
         this.gameFinished = true;
         notifyListeners(lst, GameListener::gameFinished);
+
+        System.out.println("Game " + this.getGameID() + " has finished.");
+        if(!isWalkover()){
+            System.out.println("The winner is " + getPlayerInfo().get(0).username() + " with " + getPlayerInfo().get(0).points() + " points.");
+        }
     }
 
     /**
