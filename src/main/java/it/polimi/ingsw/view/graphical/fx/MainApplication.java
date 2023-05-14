@@ -11,7 +11,6 @@ import java.awt.*;
 
 public class MainApplication extends Application {
     public static MainApplication instance;
-
     private static final Object lock = new Object();
 
     public StartUIController controller;
@@ -28,24 +27,33 @@ public class MainApplication extends Application {
 
         stage.setTitle("MyShelfie - Start");
         stage.setScene(scene);
-        stage.setMinWidth(600);
-        stage.setMinHeight(400);
+        stage.setMinWidth(800);
+        stage.setMinHeight(600);
+        stage.setResizable(false);
         stage.show();
 
         stage.setOnCloseRequest(e -> {
             System.exit(0);
         });
 
-        // Set icon on the window and the taskbar
+        // Set icons
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icons/icon.png")));
-        Taskbar.getTaskbar().setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/icons/icon.png")));
+        if(System.getProperty("os.name").contains("Mac OS X")){
+            // If MacOS set dock icon
+            Taskbar.getTaskbar().setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/icons/icon.png")));
+        }
 
-        instance = this;
         synchronized (lock) {
+            instance = this;
             lock.notifyAll();
         }
     }
 
+    /**
+     * Returns the instance of the application.
+     * If the instance is not yet created, it launches the application and waits for it to be created.
+     * @return the instance of the application
+     */
     public static MainApplication getInstance() {
         if(instance == null){
             new Thread(() -> launch(MainApplication.class)).start();

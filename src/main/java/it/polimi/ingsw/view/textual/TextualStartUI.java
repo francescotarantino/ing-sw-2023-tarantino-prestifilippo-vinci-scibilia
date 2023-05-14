@@ -19,6 +19,7 @@ public class TextualStartUI extends StartUI {
     private int numberOfPlayers;
     private int numberOfCommonGoalCards;
     private int gameID = -1;
+    private boolean waitingForPlayers = false;
     private List<String> playersNameList;
 
     @Override
@@ -93,6 +94,7 @@ public class TextualStartUI extends StartUI {
 
             notifyListeners(lst, StartUIListener::exit);
         }
+        waitingForPlayers = true;
     }
 
     /**
@@ -114,6 +116,7 @@ public class TextualStartUI extends StartUI {
 
             notifyListeners(lst, StartUIListener::exit);
         }
+        waitingForPlayers = true;
     }
 
     /**
@@ -122,7 +125,7 @@ public class TextualStartUI extends StartUI {
      */
     @Override
     public void showGamesList(List<GameDetailsView> o){
-        if(this.username != null) {
+        if(this.username != null && !waitingForPlayers) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
 
             if (o.size() != 0) {

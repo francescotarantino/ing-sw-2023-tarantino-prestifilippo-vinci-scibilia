@@ -19,7 +19,6 @@ public class AppClient {
     private static String ip;
     private static int port;
 
-
     /**
      * Starts a client application.
      * @param args client type (RMI or SOCKET), server IP and server port
@@ -130,5 +129,17 @@ public class AppClient {
         }).start();
 
         client.run();
+    }
+
+    public static String getIP(){
+        return ip;
+    }
+
+    public static int getPort(){
+        return port;
+    }
+
+    public static ConnectionType getConnectionType(){
+        return connectionType;
     }
 }

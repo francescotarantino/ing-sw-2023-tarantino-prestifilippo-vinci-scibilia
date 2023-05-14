@@ -7,10 +7,13 @@ import it.polimi.ingsw.viewmodel.GameDetailsView;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
@@ -38,13 +41,47 @@ public class GraphicalStartUI extends StartUI {
 
                     setOnMouseClicked(mouseEvent -> {
                         if (mouseEvent.getClickCount() == 2) {
-                            System.out.println("Joining game "  + item.gameID() + "...");
+                            mainApplication.controller.createGamePanel.setVisible(false);
+                            mainApplication.controller.gameListView.setDisable(true);
+                            mainApplication.controller.usernameField.setDisable(true);
+                            mainApplication.controller.waitingForPlayersPanel.setVisible(true);
+
                             notifyListeners(lst, l-> l.joinGame(item.gameID(), username));
                         }
                     });
                 }
             }
         });
+
+        mainApplication.controller.startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                RadioButton rbNumberOfPlayers = (RadioButton) mainApplication.controller.numberOfPlayers.getSelectedToggle();
+                int numberOfPlayers = Integer.parseInt(rbNumberOfPlayers.getText());
+
+                RadioButton rbNumberOfCGCs = (RadioButton) mainApplication.controller.numberOfCGCs.getSelectedToggle();
+                int numberOfCGCs = Integer.parseInt(rbNumberOfCGCs.getText());
+
+                try {
+                    notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCGCs, username));
+                } catch (IllegalArgumentException e) {
+                    showError(e.getMessage());
+
+                    notifyListeners(lst, StartUIListener::exit);
+                }
+                mainApplication.controller.createGamePanel.setVisible(false);
+                mainApplication.controller.gameListView.setDisable(true);
+                mainApplication.controller.usernameField.setDisable(true);
+                mainApplication.controller.waitingForPlayersPanel.setVisible(true);
+            }
+        });
+
+        mainApplication.controller.usernameField.textProperty().addListener(((obs, oldVal, newVal) -> {
+            this.username = newVal;
+            if(newVal.isEmpty()){
+                Platform.runLater(this::showUsernameDialog);
+            }
+        }));
     }
 
     private void showUsernameDialog() {
@@ -76,7 +113,10 @@ public class GraphicalStartUI extends StartUI {
             return null;
         });
 
-        dialog.showAndWait().ifPresentOrElse(x -> this.username = x, () -> System.exit(0));
+        dialog.showAndWait().ifPresentOrElse(x -> {
+            this.mainApplication.controller.usernameField.textProperty().setValue(x);
+            this.username = x;
+        }, () -> System.exit(0));
     }
 
     @Override
@@ -105,6 +145,20 @@ public class GraphicalStartUI extends StartUI {
 
     @Override
     public void showPlayersList(List<String> o) {
-        // TODO
+        ObservableList<String> list = new ObservableListBase<>() {
+            @Override
+            public String get(int index) {
+                return o.get(index);
+            }
+
+            @Override
+            public int size() {
+                return o.size();
+            }
+        };
+
+        Platform.runLater(() -> {
+            mainApplication.controller.waitingForPlayersList.setItems(list);
+        });
     }
 }

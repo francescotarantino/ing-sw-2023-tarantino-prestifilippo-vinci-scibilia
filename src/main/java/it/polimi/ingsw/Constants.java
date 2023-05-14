@@ -9,6 +9,10 @@ import java.util.*;
 
 public class Constants {
     /**
+     * Game version
+     */
+    public static final String version = "0.2a";
+    /**
      * Number of columns in the Bookshelf.
      */
     public static final int bookshelfX = 5;
