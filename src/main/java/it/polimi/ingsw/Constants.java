@@ -1,10 +1,12 @@
 package it.polimi.ingsw;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Point;
 import org.fusesource.jansi.Ansi;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class Constants {
@@ -212,7 +214,8 @@ public class Constants {
 
         Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/PersonalGoalCards.json")));
 
-        personalGoalCards = (List<List<String>>) new Gson().fromJson(reader, ArrayList.class);
+        Type type = new TypeToken<List<List<String>>>(){}.getType();
+        personalGoalCards = new Gson().fromJson(reader, type);
         return new ArrayList<>(personalGoalCards);
     }
 
@@ -233,7 +236,8 @@ public class Constants {
 
         Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/CommonGoalCardsDescriptions.json")));
 
-        commonGoalCardsDescriptions = ((Map<String, String>) new Gson().fromJson(reader, Map.class));
+        Type type = new TypeToken<Map<String, String>>(){}.getType();
+        commonGoalCardsDescriptions = new Gson().fromJson(reader, type);
         return commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
     }
 
