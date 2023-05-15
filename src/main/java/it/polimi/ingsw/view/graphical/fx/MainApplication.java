@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class MainApplication extends Application {
     public static MainApplication instance;
@@ -25,11 +26,12 @@ public class MainApplication extends Application {
 
         Scene scene = new Scene(root);
 
-        stage.setTitle("MyShelfie - Start");
+        stage.setTitle("MyShelfie");
         stage.setScene(scene);
         stage.setMinWidth(800);
         stage.setMinHeight(600);
         stage.setResizable(false);
+        stage.centerOnScreen();
         stage.show();
 
         stage.setOnCloseRequest(e -> {
@@ -37,7 +39,7 @@ public class MainApplication extends Application {
         });
 
         // Set icons
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icons/icon.png")));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/icon.png"))));
         if(System.getProperty("os.name").contains("Mac OS X")){
             // If MacOS set dock icon
             Taskbar.getTaskbar().setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/icons/icon.png")));

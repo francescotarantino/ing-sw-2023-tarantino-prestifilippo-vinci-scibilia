@@ -152,14 +152,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
     @Override
     public void removedGame() throws RemoteException {
-        if(this.model == null){
-            this.client.updateGamesList(GameList.getInstance().getGamesDetails());
-        } else if(GameList.getInstance().getGame(this.model.getGameID()) == null){
-            GameList.getInstance().removeListener(this);
+        this.client.updateGamesList(GameList.getInstance().getGamesDetails());
+
+        if(GameList.getInstance().getGame(this.model.getGameID()) == null){
+            //GameList.getInstance().removeListener(this); // should be removed?
             this.model.removeListener(this);
             this.model = null;
 
-            this.client.showError("The game you were waiting for has been removed.", true);
+            this.client.showError("The game you were waiting for has been removed.");
         }
     }
 

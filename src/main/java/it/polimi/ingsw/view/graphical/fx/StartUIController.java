@@ -55,10 +55,11 @@ public class StartUIController implements Initializable {
     public HBox numberOfCommonGoalCardsHbox;
     @FXML
     public TextField usernameField;
+    @FXML
+    public Text connectionMethodText;
 
     public ToggleGroup numberOfPlayers = new ToggleGroup();
     public ToggleGroup numberOfCGCs = new ToggleGroup();
-    public Text connectionMethodText;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

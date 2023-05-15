@@ -54,12 +54,11 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public synchronized void showError(String err, boolean exit) throws RemoteException {
+    public synchronized void showError(String err) throws RemoteException {
         try {
             oos.reset();
             oos.writeObject(Methods.SHOW_ERROR);
             oos.writeObject(err);
-            oos.writeObject(exit);
             oos.flush();
         } catch (IOException e) {
             throw new RemoteException("Cannot send error signal", e);
@@ -138,7 +137,7 @@ public class ClientSkeleton implements Client {
         } catch (IOException | ClassNotFoundException e) {
             throw new RemoteException("Connection seems to be closed", e);
         } catch (InvalidChoiceException e) {
-            this.showError(e.getMessage(), true);
+            this.showError(e.getMessage());
         }
     }
 }

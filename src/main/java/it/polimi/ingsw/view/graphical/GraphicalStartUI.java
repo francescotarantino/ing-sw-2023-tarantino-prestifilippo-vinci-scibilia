@@ -13,7 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
@@ -41,10 +40,7 @@ public class GraphicalStartUI extends StartUI {
 
                     setOnMouseClicked(mouseEvent -> {
                         if (mouseEvent.getClickCount() == 2) {
-                            mainApplication.controller.createGamePanel.setVisible(false);
-                            mainApplication.controller.gameListView.setDisable(true);
-                            mainApplication.controller.usernameField.setDisable(true);
-                            mainApplication.controller.waitingForPlayersPanel.setVisible(true);
+                            setWaitingForPlayersState();
 
                             notifyListeners(lst, l-> l.joinGame(item.gameID(), username));
                         }
@@ -62,17 +58,9 @@ public class GraphicalStartUI extends StartUI {
                 RadioButton rbNumberOfCGCs = (RadioButton) mainApplication.controller.numberOfCGCs.getSelectedToggle();
                 int numberOfCGCs = Integer.parseInt(rbNumberOfCGCs.getText());
 
-                try {
-                    notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCGCs, username));
-                } catch (IllegalArgumentException e) {
-                    showError(e.getMessage());
+                setWaitingForPlayersState();
 
-                    notifyListeners(lst, StartUIListener::exit);
-                }
-                mainApplication.controller.createGamePanel.setVisible(false);
-                mainApplication.controller.gameListView.setDisable(true);
-                mainApplication.controller.usernameField.setDisable(true);
-                mainApplication.controller.waitingForPlayersPanel.setVisible(true);
+                notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCGCs, username));
             }
         });
 
@@ -116,7 +104,25 @@ public class GraphicalStartUI extends StartUI {
         dialog.showAndWait().ifPresentOrElse(x -> {
             this.mainApplication.controller.usernameField.textProperty().setValue(x);
             this.username = x;
-        }, () -> System.exit(0));
+        }, () -> notifyListeners(lst, StartUIListener::exit));
+    }
+
+    private void setWaitingForPlayersState() {
+        Platform.runLater(() -> {
+            mainApplication.controller.createGamePanel.setVisible(false);
+            mainApplication.controller.gameListView.setDisable(true);
+            mainApplication.controller.usernameField.setDisable(true);
+            mainApplication.controller.waitingForPlayersPanel.setVisible(true);
+        });
+    }
+
+    private void setDefaultState() {
+        Platform.runLater(() -> {
+            mainApplication.controller.waitingForPlayersPanel.setVisible(false);
+            mainApplication.controller.createGamePanel.setVisible(true);
+            mainApplication.controller.gameListView.setDisable(false);
+            mainApplication.controller.usernameField.setDisable(false);
+        });
     }
 
     @Override
@@ -140,7 +146,15 @@ public class GraphicalStartUI extends StartUI {
 
     @Override
     public void showError(String err) {
-        // TODO
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText(err);
+            alert.show();
+        });
+
+        setDefaultState();
     }
 
     @Override

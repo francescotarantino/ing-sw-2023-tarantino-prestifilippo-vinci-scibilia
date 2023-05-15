@@ -87,13 +87,7 @@ public class TextualStartUI extends StartUI {
                         + " and " + Constants.maxCommonGoalCards + ".");
         } while(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards);
 
-        try {
-            notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCommonGoalCards, this.username));
-        } catch (IllegalArgumentException e) {
-            showError(e.getMessage());
-
-            notifyListeners(lst, StartUIListener::exit);
-        }
+        notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCommonGoalCards, this.username));
         waitingForPlayers = true;
     }
 
@@ -113,8 +107,6 @@ public class TextualStartUI extends StartUI {
             notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
         } catch (IllegalArgumentException | IllegalStateException e) {
             showError(e.getMessage());
-
-            notifyListeners(lst, StartUIListener::exit);
         }
         waitingForPlayers = true;
     }
@@ -163,6 +155,8 @@ public class TextualStartUI extends StartUI {
     @Override
     public void showError(String err) {
         System.out.println(ansi().bold().fg(Ansi.Color.RED).a(err).reset());
+
+        notifyListeners(lst, StartUIListener::exit);
     }
 
     /**
