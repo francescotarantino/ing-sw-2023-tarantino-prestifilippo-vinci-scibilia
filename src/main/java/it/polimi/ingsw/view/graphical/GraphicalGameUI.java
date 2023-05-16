@@ -83,6 +83,23 @@ public class GraphicalGameUI extends GameUI {
                     }
                 }
             }
+
+            for(int j = Constants.bookshelfY - 1; j >= 0; j--){
+                for(int i = Constants.bookshelfX - 1; i >= 0; i--){
+                    Tile tile = gameView.getBookshelfMatrix()[i][j];
+                    if(tile != null && !tile.isPlaceholder()){
+                        int finalI = i;
+                        int finalJ = Constants.bookshelfY - 1 - j;
+                        Platform.runLater(() -> {
+                            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
+                            ImageView tileImage = new ImageView(image);
+                            tileImage.fitHeightProperty().bind(controller.mainGrid.widthProperty().multiply(0.3).divide(Constants.bookshelfX + 2).multiply(98).divide(113));
+                            tileImage.setPreserveRatio(true);
+                            controller.bookshelfGridPane.add(tileImage, finalI + 1, finalJ + 1);
+                        });
+                    }
+                }
+            }
         }
     }
 
