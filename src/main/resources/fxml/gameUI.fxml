@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="mainStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.graphical.fx.GameUIController">
-   <children>
-      <ImageView fx:id="guiBackground" fitHeight="450.0" fitWidth="800.0" pickOnBounds="true" StackPane.alignment="CENTER">
-         <image>
-            <Image url="@../images/sfondo_parquet.jpg" />
-         </image>
-      </ImageView>
-      <GridPane fx:id="mainGrid">
-        <columnConstraints>
-          <ColumnConstraints fx:id="firstColumn" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="50.0" prefWidth="556.800048828125" />
-          <ColumnConstraints hgrow="NEVER" maxWidth="540.7999877929688" minWidth="0.0" percentWidth="30.0" prefWidth="141.199951171875" />
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-      </GridPane>
-   </children>
-</StackPane>
+
+<GridPane fx:id="mainGrid" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.graphical.fx.GameUIController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="50.0" prefWidth="556.800048828125" />
+    <ColumnConstraints hgrow="NEVER" maxWidth="540.7999877929688" minWidth="0.0" percentWidth="30.0" prefWidth="141.199951171875" />
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+</GridPane>

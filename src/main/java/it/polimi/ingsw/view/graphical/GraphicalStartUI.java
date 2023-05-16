@@ -51,7 +51,6 @@ public class GraphicalStartUI extends StartUI {
             stage.setScene(scene);
             stage.setMinWidth(800);
             stage.setMinHeight(600);
-            stage.setResizable(false);
             stage.centerOnScreen();
             stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/icon.png"))));
 

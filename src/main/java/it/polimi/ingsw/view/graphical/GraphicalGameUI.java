@@ -76,7 +76,7 @@ public class GraphicalGameUI extends GameUI {
                         Platform.runLater(() -> {
                             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
                             ImageView tileImage = new ImageView(image);
-                            tileImage.fitWidthProperty().bind(Bindings.min(controller.mainStackPane.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), controller.mainStackPane.heightProperty().divide(Constants.livingRoomBoardY + 2)).multiply(0.95));
+                            tileImage.fitWidthProperty().bind(Bindings.min(controller.mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), controller.mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2)).multiply(0.95));
                             tileImage.setPreserveRatio(true);
                             controller.livingRoomBoardGridPane.add(tileImage, finalI + 1, finalJ + 1);
                         });
