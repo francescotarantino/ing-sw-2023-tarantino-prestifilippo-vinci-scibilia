@@ -11,7 +11,7 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // If OS is MacOS then set dock icon
+        // If OS is macOS then set dock icon
         if(System.getProperty("os.name").contains("Mac OS X")){
             Taskbar.getTaskbar().setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/icons/icon.png")));
         }
