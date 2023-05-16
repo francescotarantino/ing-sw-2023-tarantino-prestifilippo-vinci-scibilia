@@ -10,22 +10,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
+import it.polimi.ingsw.Constants.UIType;
+import it.polimi.ingsw.Constants.ConnectionType;
+
 public class AppClient {
-    private enum ConnectionType {
-        RMI,
-        SOCKET
-    }
-
-    private enum UIType {
-        CLI,
-        GUI
-    }
-
     private static UIType uiType;
     private static ConnectionType connectionType;
     private static String ip;
     private static int port;
-
 
     /**
      * Starts a client application.
@@ -48,11 +40,6 @@ public class AppClient {
         uiType = UIType.values()[uiTypeInt];
 
         System.out.println("Connecting to " + ip + ":" + port + " using " + connectionType + "...");
-
-        if(uiType == UIType.GUI) {
-            System.out.println("GUI not implemented yet. Exiting...");
-            System.exit(1);
-        }
 
         try {
             switch (connectionType) {
@@ -114,7 +101,7 @@ public class AppClient {
         Registry registry = LocateRegistry.getRegistry(ip, port);
         AppServer appServer = (AppServer) registry.lookup(Constants.defaultRMIName);
 
-        ClientImpl client = new ClientImpl(appServer.connect());
+        ClientImpl client = new ClientImpl(appServer.connect(), uiType);
         client.run();
     }
 
@@ -123,7 +110,7 @@ public class AppClient {
      */
     private static void startSocket() throws RemoteException {
         ServerStub serverStub = new ServerStub(ip, port);
-        ClientImpl client = new ClientImpl(serverStub);
+        ClientImpl client = new ClientImpl(serverStub, uiType);
         new Thread(() -> {
             while(true) {
                 try {
@@ -142,5 +129,17 @@ public class AppClient {
         }).start();
 
         client.run();
+    }
+
+    public static String getIP(){
+        return ip;
+    }
+
+    public static int getPort(){
+        return port;
+    }
+
+    public static ConnectionType getConnectionType(){
+        return connectionType;
     }
 }

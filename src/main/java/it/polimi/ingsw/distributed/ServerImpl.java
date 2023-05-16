@@ -12,8 +12,6 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.listeners.GameListListener;
 
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,14 +40,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
     public ServerImpl() throws RemoteException {
         super();
-    }
-
-    public ServerImpl(int port) throws RemoteException {
-        super(port);
-    }
-
-    public ServerImpl(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
-        super(port, csf, ssf);
     }
 
     @Override
@@ -140,28 +130,24 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
     @Override
     public void newGame() throws RemoteException {
-        if(this.model == null){
-            this.client.updateGamesList(GameList.getInstance().getGamesDetails());
-        }
+        this.client.updateGamesList(GameList.getInstance().getGamesDetails());
     }
 
     @Override
     public void updatedGame() throws RemoteException {
-        if(this.model == null){
-            this.client.updateGamesList(GameList.getInstance().getGamesDetails());
-        }
+        this.client.updateGamesList(GameList.getInstance().getGamesDetails());
     }
 
     @Override
     public void removedGame() throws RemoteException {
-        if(this.model == null){
-            this.client.updateGamesList(GameList.getInstance().getGamesDetails());
-        } else if(GameList.getInstance().getGame(this.model.getGameID()) == null){
-            GameList.getInstance().removeListener(this);
+        this.client.updateGamesList(GameList.getInstance().getGamesDetails());
+
+        if(GameList.getInstance().getGame(this.model.getGameID()) == null){
+            //GameList.getInstance().removeListener(this); // should be removed?
             this.model.removeListener(this);
             this.model = null;
 
-            this.client.showError("The game you were waiting for has been removed.", true);
+            this.client.showError("The game you were waiting for has been removed.");
         }
     }
 

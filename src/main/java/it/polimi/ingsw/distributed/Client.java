@@ -17,9 +17,8 @@ public interface Client extends Remote {
     /**
      * This method is called by the server when there is an error to show.
      * @param err the error message
-     * @param exit if true, the client is asked to exit
      */
-    void showError(String err, boolean exit) throws RemoteException;
+    void showError(String err) throws RemoteException;
 
     /**
      * This method is called by the server when the list of players in the current game changes.

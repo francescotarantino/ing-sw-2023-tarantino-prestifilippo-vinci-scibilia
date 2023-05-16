@@ -11,6 +11,10 @@ import java.util.*;
 
 public class Constants {
     /**
+     * Game version
+     */
+    public static final String version = "0.2a";
+    /**
      * Number of columns in the Bookshelf.
      */
     public static final int bookshelfX = 5;
@@ -332,4 +336,18 @@ public class Constants {
      * Time (in milliseconds) after which the only player left in the game wins.
      */
     public static final long walkoverTimeout = 30 * 1000;
+    /**
+     * Type of connection that can be used to connect to the server.
+     */
+    public enum ConnectionType {
+        RMI,
+        SOCKET
+    }
+    /**
+     * Types of User Interfaces.
+     */
+    public enum UIType {
+        CLI,
+        GUI
+    }
 }

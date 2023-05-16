@@ -129,7 +129,7 @@ public class ServerStub implements Server {
             switch (method) {
                 case UPDATE_GAMES_LIST -> client.updateGamesList((List<GameDetailsView>) ois.readObject());
                 case UPDATE_PLAYERS_LIST -> client.updatePlayersList((List<String>) ois.readObject());
-                case SHOW_ERROR -> client.showError((String) ois.readObject(), (Boolean) ois.readObject());
+                case SHOW_ERROR -> client.showError((String) ois.readObject());
                 case GAME_HAS_STARTED -> client.gameHasStarted();
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());
                 case GAME_FINISHED -> client.gameFinished((GameView) ois.readObject());
