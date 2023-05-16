@@ -63,7 +63,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
         this.controller = new Controller(this.model);
 
-        if(this.controller.isPlayerTryingToReconnect(username)){
+        if(this.controller.hasPlayerDisconnected(username)){
             GameList.getInstance().removeListener(this);
 
             this.client.gameHasStarted();
