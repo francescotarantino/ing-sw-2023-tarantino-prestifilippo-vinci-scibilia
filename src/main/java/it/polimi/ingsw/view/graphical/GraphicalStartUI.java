@@ -3,73 +3,110 @@ package it.polimi.ingsw.view.graphical;
 import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.view.StartUI;
 import it.polimi.ingsw.view.graphical.fx.MainApplication;
+import it.polimi.ingsw.view.graphical.fx.StartUIController;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 public class GraphicalStartUI extends StartUI {
     private String username;
-    private MainApplication mainApplication;
+    private StartUIController controller;
 
     @Override
     public void run() {
-        mainApplication = MainApplication.getInstance();
+        MainApplication.startAndWaitUntilLaunch();
 
-        Platform.runLater(this::showUsernameDialog);
+        Platform.runLater(() -> {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/startUI.fxml"));
+
+            Parent root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            controller = loader.getController();
+
+            Scene scene = new Scene(root);
+
+            stage.setTitle("MyShelfie");
+            stage.setScene(scene);
+            stage.setMinWidth(800);
+            stage.setMinHeight(600);
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/icon.png"))));
+
+            stage.setOnCloseRequest(e -> {
+                notifyListeners(lst, StartUIListener::exit);
+            });
+
+            controller.gameListView.setCellFactory(lv -> new ListCell<>() {
+                @Override
+                protected void updateItem(GameDetailsView item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        setText(item.toString());
+
+                        setOnMouseClicked(mouseEvent -> {
+                            if (mouseEvent.getClickCount() == 2) {
+                                setWaitingForPlayersState();
+
+                                notifyListeners(lst, l-> l.joinGame(item.gameID(), username));
+                            }
+                        });
+                    }
+                }
+            });
+
+            controller.startButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    RadioButton rbNumberOfPlayers = (RadioButton) controller.numberOfPlayers.getSelectedToggle();
+                    int numberOfPlayers = Integer.parseInt(rbNumberOfPlayers.getText());
+
+                    RadioButton rbNumberOfCGCs = (RadioButton) controller.numberOfCGCs.getSelectedToggle();
+                    int numberOfCGCs = Integer.parseInt(rbNumberOfCGCs.getText());
+
+                    setWaitingForPlayersState();
+
+                    notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCGCs, username));
+                }
+            });
+
+            controller.usernameField.textProperty().addListener(((obs, oldVal, newVal) -> {
+                this.username = newVal;
+                if(newVal.isEmpty()){
+                    Platform.runLater(this::showUsernameDialog);
+                }
+            }));
+
+            stage.show();
+
+            showUsernameDialog();
+        });
 
         notifyListeners(lst, StartUIListener::refreshStartUI);
-
-        mainApplication.controller.gameListView.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(GameDetailsView item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else {
-                    setText(item.toString());
-
-                    setOnMouseClicked(mouseEvent -> {
-                        if (mouseEvent.getClickCount() == 2) {
-                            setWaitingForPlayersState();
-
-                            notifyListeners(lst, l-> l.joinGame(item.gameID(), username));
-                        }
-                    });
-                }
-            }
-        });
-
-        mainApplication.controller.startButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                RadioButton rbNumberOfPlayers = (RadioButton) mainApplication.controller.numberOfPlayers.getSelectedToggle();
-                int numberOfPlayers = Integer.parseInt(rbNumberOfPlayers.getText());
-
-                RadioButton rbNumberOfCGCs = (RadioButton) mainApplication.controller.numberOfCGCs.getSelectedToggle();
-                int numberOfCGCs = Integer.parseInt(rbNumberOfCGCs.getText());
-
-                setWaitingForPlayersState();
-
-                notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCGCs, username));
-            }
-        });
-
-        mainApplication.controller.usernameField.textProperty().addListener(((obs, oldVal, newVal) -> {
-            this.username = newVal;
-            if(newVal.isEmpty()){
-                Platform.runLater(this::showUsernameDialog);
-            }
-        }));
     }
 
     private void showUsernameDialog() {
@@ -102,26 +139,26 @@ public class GraphicalStartUI extends StartUI {
         });
 
         dialog.showAndWait().ifPresentOrElse(x -> {
-            this.mainApplication.controller.usernameField.textProperty().setValue(x);
+            this.controller.usernameField.textProperty().setValue(x);
             this.username = x;
         }, () -> notifyListeners(lst, StartUIListener::exit));
     }
 
     private void setWaitingForPlayersState() {
         Platform.runLater(() -> {
-            mainApplication.controller.createGamePanel.setVisible(false);
-            mainApplication.controller.gameListView.setDisable(true);
-            mainApplication.controller.usernameField.setDisable(true);
-            mainApplication.controller.waitingForPlayersPanel.setVisible(true);
+            controller.createGamePanel.setVisible(false);
+            controller.gameListView.setDisable(true);
+            controller.usernameField.setDisable(true);
+            controller.waitingForPlayersPanel.setVisible(true);
         });
     }
 
     private void setDefaultState() {
         Platform.runLater(() -> {
-            mainApplication.controller.waitingForPlayersPanel.setVisible(false);
-            mainApplication.controller.createGamePanel.setVisible(true);
-            mainApplication.controller.gameListView.setDisable(false);
-            mainApplication.controller.usernameField.setDisable(false);
+            controller.waitingForPlayersPanel.setVisible(false);
+            controller.createGamePanel.setVisible(true);
+            controller.gameListView.setDisable(false);
+            controller.usernameField.setDisable(false);
         });
     }
 
@@ -140,7 +177,7 @@ public class GraphicalStartUI extends StartUI {
         };
 
         Platform.runLater(() -> {
-            mainApplication.controller.gameListView.setItems(list);
+            controller.gameListView.setItems(list);
         });
     }
 
@@ -172,7 +209,7 @@ public class GraphicalStartUI extends StartUI {
         };
 
         Platform.runLater(() -> {
-            mainApplication.controller.waitingForPlayersList.setItems(list);
+            controller.waitingForPlayersList.setItems(list);
         });
     }
 }
