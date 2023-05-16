@@ -252,7 +252,7 @@ public class Controller {
      * @param username the username of the player who's trying to reconnect
      * @return true if the player can reconnect, false otherwise
      */
-    public boolean isPlayerTryingToReconnect(String username){
+    public boolean hasPlayerDisconnected(String username){
         return this.game.isFull() && this.game.playersList().contains(username) && !this.game.getPlayer(this.game.playersList().indexOf(username)).isConnected();
     }
 

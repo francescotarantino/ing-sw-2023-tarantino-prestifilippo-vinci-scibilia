@@ -8,6 +8,8 @@ import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ControllerTest {
@@ -23,6 +25,15 @@ public class ControllerTest {
     @Test
     void checkStart(){
        assertEquals(game.getCurrentPlayerIndex() , game.getFirstPlayerIndex());
+    }
+
+    @Test
+    void checkStartIfFull(){
+        Game gameNotFull = new Game(222,3,new Player("playerOne"),2);
+        Controller controllerGNF = new Controller(gameNotFull);
+        controllerGNF.addPlayer("playerTwo");
+        controllerGNF.startIfFull();
+        assertNotEquals(gameNotFull.getCurrentPlayerIndex() , gameNotFull.getFirstPlayerIndex());
     }
     @Test
     void checkPerformTurn(){
@@ -92,6 +103,34 @@ public class ControllerTest {
         assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
         controller.takeTiles(new Point(4, 4)); //the additional point should trigger the refill
         assertTrue(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
+    }
+
+    @Test
+    void checkWalkover(){
+        controller.walkover();
+        assertTrue(game.isWalkover());
+        assertTrue(game.isFinished());
+    }
+
+    @Test
+    void checkHandlePlayerDisconnection(){
+        controller.handlePlayerDisconnection(1);
+        List<Player> connectedPlayers = game.getPlayers().stream().filter(Player::isConnected).toList();
+        assertFalse(connectedPlayers.contains(new Player("playerTwo")));
+    }
+
+    @Test
+    void checkReconnectPlayer(){
+        controller.handlePlayerDisconnection(1);
+        controller.reconnectPlayer("playerTwo");
+        List<Player> connectedPlayers = game.getPlayers().stream().filter(Player::isConnected).toList();
+        assertTrue(connectedPlayers.contains(game.getPlayer(1)));
+    }
+
+    @Test
+    void checkHasPlayerDisconnected(){
+        controller.handlePlayerDisconnection(1);
+        assertTrue(controller.hasPlayerDisconnected("playerTwo"));
     }
    @Test
    void testCheckBoardNeedRefill2() {
