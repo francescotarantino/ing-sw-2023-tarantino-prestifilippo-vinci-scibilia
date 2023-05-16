@@ -16,8 +16,6 @@ import it.polimi.ingsw.view.textual.TextualStartUI;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
@@ -48,20 +46,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
         initialize();
     }
-
-    /*
-    public ClientImpl(Server server, int port) throws RemoteException {
-        super(port);
-        this.server = server;
-        initialize();
-    }
-
-    public ClientImpl(Server server, int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
-        super(port, csf, ssf);
-        this.server = server;
-        initialize();
-    }
-     */
 
     public void initialize() throws RemoteException {
         this.server.register(this);

@@ -12,8 +12,6 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.listeners.GameListListener;
 
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,16 +41,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     public ServerImpl() throws RemoteException {
         super();
     }
-
-    /*
-    public ServerImpl(int port) throws RemoteException {
-        super(port);
-    }
-
-    public ServerImpl(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
-        super(port, csf, ssf);
-    }
-    */
 
     @Override
     public void register(Client client) throws RemoteException {
