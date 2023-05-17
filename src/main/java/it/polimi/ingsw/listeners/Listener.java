@@ -30,8 +30,7 @@ public interface Listener {
                 lambda.accept(listener);
             } catch (RemoteException e) {
                 listeners.remove(listener);
-                System.err.println("Removing listener " + listener + " because of a RemoteException.");
-                e.printStackTrace();
+                System.err.println("Removing listener " + listener + " because of a RemoteException. Probably the client has disconnected.");
             }
         });
     }

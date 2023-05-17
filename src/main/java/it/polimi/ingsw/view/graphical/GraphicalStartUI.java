@@ -2,14 +2,13 @@ package it.polimi.ingsw.view.graphical;
 
 import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.view.StartUI;
-import it.polimi.ingsw.view.graphical.fx.MainApplication;
+import it.polimi.ingsw.view.graphical.fx.FXApplication;
 import it.polimi.ingsw.view.graphical.fx.StartUIController;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -31,7 +30,13 @@ public class GraphicalStartUI extends StartUI {
 
     @Override
     public void run() {
-        MainApplication.startAndWaitUntilLaunch();
+        new Thread(() -> {
+            Application.launch(FXApplication.class);
+            notifyListeners(lst, StartUIListener::exit);
+        }).start();
+        try {
+            FXApplication.waitUntilLaunch();
+        } catch (InterruptedException ignored) {}
 
         Platform.runLater(() -> {
             Stage stage = new Stage();
@@ -54,8 +59,11 @@ public class GraphicalStartUI extends StartUI {
             stage.centerOnScreen();
             stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/icon.png"))));
 
-            stage.setOnCloseRequest(e -> {
-                notifyListeners(lst, StartUIListener::exit);
+            stage.setOnShown(e -> {
+                stage.toFront();
+                FXApplication.execute(() -> {
+                    notifyListeners(lst, StartUIListener::refreshStartUI);
+                });
             });
 
             controller.gameListView.setCellFactory(lv -> new ListCell<>() {
@@ -65,32 +73,42 @@ public class GraphicalStartUI extends StartUI {
                     if (empty) {
                         setText(null);
                     } else {
-                        setText(item.toString());
+                        StringBuilder s = new StringBuilder();
+                        s.append("Game ").append(item.gameID()).append(" - ").append(item.playersInfo().size()).append("/").append(item.numberOfPlayers()).append(" players\t");
+                        if(item.isStarted())
+                            s.append("STARTED\n");
+                        else
+                            s.append("NOT STARTED\n");
+                        s.append("Players: ");
+                        item.playersInfo().forEach(playerInfo -> s.append(" ").append(playerInfo.username()));
+
+                        setText(s.toString());
 
                         setOnMouseClicked(mouseEvent -> {
                             if (mouseEvent.getClickCount() == 2) {
                                 setWaitingForPlayersState();
 
-                                notifyListeners(lst, l-> l.joinGame(item.gameID(), username));
+                                FXApplication.execute(() -> {
+                                    notifyListeners(lst, l-> l.joinGame(item.gameID(), username));
+                                });
                             }
                         });
                     }
                 }
             });
 
-            controller.startButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    RadioButton rbNumberOfPlayers = (RadioButton) controller.numberOfPlayers.getSelectedToggle();
-                    int numberOfPlayers = Integer.parseInt(rbNumberOfPlayers.getText());
+            controller.startButton.setOnAction(e -> {
+                setWaitingForPlayersState();
 
-                    RadioButton rbNumberOfCGCs = (RadioButton) controller.numberOfCGCs.getSelectedToggle();
-                    int numberOfCGCs = Integer.parseInt(rbNumberOfCGCs.getText());
+                RadioButton rbNumberOfPlayers = (RadioButton) controller.numberOfPlayers.getSelectedToggle();
+                int numberOfPlayers = Integer.parseInt(rbNumberOfPlayers.getText());
 
-                    setWaitingForPlayersState();
+                RadioButton rbNumberOfCGCs = (RadioButton) controller.numberOfCGCs.getSelectedToggle();
+                int numberOfCGCs = Integer.parseInt(rbNumberOfCGCs.getText());
 
+                FXApplication.execute(() -> {
                     notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, numberOfCGCs, username));
-                }
+                });
             });
 
             controller.usernameField.textProperty().addListener(((obs, oldVal, newVal) -> {
@@ -104,8 +122,6 @@ public class GraphicalStartUI extends StartUI {
 
             showUsernameDialog();
         });
-
-        notifyListeners(lst, StartUIListener::refreshStartUI);
     }
 
     private void showUsernameDialog() {
@@ -140,7 +156,9 @@ public class GraphicalStartUI extends StartUI {
         dialog.showAndWait().ifPresentOrElse(x -> {
             this.controller.usernameField.textProperty().setValue(x);
             this.username = x;
-        }, () -> notifyListeners(lst, StartUIListener::exit));
+        }, () -> {
+            Platform.runLater(this::showUsernameDialog);
+        });
     }
 
     private void setWaitingForPlayersState() {

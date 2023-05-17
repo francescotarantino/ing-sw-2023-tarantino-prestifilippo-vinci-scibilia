@@ -1,27 +1,21 @@
 package it.polimi.ingsw.view.graphical;
 
-import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.view.graphical.fx.GameUIController;
 import it.polimi.ingsw.viewmodel.GameView;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 public class GraphicalGameUI extends GameUI {
     private GameUIController controller;
 
-    private final Object lock = new Object();
-    private boolean gui = false;
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     @Override
     public void run() {
@@ -44,63 +38,29 @@ public class GraphicalGameUI extends GameUI {
             stage.setResizable(true);
             stage.setMinWidth(800);
             stage.setMinHeight(450);
-            stage.setOnCloseRequest(e -> {
-                System.exit(0);
+
+            stage.setOnShown(e -> {
+                latch.countDown();
+
+                stage.toFront();
+                stage.requestFocus();
             });
 
             stage.show();
-
-            synchronized (lock){
-                gui = true;
-                lock.notifyAll();
-            }
         });
     }
 
     @Override
     public void update(GameView gameView) {
-        synchronized (lock){
-            while(!gui) {
-                try {
-                    lock.wait();
-                } catch (InterruptedException ignored) {}
-            }
+        try {
+            latch.await();
+        } catch (InterruptedException ignored) {}
 
-            // TODO: save reference to each child
-            for(int j = Constants.livingRoomBoardY - 1; j >= 0; j--){
-                for(int i = 0; i < Constants.livingRoomBoardX; i++){
-                    Tile tile = gameView.getLivingRoomBoardMatrix()[i][j];
-                    if(tile != null && !tile.isPlaceholder()){
-                        int finalI = i;
-                        int finalJ = Constants.livingRoomBoardY - 1 - j;
-                        Platform.runLater(() -> {
-                            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
-                            ImageView tileImage = new ImageView(image);
-                            tileImage.fitWidthProperty().bind(Bindings.min(controller.mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), controller.mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2)).multiply(0.95));
-                            tileImage.setPreserveRatio(true);
-                            controller.livingRoomBoardGridPane.add(tileImage, finalI + 1, finalJ + 1);
-                        });
-                    }
-                }
-            }
-
-            for(int j = Constants.bookshelfY - 1; j >= 0; j--){
-                for(int i = Constants.bookshelfX - 1; i >= 0; i--){
-                    Tile tile = gameView.getBookshelfMatrix()[i][j];
-                    if(tile != null && !tile.isPlaceholder()){
-                        int finalI = i;
-                        int finalJ = Constants.bookshelfY - 1 - j;
-                        Platform.runLater(() -> {
-                            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
-                            ImageView tileImage = new ImageView(image);
-                            tileImage.fitHeightProperty().bind(controller.mainGrid.widthProperty().multiply(0.3).divide(Constants.bookshelfX + 2).multiply(98).divide(113));
-                            tileImage.setPreserveRatio(true);
-                            controller.bookshelfGridPane.add(tileImage, finalI + 1, finalJ + 1);
-                        });
-                    }
-                }
-            }
-        }
+        Platform.runLater(() -> {
+            // TODO show other things
+            controller.printBookshelf(gameView.getBookshelfMatrix());
+            controller.printLivingRoomBoard(gameView.getLivingRoomBoardMatrix());
+        });
     }
 
     @Override

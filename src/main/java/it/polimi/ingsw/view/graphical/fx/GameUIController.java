@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.graphical.fx;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.model.Tile;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -89,6 +90,40 @@ public class GameUIController implements Initializable {
             r.prefHeightProperty().bind(mainGrid.widthProperty().multiply(0.3).divide(Constants.bookshelfX + 2).multiply(98).divide(113));
             r.setValignment(VPos.CENTER);
             bookshelfGridPane.getRowConstraints().add(r);
+        }
+    }
+
+    public void printLivingRoomBoard(Tile[][] matrix) {
+        livingRoomBoardGridPane.getChildren().clear();
+
+        for(int j = Constants.livingRoomBoardY - 1; j >= 0; j--){
+            for(int i = 0; i < Constants.livingRoomBoardX; i++){
+                Tile tile = matrix[i][j];
+                if(tile != null && !tile.isPlaceholder()){
+                    Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
+                    ImageView tileImage = new ImageView(image);
+                    tileImage.fitWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2)).multiply(0.95));
+                    tileImage.setPreserveRatio(true);
+                    livingRoomBoardGridPane.add(tileImage, i + 1, Constants.livingRoomBoardY - j);
+                }
+            }
+        }
+    }
+
+    public void printBookshelf(Tile[][] matrix){
+        bookshelfGridPane.getChildren().clear();
+
+        for(int j = Constants.bookshelfY - 1; j >= 0; j--){
+            for(int i = Constants.bookshelfX - 1; i >= 0; i--){
+                Tile tile = matrix[i][j];
+                if(tile != null && !tile.isPlaceholder()){
+                    Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
+                    ImageView tileImage = new ImageView(image);
+                    tileImage.fitHeightProperty().bind(mainGrid.widthProperty().multiply(0.3).divide(Constants.bookshelfX + 2).multiply(98).divide(113));
+                    tileImage.setPreserveRatio(true);
+                    bookshelfGridPane.add(tileImage, i + 1, Constants.bookshelfY - j);
+                }
+            }
         }
     }
 }

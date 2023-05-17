@@ -15,16 +15,4 @@ public record GameDetailsView(int gameID,
                               boolean isStarted) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    @Override
-    public String toString(){
-        StringBuilder s = new StringBuilder();
-        s.append("Game ").append(gameID).append(" - ").append(playersInfo.size()).append("/").append(numberOfPlayers).append(" players\t");
-        if(isStarted)
-            s.append("STARTED\n");
-        else
-            s.append("NOT STARTED\n");
-        s.append("Players: ");
-        playersInfo.forEach(playerInfo -> s.append("\t").append(playerInfo.username()));
-        return s.toString();
-    }
 }

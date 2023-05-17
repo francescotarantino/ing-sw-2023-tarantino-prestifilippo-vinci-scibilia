@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.graphical.fx;
 import it.polimi.ingsw.AppClient;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -14,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
@@ -77,17 +75,15 @@ public class StartUIController implements Initializable {
         versionText.setText("v" + Constants.version);
 
         connectionMethodText.setText(AppClient.getIP() + ":" + AppClient.getPort() + " (" + AppClient.getConnectionType() + ")");
-        githubButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if(Desktop.isDesktopSupported()){
-                    Desktop desktop = Desktop.getDesktop();
 
-                    if(desktop.isSupported(Desktop.Action.BROWSE)){
-                        try {
-                            desktop.browse(URI.create("https://github.com/francescotarantino/ing-sw-2023-tarantino-prestifilippo-vinci-scibilia"));
-                        } catch (IOException ignored) {}
-                    }
+        githubButton.setOnMouseClicked(e -> {
+            if(Desktop.isDesktopSupported()){
+                Desktop desktop = Desktop.getDesktop();
+
+                if(desktop.isSupported(Desktop.Action.BROWSE)){
+                    try {
+                        desktop.browse(URI.create("https://github.com/francescotarantino/ing-sw-2023-tarantino-prestifilippo-vinci-scibilia"));
+                    } catch (IOException ignored) {}
                 }
             }
         });
