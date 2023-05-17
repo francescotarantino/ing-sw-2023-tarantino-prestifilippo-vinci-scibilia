@@ -2,10 +2,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class Tile implements Serializable {
-    static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final Constants.TileType type;
     private final int variant;
 
@@ -68,6 +70,18 @@ public class Tile implements Serializable {
      */
     public boolean isPlaceholder() {
         return this.type == Constants.TileType.PLACEHOLDER;
+    }
+
+
+    /**
+     * @return the path of the image of the tile, based on its type and variant
+     */
+    public String getImagePath() {
+        if(!isPlaceholder()) {
+            return "/images/tiles/" + this.type.toString().toLowerCase() + "_" + (this.variant + 1) + ".png";
+        } else {
+            return null;
+        }
     }
 
     @Override

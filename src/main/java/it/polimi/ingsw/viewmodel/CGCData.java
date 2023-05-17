@@ -3,7 +3,7 @@ package it.polimi.ingsw.viewmodel;
 import java.io.Serial;
 import java.io.Serializable;
 
-public record CGCData(String description, int[] tokens) implements Serializable {
+public record CGCData(String description, int[] tokens, String image_path) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

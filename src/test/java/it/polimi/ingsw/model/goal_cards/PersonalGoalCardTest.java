@@ -4,6 +4,10 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonalGoalCardTest {
@@ -16,16 +20,30 @@ public class PersonalGoalCardTest {
         assertDoesNotThrow(Constants::getPersonalGoalCards, "Error while reading PGC file");
 
         for(int i = 0; i < Constants.getPersonalGoalCards().size(); i++){
-            for (int j = 0; j < Constants.getPersonalGoalCards().get(i).size(); j++){
-                int i1 = i;
-                int j1 = j;
+            Map<String, ?> data = Constants.getPersonalGoalCards().get(i);
 
+            // Check if image path is present
+            assertNotNull(data.get("image_path"));
+
+            // Check if matrix is valid
+            for (int j = 0; j < Constants.getPersonalGoalCards().get(i).size(); j++){
+                List<?> rawList = (List<?>) data.get("matrix");
+                List<String> matrix = new ArrayList<>();
+                for (Object obj : rawList) {
+                    if (obj instanceof String || obj == null) {
+                        matrix.add((String) obj);
+                    } else {
+                        throw new RuntimeException("Invalid JSON file.");
+                    }
+                }
+
+                int finalJ = j;
                 assertDoesNotThrow(() -> {
-                    if(Constants.getPersonalGoalCards().get(i1).get(j1) != null)
-                        Constants.TileType.valueOf(Constants.getPersonalGoalCards().get(i1).get(j1));
+                    if(matrix.get(finalJ) != null)
+                        Constants.TileType.valueOf(matrix.get(finalJ));
                 }, "Error while reading PGC #" + i + " at position " + j);
 
-                assertNotEquals("PLACEHOLDER", Constants.getPersonalGoalCards().get(i).get(j));
+                assertNotEquals("PLACEHOLDER", matrix.get(j));
             }
         }
     }

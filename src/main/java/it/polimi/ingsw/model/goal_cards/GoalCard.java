@@ -19,4 +19,6 @@ public abstract class GoalCard {
     }
 
     public abstract int checkValidity(Tile[][] matrix);
+
+    public abstract String getImagePath();
 }

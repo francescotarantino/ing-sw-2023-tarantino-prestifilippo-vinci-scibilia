@@ -27,8 +27,14 @@ public class GameView implements Serializable {
      * The matrix of the player's bookshelf.
      */
     private final Tile[][] bookshelfMatrix;
-
+    /**
+     * The matrix of the player's personal goal card.
+     */
     private final Constants.TileType[][] personalGoalCardMatrix;
+    /**
+     * The path of the player's personal goal card image.
+     */
+    private final String personalGoalCardImagePath;
     /**
      * The index of the current player who's playing.
      */
@@ -72,6 +78,7 @@ public class GameView implements Serializable {
         this.livingRoomBoardMatrix = game.getLivingRoomBoard().getMatrix();
         this.bookshelfMatrix = game.getBookshelves()[this.myIndex].getMatrix();
         this.personalGoalCardMatrix = game.getBookshelves()[this.myIndex].getPersonalGoalCard().getMatrix();
+        this.personalGoalCardImagePath = game.getBookshelves()[this.myIndex].getPersonalGoalCard().getImagePath();
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
         this.firstPlayerUsername = game.getBookshelves()[game.getFirstPlayerIndex()].getPlayer().getUsername();
@@ -86,7 +93,7 @@ public class GameView implements Serializable {
         this.gamePaused = game.isPaused();
         this.walkover = game.isWalkover();
         this.cgcData = Arrays.stream(game.getCommonGoalCards())
-                .map(card -> new CGCData(card.getDescription(), card.getAvailableScores()))
+                .map(card -> new CGCData(card.getDescription(), card.getAvailableScores(), card.getImagePath()))
                 .toList();
         this.playersData = game.getPlayerInfo();
     }
@@ -141,5 +148,9 @@ public class GameView implements Serializable {
 
     public boolean isWalkover() {
         return walkover;
+    }
+
+    public String getPersonalGoalCardImagePath() {
+        return personalGoalCardImagePath;
     }
 }

@@ -3,12 +3,15 @@ package it.polimi.ingsw.model.goal_cards;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static it.polimi.ingsw.Utils.checkMatrixSize;
 
 public class PersonalGoalCard extends GoalCard {
     private final Constants.TileType[][] matrix;
+    private final String imagePath;
 
     /**
      * Creates a personal goal card with the given ID, reading the matrix from the Constants class (so from the JSON file)
@@ -18,13 +21,24 @@ public class PersonalGoalCard extends GoalCard {
         super(index);
         this.matrix = new Constants.TileType[Constants.bookshelfX][Constants.bookshelfY];
 
-        List<String> data = Constants.getPersonalGoalCards().get(index);
+        Map<String, ?> pgcData = Constants.getPersonalGoalCards().get(index);
+
+        List<?> rawList = (List<?>) pgcData.get("matrix");
+        List<String> matrixData = new ArrayList<>();
+        for (Object obj : rawList) {
+            if (obj instanceof String || obj == null) {
+                matrixData.add((String) obj);
+            } else {
+                throw new RuntimeException("Invalid JSON file.");
+            }
+        }
+        this.imagePath = (String) pgcData.get("image_path");
 
         int indexInFile = 0;
         for (int j = Constants.bookshelfY - 1; j >= 0; j--){
             for (int i = 0; i < Constants.bookshelfX; i++){
-                if(data.get(indexInFile) != null){
-                    this.matrix[i][j] = Constants.TileType.valueOf(data.get(indexInFile));
+                if(matrixData.get(indexInFile) != null){
+                    this.matrix[i][j] = Constants.TileType.valueOf(matrixData.get(indexInFile));
                 } else {
                     this.matrix[i][j] = null;
                 }
@@ -43,6 +57,7 @@ public class PersonalGoalCard extends GoalCard {
         checkMatrixSize(matrix);
 
         this.matrix = matrix;
+        this.imagePath = null;
     }
 
     /**
@@ -71,5 +86,10 @@ public class PersonalGoalCard extends GoalCard {
         }
 
         return Constants.getPersonalGoalCardPoints(count);
+    }
+
+    @Override
+    public String getImagePath() {
+        return this.imagePath;
     }
 }

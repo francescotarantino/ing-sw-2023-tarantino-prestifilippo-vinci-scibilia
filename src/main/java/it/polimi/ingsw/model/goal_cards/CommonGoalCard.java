@@ -114,4 +114,11 @@ public abstract class CommonGoalCard extends GoalCard {
     public String getDescription(){
         return this.description;
     }
+
+    /**
+     * @return the image path of the common goal card
+     */
+    public String getImagePath() {
+        return "/images/commonGoalCards/cgc" + this.getID() + ".png";
+    }
 }

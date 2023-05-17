@@ -99,7 +99,7 @@ public class GameUIController implements Initializable {
             for(int i = 0; i < Constants.livingRoomBoardX; i++){
                 Tile tile = matrix[i][j];
                 if(tile != null && !tile.isPlaceholder()){
-                    Image image = ImageCache.getImage("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png");
+                    Image image = ImageCache.getImage(tile.getImagePath());
                     ImageView tileImage = new ImageView(image);
                     tileImage.fitWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2)).multiply(0.95));
                     tileImage.setPreserveRatio(true);
@@ -116,7 +116,7 @@ public class GameUIController implements Initializable {
             for(int i = Constants.bookshelfX - 1; i >= 0; i--){
                 Tile tile = matrix[i][j];
                 if(tile != null && !tile.isPlaceholder()){
-                    Image image = ImageCache.getImage("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png");
+                    Image image = ImageCache.getImage(tile.getImagePath());
                     ImageView tileImage = new ImageView(image);
                     tileImage.fitHeightProperty().bind(mainGrid.widthProperty().multiply(0.3).divide(Constants.bookshelfX + 2).multiply(98).divide(113));
                     tileImage.setPreserveRatio(true);
