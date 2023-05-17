@@ -112,7 +112,7 @@ public class GameList implements GameListener {
     public void modelChanged() throws RemoteException {}
 
     @Override
-    public void gameFinished() throws RemoteException {}
+    public void gameEnded() throws RemoteException {}
 
     @Override
     public void gameIsFull() throws RemoteException {}

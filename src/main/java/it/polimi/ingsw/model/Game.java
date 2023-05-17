@@ -53,9 +53,9 @@ public class Game {
      */
     private final List<GameListener> lst = new ArrayList<>();
     /**
-     * Boolean representing whether the game has finished or not.
+     * Boolean representing whether the game has ended or not.
      */
-    private boolean gameFinished = false;
+    private boolean gameEnded = false;
     /**
      * Boolean representing that the game has ended because of a walkover.
      */
@@ -275,23 +275,23 @@ public class Game {
     }
 
     /**
-     * This method sets the game as finished and notifies the listeners.
+     * This method sets the game as ended and notifies the listeners.
      */
-    public void setGameFinished(){
-        this.gameFinished = true;
-        notifyListeners(lst, GameListener::gameFinished);
+    public void setGameEnded(){
+        this.gameEnded = true;
+        notifyListeners(lst, GameListener::gameEnded);
 
-        System.out.println("Game " + this.getGameID() + " has finished.");
+        System.out.println("Game " + this.getGameID() + " has ended.");
         if(!isWalkover()){
             System.out.println("The winner is " + getPlayerInfo().get(0).username() + " with " + getPlayerInfo().get(0).points() + " points.");
         }
     }
 
     /**
-     * @return true if the game is finished, false otherwise
+     * @return true if the game is ended, false otherwise
      */
-    public boolean isFinished(){
-        return this.gameFinished;
+    public boolean isEnded(){
+        return this.gameEnded;
     }
 
     @Override

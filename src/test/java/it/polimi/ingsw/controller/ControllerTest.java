@@ -109,7 +109,7 @@ public class ControllerTest {
     void checkWalkover(){
         controller.walkover();
         assertTrue(game.isWalkover());
-        assertTrue(game.isFinished());
+        assertTrue(game.isEnded());
     }
 
     @Test
@@ -185,6 +185,6 @@ public class ControllerTest {
         controller.endGame();
         assertEquals(11 + playerOnePGCPoints, game.getPlayer(0).getPoints());
         assertEquals(13 + playerTwoPGCPoints, game.getPlayer(1).getPoints());
-        assertTrue(game.isFinished());
+        assertTrue(game.isEnded());
     }
 }

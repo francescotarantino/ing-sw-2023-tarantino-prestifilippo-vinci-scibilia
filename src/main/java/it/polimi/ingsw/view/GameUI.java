@@ -11,7 +11,7 @@ abstract public class GameUI implements Runnable {
 
     public abstract void update(GameView gameView);
 
-    public abstract void gameFinished(GameView gameView);
+    public abstract void gameEnded(GameView gameView);
 
     public synchronized void addListener(GameUIListener o){
         if(!lst.contains(o)){

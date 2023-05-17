@@ -244,7 +244,7 @@ public class Controller {
      */
     protected void endGame(){
         assignPoints();
-        this.game.setGameFinished();
+        this.game.setGameEnded();
     }
 
     /**
@@ -299,6 +299,6 @@ public class Controller {
      */
     public void walkover(){
         this.game.setWalkover(true);
-        this.game.setGameFinished();
+        this.game.setGameEnded();
     }
 }

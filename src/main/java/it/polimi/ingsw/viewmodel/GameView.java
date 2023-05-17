@@ -54,9 +54,9 @@ public class GameView implements Serializable {
     private final String finalPlayerUsername;
     private final List<CGCData> cgcData;
     /**
-     * True if the game is finished, false otherwise.
+     * True if the game is ended, false otherwise.
      */
-    private final boolean gameFinished;
+    private final boolean gameEnded;
     /**
      * True if the game is paused (there is only one player connected), false otherwise.
      */
@@ -89,7 +89,7 @@ public class GameView implements Serializable {
                     (game.getFinalPlayerIndex() - 1) >= 0 ? (game.getFinalPlayerIndex() - 1) : (game.getTotalPlayersNumber() - 1)
             ).getUsername();
         }
-        this.gameFinished = game.isFinished();
+        this.gameEnded = game.isEnded();
         this.gamePaused = game.isPaused();
         this.walkover = game.isWalkover();
         this.cgcData = Arrays.stream(game.getCommonGoalCards())
@@ -122,8 +122,8 @@ public class GameView implements Serializable {
         return finalPlayerUsername;
     }
 
-    public boolean isGameFinished() {
-        return gameFinished;
+    public boolean isGameEnded() {
+        return gameEnded;
     }
 
     public List<PlayerInfo> getPlayerInfo() {

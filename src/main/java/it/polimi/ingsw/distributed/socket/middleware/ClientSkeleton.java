@@ -24,7 +24,7 @@ public class ClientSkeleton implements Client {
         SHOW_ERROR,
         GAME_HAS_STARTED,
         MODEL_CHANGED,
-        GAME_FINISHED,
+        GAME_ENDED,
         PING
     }
 
@@ -101,10 +101,10 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public synchronized void gameFinished(GameView gameView) throws RemoteException {
+    public synchronized void gameEnded(GameView gameView) throws RemoteException {
         try {
             oos.reset();
-            oos.writeObject(Methods.GAME_FINISHED);
+            oos.writeObject(Methods.GAME_ENDED);
             oos.writeObject(gameView);
             oos.flush();
         } catch (IOException e1) {

@@ -64,7 +64,7 @@ public class GraphicalGameUI extends GameUI {
     }
 
     @Override
-    public void gameFinished(GameView gameView) {
+    public void gameEnded(GameView gameView) {
         // TODO
     }
 }

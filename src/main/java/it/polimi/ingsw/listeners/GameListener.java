@@ -9,10 +9,10 @@ public interface GameListener extends Listener {
     void modelChanged() throws RemoteException;
 
     /**
-     * This method is invoked by the {@link it.polimi.ingsw.model.Game} class when the game is finished.
+     * This method is invoked by the {@link it.polimi.ingsw.model.Game} class when the game is ended.
      * It should trigger the end of the game for the client.
      */
-    void gameFinished() throws RemoteException;
+    void gameEnded() throws RemoteException;
 
     /**
      * This method is invoked when a player joins the game.

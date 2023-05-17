@@ -180,7 +180,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     }
 
     @Override
-    public void gameFinished() throws RemoteException {
+    public void gameEnded() throws RemoteException {
         GameView gameView = new GameView(this.model, this.playerIndex);
 
         GameList.getInstance().removeGame(this.model);
@@ -188,7 +188,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         this.model.removeListener(this);
         this.model = null;
         try {
-            this.client.gameFinished(gameView);
+            this.client.gameEnded(gameView);
         } catch (RemoteException ignored) {}
     }
 

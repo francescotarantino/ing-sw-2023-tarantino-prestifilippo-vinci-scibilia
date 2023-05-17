@@ -132,7 +132,7 @@ public class ServerStub implements Server {
                 case SHOW_ERROR -> client.showError((String) ois.readObject());
                 case GAME_HAS_STARTED -> client.gameHasStarted();
                 case MODEL_CHANGED -> client.modelChanged((GameView) ois.readObject());
-                case GAME_FINISHED -> client.gameFinished((GameView) ois.readObject());
+                case GAME_ENDED -> client.gameEnded((GameView) ois.readObject());
                 case PING -> client.ping();
             }
         } catch (SocketException e) {

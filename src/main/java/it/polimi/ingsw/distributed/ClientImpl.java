@@ -119,8 +119,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
-    public void gameFinished(GameView gameView) throws RemoteException {
-        gameUI.gameFinished(gameView);
+    public void gameEnded(GameView gameView) throws RemoteException {
+        gameUI.gameEnded(gameView);
     }
 
     @Override
