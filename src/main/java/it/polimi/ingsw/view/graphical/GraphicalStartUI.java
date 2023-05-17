@@ -27,6 +27,7 @@ import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 public class GraphicalStartUI extends StartUI {
     private String username;
     private StartUIController controller;
+    private Stage stage;
 
     @Override
     public void run() {
@@ -39,7 +40,7 @@ public class GraphicalStartUI extends StartUI {
         } catch (InterruptedException ignored) {}
 
         Platform.runLater(() -> {
-            Stage stage = new Stage();
+            stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/startUI.fxml"));
 
             Parent root;
@@ -227,6 +228,16 @@ public class GraphicalStartUI extends StartUI {
 
         Platform.runLater(() -> {
             controller.waitingForPlayersList.setItems(list);
+        });
+    }
+
+    /**
+     * This method closes the startUI window.
+     */
+    @Override
+    public void close() {
+        Platform.runLater(() -> {
+            stage.close();
         });
     }
 }

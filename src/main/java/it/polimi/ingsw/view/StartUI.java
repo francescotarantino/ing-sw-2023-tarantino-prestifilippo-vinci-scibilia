@@ -15,6 +15,11 @@ abstract public class StartUI implements Runnable {
 
     public abstract void showPlayersList(List<String> o);
 
+    /**
+     * This method closes the UI.
+     */
+    public abstract void close();
+
     public synchronized void addListener(StartUIListener o){
         if(!lst.contains(o)){
             lst.add(o);

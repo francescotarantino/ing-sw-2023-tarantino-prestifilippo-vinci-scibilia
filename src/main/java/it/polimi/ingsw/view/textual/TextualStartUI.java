@@ -192,4 +192,12 @@ public class TextualStartUI extends StartUI {
 
         this.playersNameList = o;
     }
+
+    /**
+     * This method erases the screen.
+     */
+    @Override
+    public void close(){
+        System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+    }
 }
