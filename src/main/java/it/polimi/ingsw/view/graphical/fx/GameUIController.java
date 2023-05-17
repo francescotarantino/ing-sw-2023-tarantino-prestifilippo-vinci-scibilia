@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class GameUIController implements Initializable {
@@ -29,7 +28,7 @@ public class GameUIController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         BackgroundImage backgroundImage = new BackgroundImage(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/background.jpg"))),
+                ImageCache.getImage("/images/background.jpg"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -39,7 +38,7 @@ public class GameUIController implements Initializable {
 
         livingRoomBoardGridPane = new GridPane();
         BackgroundImage livingRoomBoardBackground = new BackgroundImage(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/livingRoomBoard.png"))),
+                ImageCache.getImage("/images/livingRoomBoard.png"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -68,7 +67,7 @@ public class GameUIController implements Initializable {
         bookshelfStackPane = new StackPane();
         bookshelfArea.getChildren().add(bookshelfStackPane);
 
-        ImageView bookshelfImage = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bookshelf.png"))));
+        ImageView bookshelfImage = new ImageView(ImageCache.getImage("/images/bookshelf.png"));
         bookshelfImage.fitWidthProperty().bind(mainGrid.widthProperty().multiply(0.3));
         bookshelfImage.setPreserveRatio(true);
 
@@ -100,7 +99,7 @@ public class GameUIController implements Initializable {
             for(int i = 0; i < Constants.livingRoomBoardX; i++){
                 Tile tile = matrix[i][j];
                 if(tile != null && !tile.isPlaceholder()){
-                    Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
+                    Image image = ImageCache.getImage("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png");
                     ImageView tileImage = new ImageView(image);
                     tileImage.fitWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2)).multiply(0.95));
                     tileImage.setPreserveRatio(true);
@@ -117,7 +116,7 @@ public class GameUIController implements Initializable {
             for(int i = Constants.bookshelfX - 1; i >= 0; i--){
                 Tile tile = matrix[i][j];
                 if(tile != null && !tile.isPlaceholder()){
-                    Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png")));
+                    Image image = ImageCache.getImage("/images/tiles/" + tile.getType().toString().toLowerCase() + "_" + (tile.getVariant() + 1) + ".png");
                     ImageView tileImage = new ImageView(image);
                     tileImage.fitHeightProperty().bind(mainGrid.widthProperty().multiply(0.3).divide(Constants.bookshelfX + 2).multiply(98).divide(113));
                     tileImage.setPreserveRatio(true);

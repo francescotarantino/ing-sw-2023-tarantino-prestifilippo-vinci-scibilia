@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.graphical;
 import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.view.StartUI;
 import it.polimi.ingsw.view.graphical.fx.FXApplication;
+import it.polimi.ingsw.view.graphical.fx.ImageCache;
 import it.polimi.ingsw.view.graphical.fx.StartUIController;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 import javafx.application.Application;
@@ -14,13 +15,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
@@ -31,10 +30,15 @@ public class GraphicalStartUI extends StartUI {
 
     @Override
     public void run() {
+        System.out.println("Loading all assets...");
+        ImageCache.loadImages();
+        System.out.println("Assets loaded!");
+
         new Thread(() -> {
             Application.launch(FXApplication.class);
             notifyListeners(lst, StartUIListener::exit);
         }).start();
+
         try {
             FXApplication.waitUntilLaunch();
         } catch (InterruptedException ignored) {}
@@ -58,7 +62,7 @@ public class GraphicalStartUI extends StartUI {
             stage.setMinWidth(800);
             stage.setMinHeight(600);
             stage.centerOnScreen();
-            stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/icon.png"))));
+            stage.getIcons().add(ImageCache.getImage("/images/icons/icon.png"));
 
             stage.setOnShown(e -> {
                 stage.toFront();

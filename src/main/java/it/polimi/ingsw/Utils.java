@@ -4,15 +4,18 @@ import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.textual.Charset;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -212,7 +215,7 @@ public class Utils {
 
     /**
      * This method can be used to iterate in a specific resource directory.
-     * In particular, given a resource path, it will iterate in all the files contained in that directory.
+     * In particular, given a resource path, it will iterate in all the files contained in that directory recursively.
      * For each file, the consumer will be called with the path of the file as parameter.
      * The consumer can access the file using the {@link Class#getResourceAsStream(String)} method.
      * <br>
@@ -224,7 +227,7 @@ public class Utils {
     public static void iterateInResourceDirectory(String resourcePath, Consumer<String> consumer) {
         try {
             // Get the code source
-            CodeSource src = Charset.class.getProtectionDomain().getCodeSource();
+            CodeSource src = Utils.class.getProtectionDomain().getCodeSource();
             if (src != null) {
                 URL jar = src.getLocation();
 
@@ -250,27 +253,18 @@ public class Utils {
                     zip.close();
                 } else {
                     // The game is not running from jar (e.g. it's running with IntelliJ)
-
-                    // Open the resource directory as a stream
-                    InputStream inputStream = Charset.class.getResourceAsStream("/" + resourcePath);
-                    assert inputStream != null;
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                    // For each file in the resource directory
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        // Call the consumer
-                        consumer.accept("/" + resourcePath + "/" + line);
+                    Path path = Paths.get(Objects.requireNonNull(Utils.class.getResource("/" + resourcePath)).toURI());
+                    try(Stream<Path> stream = Files.walk(path)){
+                        stream
+                                .filter(Files::isRegularFile)
+                                .forEach(file -> consumer.accept("/" + resourcePath + "/" + path.relativize(file)));
                     }
-
-                    inputStream.close();
-                    reader.close();
                 }
             } else {
                 // Something went wrong
                 throw new RuntimeException("Unable to read from filesystem");
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }

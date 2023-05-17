@@ -11,7 +11,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -21,7 +20,6 @@ import java.io.IOException;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class StartUIController implements Initializable {
@@ -62,7 +60,7 @@ public class StartUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         BackgroundImage backgroundImage = new BackgroundImage(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/background.jpg"))),
+                ImageCache.getImage("/images/background.jpg"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
