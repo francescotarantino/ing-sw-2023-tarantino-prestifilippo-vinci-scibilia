@@ -205,20 +205,24 @@ public class Constants {
     /**
      * This private attribute stores temporarily the list of all the Personal Goal Cards read from the JSON file.
      */
-    private static List<List<String>> personalGoalCards;
+    private static List<Map<String, ?>> personalGoalCards;
     /**
      * Returns a list of all the Personal Goal Cards from the JSON file.
      * The first time this method is called, it reads the JSON file and stores the result in a private variable.
-     * @return list of all the Personal Goal Cards
+     * @return a list of maps, each one representing a Personal Goal Card.
+     * The map, if the JSON file is valid, contains two keys: <br>
+     * - <i>matrix</i>: a list of String which represents the matrix of the card <br>
+     * - <i>image_path</i>: a String which represents the path of the image of the card <br>
+     * @see it.polimi.ingsw.model.goal_cards.PersonalGoalCard#PersonalGoalCard(int)
      */
-    public static List<List<String>> getPersonalGoalCards() {
+    public static List<Map<String, ?>> getPersonalGoalCards() {
         if (personalGoalCards != null) {
             return new ArrayList<>(personalGoalCards);
         }
 
         Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/PersonalGoalCards.json")));
 
-        Type type = new TypeToken<List<List<String>>>(){}.getType();
+        Type type = new TypeToken<List<Map<String, ?>>>(){}.getType();
         personalGoalCards = new Gson().fromJson(reader, type);
         return new ArrayList<>(personalGoalCards);
     }
