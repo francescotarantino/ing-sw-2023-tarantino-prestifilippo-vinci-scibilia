@@ -75,7 +75,9 @@
     <plugins>
       <!-- Assembly plugin -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>build-client</id>
@@ -89,10 +91,10 @@
                   <mainClass>it.polimi.ingsw.AppClient</mainClass>
                 </manifest>
               </archive>
-              <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
-              </descriptorRefs>
-              <finalName>myshelfie-client</finalName>
+              <descriptors>
+                <descriptor>assembly-client.xml</descriptor>
+              </descriptors>
+              <finalName>myshelfie</finalName>
             </configuration>
           </execution>
           <execution>
@@ -107,10 +109,10 @@
                   <mainClass>it.polimi.ingsw.AppServerImpl</mainClass>
                 </manifest>
               </archive>
-              <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
-              </descriptorRefs>
-              <finalName>myshelfie-server</finalName>
+              <descriptors>
+                <descriptor>assembly-server.xml</descriptor>
+              </descriptors>
+              <finalName>myshelfie</finalName>
             </configuration>
           </execution>
         </executions>
