@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 import static it.polimi.ingsw.Constants.*;
 import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
+import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 import static it.polimi.ingsw.view.textual.Charset.getUnicodeCharsets;
 
@@ -259,6 +260,8 @@ public class TextualGameUI extends GameUI {
      */
     private List<Point> selectLivingRoomTiles(Scanner input) throws InterruptedException {
         List<Point> points = new ArrayList<>();
+        boolean tilesCanBeTaken = false;
+        while(!tilesCanBeTaken){
             System.out.print("How many tiles do you want to pick? ");
             int howManyPick = TextualUtils.nextIntInterruptible(input, Constants.minPick, Constants.maxPick,
                     ("You can pick from " + Constants.minPick + " to " + Constants.maxPick + " tiles."));
@@ -281,6 +284,15 @@ public class TextualGameUI extends GameUI {
                 points.clear();
                 updateBoard(this.lastGameView);
             }
+            else{
+                tilesCanBeTaken = checkIfTilesCanBeTaken(lastGameView.getLivingRoomBoardMatrix(), points.toArray(new Point[0]));
+                if(!tilesCanBeTaken){
+                    points.clear();
+                    updateBoard(this.lastGameView);
+                    System.out.println("Invalid selection. Taken tiles must form a straight line and have at least one free side.");
+                }
+            }
+        }
         return points;
     }
 
@@ -303,18 +315,19 @@ public class TextualGameUI extends GameUI {
     private Integer selectColumn(Scanner input, List<Point> points) throws InterruptedException {
         System.out.println("In which column do you want to put the tiles?");
         int column = nextIntInterruptible(input, 0, bookshelfX, ("Column must be between 1 and " + bookshelfX + ".")) - 1;
-            if(column != -1 && checkIfColumnHasEnoughSpace(this.lastGameView.getBookshelfMatrix(), column, points.size())) {
-                System.out.print("You are placing " + points.size() + " tiles " + "in column " + (column + 1) + ":");
-                printPoints(points);
-                System.out.println();
-                System.out.println("Do you want to continue? Select \"N\" to pick again, \"Y\" to confirm: ");
-                if(!isN(input, "Select either \"N\" or \"Y\".")) {
-                    return column;
-                }
+        boolean columnHasEnoughSpace = checkIfColumnHasEnoughSpace(this.lastGameView.getBookshelfMatrix(), column, points.size());
+        if(column != -1 && columnHasEnoughSpace) {
+            System.out.print("You are placing " + points.size() + " tiles " + "in column " + (column + 1) + ":");
+            printPoints(points);
+            System.out.println();
+            System.out.println("Do you want to continue? Select \"N\" to pick again, \"Y\" to confirm: ");
+            if(!isN(input, "Select either \"N\" or \"Y\".")) {
+                return column;
             }
-            if (!checkIfColumnHasEnoughSpace(this.lastGameView.getBookshelfMatrix(), column, points.size())) {
-                System.out.println("Chosen column does not have enough space.");
-            }
+        }
+        if (!columnHasEnoughSpace) {
+            System.out.println("Chosen column does not have enough space.");
+        }
         return null;
     }
 
