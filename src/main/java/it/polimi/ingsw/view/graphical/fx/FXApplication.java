@@ -9,6 +9,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class is required by JavaFX to launch the GUI of the game.
+ * It also provides the #execute(Runnable) method to execute tasks such as calls to the server in separate threads.
+ */
 public class FXApplication extends Application {
     /**
      * This latch is used to wait until FX Application it is launched and ready.

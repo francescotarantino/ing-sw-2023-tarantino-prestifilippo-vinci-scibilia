@@ -26,6 +26,9 @@ import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 public class GraphicalStartUI extends StartUI {
     private String username;
     private StartUIController controller;
+    /**
+     * Main window of the StartUI.
+     */
     private Stage stage;
 
     @Override
@@ -129,6 +132,10 @@ public class GraphicalStartUI extends StartUI {
         });
     }
 
+    /**
+     * This method shows a dialog asking the user to insert his username.
+     * If the dialog is closed without inserting a username, it will be shown again.
+     */
     private void showUsernameDialog() {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("MyShelfie");
@@ -166,6 +173,11 @@ public class GraphicalStartUI extends StartUI {
         });
     }
 
+    /**
+     * This method hides the create game panel and shows the waiting for players panel.
+     * It also disables the game list view and the username field.
+     * It should be called when the user creates a game or joins an existing one.
+     */
     private void setWaitingForPlayersState() {
         Platform.runLater(() -> {
             controller.createGamePanel.setVisible(false);
@@ -175,6 +187,9 @@ public class GraphicalStartUI extends StartUI {
         });
     }
 
+    /**
+     * This method sets the default state of the StartUI.
+     */
     private void setDefaultState() {
         Platform.runLater(() -> {
             controller.waitingForPlayersPanel.setVisible(false);

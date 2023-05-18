@@ -15,6 +15,10 @@ import java.util.concurrent.CountDownLatch;
 public class GraphicalGameUI extends GameUI {
     private GameUIController controller;
 
+    /**
+     * This latch is used to wait until the UI is launched and ready.
+     * Otherwise, if the UI is not ready and the client receives an update from the server, JavaFX could crash.
+     */
     private final CountDownLatch latch = new CountDownLatch(1);
 
     @Override
