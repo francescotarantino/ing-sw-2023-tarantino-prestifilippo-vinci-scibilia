@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import javafx.scene.input.DataFormat;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -8,6 +10,7 @@ public class Point implements Serializable {
     private static final long serialVersionUID = 1L;
     private final int x;
     private final int y;
+    public static final DataFormat pointFormat = new DataFormat("it.polimi.ingsw.model.Point");
 
     public Point(int x, int y){
         this.x = x;

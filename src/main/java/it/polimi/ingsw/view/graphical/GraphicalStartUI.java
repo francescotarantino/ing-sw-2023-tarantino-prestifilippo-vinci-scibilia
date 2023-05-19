@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
@@ -30,17 +31,18 @@ public class GraphicalStartUI extends StartUI {
      * Main window of the StartUI.
      */
     private Stage stage;
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     @Override
     public void run() {
-        System.out.println("Loading all assets...");
-        ImageCache.loadImages();
-        System.out.println("Assets loaded!");
-
         new Thread(() -> {
             Application.launch(FXApplication.class);
             notifyListeners(lst, StartUIListener::exit);
         }).start();
+
+        System.out.println("Loading all assets...");
+        ImageCache.loadImages();
+        System.out.println("Assets loaded!");
 
         try {
             FXApplication.waitUntilLaunch();
@@ -68,6 +70,7 @@ public class GraphicalStartUI extends StartUI {
             stage.getIcons().add(ImageCache.getImage("/images/icons/icon.png"));
 
             stage.setOnShown(e -> {
+                latch.countDown();
                 stage.toFront();
                 FXApplication.execute(() -> {
                     notifyListeners(lst, StartUIListener::refreshStartUI);
@@ -233,6 +236,10 @@ public class GraphicalStartUI extends StartUI {
 
     @Override
     public void showPlayersList(List<String> o) {
+        try {
+            latch.await();
+        } catch (InterruptedException ignored) {}
+
         ObservableList<String> list = new ObservableListBase<>() {
             @Override
             public String get(int index) {

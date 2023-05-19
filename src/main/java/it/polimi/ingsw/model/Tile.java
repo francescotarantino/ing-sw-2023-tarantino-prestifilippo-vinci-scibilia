@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
+import javafx.scene.input.DataFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ public class Tile implements Serializable {
     private static final long serialVersionUID = 1L;
     private final Constants.TileType type;
     private final int variant;
+    public static final DataFormat tileFormat = new DataFormat("it.polimi.ingsw.model.Tile");
 
     /**
      * Creates a new tile with the specified type. The variant is set to 0 (useful for placeholders).
