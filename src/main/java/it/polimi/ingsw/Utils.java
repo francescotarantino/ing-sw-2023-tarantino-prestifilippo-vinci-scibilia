@@ -98,6 +98,9 @@ public class Utils {
      * @return true if the tiles can be taken, false otherwise
      */
     public static boolean checkIfTilesCanBeTaken(Tile[][] boardMatrix, Point... points) {
+        if(points.length < Constants.minPick || points.length > Constants.maxPick){
+            return false;
+        }
         // Check if the tiles are not null or placeholders
         for (Point point : points) {
             if (boardMatrix[point.getX()][point.getY()] == null || boardMatrix[point.getX()][point.getY()].isPlaceholder()) return false;
@@ -105,9 +108,12 @@ public class Utils {
 
         // Check if tiles are adjacent
         if(points.length != 1){
-            if(points[0].getX() == points[1].getX() && !checkContiguity(Point::getY, points)) return false;
+            if(Arrays.stream(points).mapToInt(Point::getX).allMatch(x -> x == points[0].getX()) && !checkContiguity(Point::getY, points)) return false;
 
-            if(points[0].getY() == points[1].getY() && !checkContiguity(Point::getX, points)) return false;
+            if(Arrays.stream(points).mapToInt(Point::getY).allMatch(y -> y == points[0].getY()) && !checkContiguity(Point::getX, points)) return false;
+
+            if(!Arrays.stream(points).mapToInt(Point::getX).allMatch(x -> x == points[0].getX()) &&
+               !Arrays.stream(points).mapToInt(Point::getY).allMatch(y -> y == points[0].getY())) return false;
         }
 
         // Check if tiles have at least one free side
