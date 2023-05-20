@@ -208,7 +208,8 @@ public class GraphicalGameUI extends GameUI {
         }
         Platform.runLater(() -> {
             Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle(result);
+            dialog.setTitle("Game result");
+            dialog.setHeaderText(result);
 
             TextArea textArea = new TextArea(scores);
             textArea.setPrefColumnCount(40);

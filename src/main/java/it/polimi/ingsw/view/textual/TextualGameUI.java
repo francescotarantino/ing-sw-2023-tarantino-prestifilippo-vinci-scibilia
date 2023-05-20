@@ -340,7 +340,7 @@ public class TextualGameUI extends GameUI {
             printLivingRoomRowNumbers(screenLine);
             for (int column = 0; column < livingRoomBoardX; column++) {
                 if (screenLine % 2 == 0) {
-                    printBorderRow(column, (screenLine/2), livingRoomBoardY);
+                    printBorderRow(column, (screenLine/2), livingRoomBoardY, livingRoomBoardColor);
                 } else {
                     printCenterRow(column, (screenLine/2), gameView.getLivingRoomBoardMatrix(), livingRoomBoardColor);
                 }
@@ -373,22 +373,22 @@ public class TextualGameUI extends GameUI {
             System.out.print(" " + (livingRoomBoardY - (screenLine/2))  + " ");
         }
     }
-    private void printBorderRow(int column, int row, int numOfRows) {
+    private void printBorderRow(int column, int row, int numOfRows, int[] color) {
         if(row == (numOfRows)) {
             if (column == 0) {
-                fgDisambiguationPrint(c.cornerTopLeft + c.fiveCeilings, false, livingRoomBoardColor);
+                fgDisambiguationPrint(c.cornerTopLeft + c.fiveCeilings, false, color);
             }
             else {
-                fgDisambiguationPrint(c.edgeTop + c.fiveCeilings, false, livingRoomBoardColor);
+                fgDisambiguationPrint(c.edgeTop + c.fiveCeilings, false, color);
             }
         }
 
         else {
             if (column == 0) {
-                fgDisambiguationPrint(c.edgeLeft + c.fiveCeilings, false, livingRoomBoardColor);
+                fgDisambiguationPrint(c.edgeLeft + c.fiveCeilings, false, color);
             }
             else {
-                fgDisambiguationPrint(c.cross + c.fiveCeilings, false, livingRoomBoardColor);
+                fgDisambiguationPrint(c.cross + c.fiveCeilings, false, color);
             }
         }
     }
@@ -399,7 +399,7 @@ public class TextualGameUI extends GameUI {
             System.out.print(ansi().bold().fg(matrix[column][row].getType().color())
                     .a(matrix[column][row].toString().charAt(0)).reset() + "  ");
         } else {
-            fgDisambiguationPrint(c.wall + "     ", false, livingRoomBoardColor);
+            fgDisambiguationPrint(c.wall + "     ", false, color);
         }
     }
     private void printLastCharacter(int screenLine, int[] color, boolean endLine, int numOfColumns) {
@@ -429,7 +429,7 @@ public class TextualGameUI extends GameUI {
             System.out.print("             ");
             for (int column = 0; column < bookshelfX; column++) {
                 if (screenLine % 2 == 0) {
-                    printBorderRow(column, (screenLine/2), bookshelfY);
+                    printBorderRow(column, (screenLine/2), bookshelfY, bookshelfColor);
                 } else {
                     printCenterRow(column, (screenLine/2), gameView.getBookshelfMatrix(), bookshelfColor);
                 }
@@ -442,7 +442,7 @@ public class TextualGameUI extends GameUI {
 
             for (int column = 0; column < bookshelfX; column++) {
                 if (screenLine % 2 == 0) {
-                    printBorderRow(column, screenLine/2, bookshelfY);
+                    printBorderRow(column, screenLine/2, bookshelfY, personalGoalCardColor);
                 }
                 else {
                     printPCGCenterRow(column, screenLine/2, gameView.getBookshelfMatrix(), gameView.getPersonalGoalCardMatrix());
