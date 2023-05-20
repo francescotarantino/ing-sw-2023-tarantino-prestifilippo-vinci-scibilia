@@ -314,8 +314,10 @@ public class TextualGameUI extends GameUI {
     private Integer selectColumn(Scanner input, List<Point> points) throws InterruptedException {
         System.out.println("In which column do you want to put the " + (points.size() == 1 ? "tile" : "tiles") + "?");
         int column = nextIntInterruptible(input, 0, bookshelfX, ("Column must be between 1 and " + bookshelfX + ".")) - 1;
+        if(column == -1)
+            return null;
         boolean columnHasEnoughSpace = checkIfColumnHasEnoughSpace(this.lastGameView.getBookshelfMatrix(), column, points.size());
-        if(column != -1 && columnHasEnoughSpace) {
+        if(columnHasEnoughSpace) {
             System.out.print("You are placing " + points.size() + (points.size() == 1 ? " tile" : " tiles")+ " in column " + (column + 1) + ":");
             printPoints(points);
             System.out.println(".");
