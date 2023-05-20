@@ -5,6 +5,8 @@ import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.graphical.GraphicalGameUI;
+import it.polimi.ingsw.viewmodel.CGCData;
+import it.polimi.ingsw.viewmodel.PlayerInfo;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
@@ -14,10 +16,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -26,6 +25,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
@@ -43,6 +43,10 @@ public class GameUIController implements Initializable {
     public Button confirmMoveButton;
     @FXML
     public Button resetMoveButton;
+    @FXML
+    public VBox cardsArea;
+    @FXML
+    public ListView<PlayerInfo> playersList;
 
     public GridPane livingRoomBoardGridPane;
     public GridPane bookshelfGridPane;
@@ -64,7 +68,7 @@ public class GameUIController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         livingRoomBoardSize = Bindings.min(mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2));
-        bookshelfWidth = mainGrid.widthProperty().multiply(0.3);
+        bookshelfWidth = Bindings.min(mainGrid.widthProperty().multiply(0.3), mainGrid.heightProperty().multiply(0.8));
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 ImageCache.getImage("/images/background.jpg"),
@@ -133,6 +137,10 @@ public class GameUIController implements Initializable {
 
         confirmMoveButton.setOnAction(e -> this.confirmMove());
         resetMoveButton.setOnAction(e -> this.resetMove());
+
+        GridPane.setRowSpan(cardsArea, 2);
+
+        playersList.maxWidthProperty().bind(bookshelfWidth.multiply(0.85));
     }
 
     public void printLivingRoomBoard(Tile[][] matrix, GraphicalGameUI.State state) {
@@ -199,6 +207,69 @@ public class GameUIController implements Initializable {
         }
     }
 
+    public void clearCardsArea(){
+        cardsArea.getChildren().clear();
+    }
+
+    public void printCards(String pgcImagePath, List<CGCData> cgcData){
+        for(CGCData data : cgcData){
+            GridPane card = new GridPane();
+            BackgroundImage cardBackground = new BackgroundImage(
+                    ImageCache.getImage(data.image_path()),
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
+            );
+            card.setBackground(new Background(cardBackground));
+            card.prefWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.15), mainGrid.widthProperty().multiply(0.15 * 0.66).multiply(1.54)));
+            card.prefHeightProperty().bind(mainGrid.widthProperty().multiply(0.15 * 0.66));
+            Tooltip tooltip = new Tooltip(data.description());
+            tooltip.setShowDelay(Duration.millis(1));
+            Tooltip.install(card, tooltip);
+            if(data.tokens().length > 0) {
+                ColumnConstraints cc = new ColumnConstraints();
+                cc.setPercentWidth(40);
+                cc.setHalignment(HPos.CENTER);
+                card.getColumnConstraints().add(cc);
+                cc = new ColumnConstraints();
+                cc.setPercentWidth(60);
+                cc.setHalignment(HPos.CENTER);
+                card.getColumnConstraints().add(cc);
+                RowConstraints rc = new RowConstraints();
+                rc.setPercentHeight(91);
+                rc.setValignment(VPos.CENTER);
+                card.getRowConstraints().add(rc);
+                ImageView upperToken = new ImageView(ImageCache.getImage(
+                        "/images/scoringTokens/scoring_" + Arrays.stream(data.tokens()).max().getAsInt() + ".jpg"
+                ));
+                upperToken.fitWidthProperty().bind(Bindings.min(card.widthProperty().multiply(0.3), card.heightProperty().multiply(0.6)));
+                upperToken.setPreserveRatio(true);
+                upperToken.setRotate(-11);
+                card.add(upperToken, 1, 0);
+            }
+            cardsArea.getChildren().add(card);
+        }
+
+        ImageView personalGoalCard = new ImageView(ImageCache.getImage(pgcImagePath));
+        personalGoalCard.fitWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.15), mainGrid.heightProperty().multiply(0.5)));
+        personalGoalCard.setPreserveRatio(true);
+        cardsArea.getChildren().add(personalGoalCard);
+    }
+
+    public void printTokens(List<Integer> tokens){
+        FlowPane flowPane = new FlowPane();
+        flowPane.setAlignment(Pos.CENTER);
+        flowPane.setHgap(5);
+        cardsArea.getChildren().add(flowPane);
+        for(int token : tokens) {
+            ImageView tokenImage = new ImageView(ImageCache.getImage("/images/scoringTokens/scoring_" + token + ".jpg"));
+            tokenImage.setPreserveRatio(true);
+            tokenImage.fitWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.03), mainGrid.heightProperty().multiply(0.07)));
+            flowPane.getChildren().add(tokenImage);
+        }
+    }
+
     private void createGreyTiles(Tile[][] matrix) {
         greyTiles.clear();
         for(int column = 0; column < Constants.bookshelfX; column++){
@@ -206,6 +277,7 @@ public class GameUIController implements Initializable {
                 if(matrix[column][row] == null){
                     Image image = ImageCache.getImage("/images/tiles/grey.gif");
                     ImageView greyTile = new ImageView(image);
+                    greyTile.setOpacity(0.7);
                     greyTile.fitHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));
                     greyTile.setPreserveRatio(true);
                     setTileOnDragDropped(new Point(column, row), greyTile);
@@ -234,7 +306,6 @@ public class GameUIController implements Initializable {
                 lvbTileImageViews[pf.getX()][pf.getY()].setOpacity(0.3);
                 lvbTileImageViews[pf.getX()][pf.getY()].setDisable(true);
             }
-            //TODO cambia l'opacità di tutto
         });
     }
 
@@ -261,6 +332,7 @@ public class GameUIController implements Initializable {
 
             if(bookshelf.getY() < Constants.bookshelfY - 1 && points.length < Constants.maxPick){
                 ImageView greyTile = new ImageView(ImageCache.getImage("/images/tiles/grey.gif"));
+                greyTile.setOpacity(0.7);
                 greyTile.fitHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));
                 greyTile.setPreserveRatio(true);
                 setTileOnDragDropped(new Point(bookshelf.getX(), bookshelf.getY() + 1), greyTile);
@@ -327,8 +399,8 @@ public class GameUIController implements Initializable {
         this.resetMoveButton.setDisable(false);
     }
 
-    public void setNotMyTurn() {
-        turnText.setText("NOT YOUR TURN!");
+    public void setNotMyTurn(String currentPlayer){
+        turnText.setText("PLAYER " + currentPlayer + "'s TURN!");
         turnText.setFill(Color.color(0.7,0,0));
         this.confirmMoveButton.setDisable(true);
         this.resetMoveButton.setDisable(true);

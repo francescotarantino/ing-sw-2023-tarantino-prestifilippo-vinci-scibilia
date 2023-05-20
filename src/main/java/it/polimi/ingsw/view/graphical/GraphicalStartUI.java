@@ -40,13 +40,13 @@ public class GraphicalStartUI extends StartUI {
             notifyListeners(lst, StartUIListener::exit);
         }).start();
 
-        System.out.println("Loading all assets...");
-        ImageCache.loadImages();
-        System.out.println("Assets loaded!");
-
         try {
             FXApplication.waitUntilLaunch();
         } catch (InterruptedException ignored) {}
+
+        System.out.println("Loading all assets...");
+        ImageCache.loadImages();
+        System.out.println("Assets loaded!");
 
         Platform.runLater(() -> {
             stage = new Stage();
@@ -177,7 +177,7 @@ public class GraphicalStartUI extends StartUI {
     }
 
     /**
-     * This method hides the create game panel and shows the waiting for players panel.
+     * This method hides the "create game" panel and shows the waiting for players panel.
      * It also disables the game list view and the username field.
      * It should be called when the user creates a game or joins an existing one.
      */
@@ -204,6 +204,10 @@ public class GraphicalStartUI extends StartUI {
 
     @Override
     public void showGamesList(List<GameDetailsView> o) {
+        try {
+            latch.await();
+        } catch (InterruptedException ignored) {}
+
         ObservableList<GameDetailsView> list = new ObservableListBase<>() {
             @Override
             public GameDetailsView get(int index) {
