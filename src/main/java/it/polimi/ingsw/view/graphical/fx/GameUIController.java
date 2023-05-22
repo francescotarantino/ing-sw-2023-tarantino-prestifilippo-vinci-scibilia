@@ -5,7 +5,7 @@ import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.graphical.GraphicalGameUI;
-import it.polimi.ingsw.view.graphical.fx.dialogs.MoveErrorDialog;
+import it.polimi.ingsw.view.graphical.fx.dialogs.MoveErrorAlert;
 import it.polimi.ingsw.viewmodel.CGCData;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import javafx.application.Platform;
@@ -349,7 +349,7 @@ public class GameUIController implements Initializable {
 
     private void moveErrorMessage(){
         Platform.runLater(() -> {
-            MoveErrorDialog dialog = new MoveErrorDialog();
+            MoveErrorAlert dialog = new MoveErrorAlert();
             dialog.showAndWait();
         });
     }

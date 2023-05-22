@@ -5,12 +5,12 @@ import it.polimi.ingsw.view.StartUI;
 import it.polimi.ingsw.view.graphical.fx.FXApplication;
 import it.polimi.ingsw.view.graphical.fx.ImageCache;
 import it.polimi.ingsw.view.graphical.fx.StartUIController;
+import it.polimi.ingsw.view.graphical.fx.dialogs.ErrorAlert;
 import it.polimi.ingsw.view.graphical.fx.dialogs.UsernameDialog;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -179,30 +179,15 @@ public class GraphicalStartUI extends StartUI {
             latch.await();
         } catch (InterruptedException ignored) {}
 
-        ObservableList<GameDetailsView> list = new ObservableListBase<>() {
-            @Override
-            public GameDetailsView get(int index) {
-                return o.get(index);
-            }
-
-            @Override
-            public int size() {
-                return o.size();
-            }
-        };
-
         Platform.runLater(() -> {
-            controller.gameListView.setItems(list);
+            controller.gameListView.setItems(FXCollections.observableList(o));
         });
     }
 
     @Override
     public void showError(String err) {
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error occurred.");
-            alert.setContentText(err);
+            ErrorAlert alert = new ErrorAlert(err);
             alert.show();
         });
 
@@ -215,20 +200,8 @@ public class GraphicalStartUI extends StartUI {
             latch.await();
         } catch (InterruptedException ignored) {}
 
-        ObservableList<String> list = new ObservableListBase<>() {
-            @Override
-            public String get(int index) {
-                return o.get(index);
-            }
-
-            @Override
-            public int size() {
-                return o.size();
-            }
-        };
-
         Platform.runLater(() -> {
-            controller.waitingForPlayersList.setItems(list);
+            controller.waitingForPlayersList.setItems(FXCollections.observableList(o));
         });
     }
 

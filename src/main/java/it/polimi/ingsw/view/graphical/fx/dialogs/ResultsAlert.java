@@ -4,8 +4,8 @@ import it.polimi.ingsw.viewmodel.GameView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-public class ResultsDialog extends Alert {
-    public ResultsDialog(GameView gameView) {
+public class ResultsAlert extends Alert {
+    public ResultsAlert(GameView gameView) {
         super(AlertType.NONE);
 
         setTitle("Game result");

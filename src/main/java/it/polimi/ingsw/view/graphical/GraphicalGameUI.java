@@ -5,12 +5,11 @@ import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.view.graphical.fx.GameUIController;
 import it.polimi.ingsw.view.graphical.fx.ImageCache;
 import it.polimi.ingsw.view.graphical.fx.dialogs.PauseDialog;
-import it.polimi.ingsw.view.graphical.fx.dialogs.ResultsDialog;
+import it.polimi.ingsw.view.graphical.fx.dialogs.ResultsAlert;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -150,19 +149,7 @@ public class GraphicalGameUI extends GameUI {
         Platform.runLater(() -> {
             controller.clearCardsArea();
 
-            ObservableList<PlayerInfo> list = new ObservableListBase<>() {
-                @Override
-                public PlayerInfo get(int index) {
-                    return gameView.getPlayerInfo().get(index);
-                }
-
-                @Override
-                public int size() {
-                    return gameView.getPlayerInfo().size();
-                }
-            };
-            controller.playersList.setItems(list);
-
+            controller.playersList.setItems(FXCollections.observableList(gameView.getPlayerInfo()));
 
             if(gameView.getFinalPlayerUsername() != null){
                 BackgroundImage livingRoomBoardBackground = new BackgroundImage(
@@ -193,7 +180,7 @@ public class GraphicalGameUI extends GameUI {
         Platform.runLater(() -> {
             pauseDialog.closeIfShown();
 
-            ResultsDialog dialog = new ResultsDialog(gameView);
+            ResultsAlert dialog = new ResultsAlert(gameView);
             dialog.showAndWait().ifPresent(x -> stage.close());
         });
     }
