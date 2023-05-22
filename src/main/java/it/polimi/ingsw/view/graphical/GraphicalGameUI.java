@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.graphical;
 
 import it.polimi.ingsw.model.Point;
+import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.view.graphical.fx.FXApplication;
 import it.polimi.ingsw.view.graphical.fx.GameUIController;
@@ -15,10 +16,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
@@ -66,6 +70,7 @@ public class GraphicalGameUI extends GameUI {
             stage.setResizable(true);
             stage.setMinWidth(800);
             stage.setMinHeight(450);
+            stage.setMaximized(true);
             stage.getIcons().add(ImageCache.getImage("/images/icons/icon.png"));
 
             stage.setOnShown(e -> {
@@ -99,6 +104,21 @@ public class GraphicalGameUI extends GameUI {
                         if(lastGameView.getFinalPlayerUsername() != null && lastGameView.getFinalPlayerUsername().equals(playerInfo.username()))
                             s.append(" | (LAST)");
                         setText(s.toString());
+
+                        StringBuilder t = new StringBuilder();
+                        t.append("Last move: ");
+                        if(playerInfo.lastMovePoints() != null){
+                            t.append("took ");
+                            t.append(String.join(", ", Arrays.stream(playerInfo.lastMoveTiles()).map(Tile::toString).toArray(String[]::new)));
+                            t.append(" from ");
+                            t.append(String.join(", ", Arrays.stream(playerInfo.lastMovePoints()).map(Point::toString).toArray(String[]::new)));
+                            t.append(".");
+                        } else {
+                            t.append("hasn't played yet!");
+                        }
+                        Tooltip lastmoveTooltip = new Tooltip(t.toString());
+                        lastmoveTooltip.setShowDelay(Duration.millis(100));
+                        setTooltip(lastmoveTooltip);
                     }
                 }
             });
