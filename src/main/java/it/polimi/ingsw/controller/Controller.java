@@ -43,6 +43,8 @@ public class Controller {
      * @param points is an array of points from which the player wants to take the tiles
      */
     public void performTurn(int column, Point...points){
+        if(this.game.isPaused())
+            throw new IllegalStateException("Game is paused.");
         if(column < 0 || column > Constants.bookshelfX)
             throw new IndexOutOfBoundsException("Invalid column.");
         if (points.length > Constants.maxPick || points.length == 0)

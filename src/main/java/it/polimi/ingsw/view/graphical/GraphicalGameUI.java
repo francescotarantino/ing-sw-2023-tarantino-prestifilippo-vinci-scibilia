@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.graphical;
 
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.view.GameUI;
+import it.polimi.ingsw.view.graphical.fx.FXApplication;
 import it.polimi.ingsw.view.graphical.fx.GameUIController;
 import it.polimi.ingsw.view.graphical.fx.ImageCache;
 import it.polimi.ingsw.view.graphical.fx.dialogs.PauseDialog;
@@ -171,7 +172,7 @@ public class GraphicalGameUI extends GameUI {
     }
 
     public void turnExecuted(Point[] points, int column){
-        notifyListeners(lst, x -> x.performTurn(column, points));
+        FXApplication.execute(() -> notifyListeners(lst, x -> x.performTurn(column, points)));
     }
 
     @Override

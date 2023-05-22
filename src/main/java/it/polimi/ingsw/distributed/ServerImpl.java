@@ -24,7 +24,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
      */
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     protected Game model;
     protected Controller controller;
