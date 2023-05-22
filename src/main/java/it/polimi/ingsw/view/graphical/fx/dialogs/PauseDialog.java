@@ -15,8 +15,6 @@ public class PauseDialog extends Dialog<Void> {
     public void showIfNotShown() {
         if (!isShowing()){
             show();
-
-            getDialogPane().requestFocus();
         }
     }
 

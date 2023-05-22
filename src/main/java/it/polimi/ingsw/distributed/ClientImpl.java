@@ -18,11 +18,23 @@ import it.polimi.ingsw.viewmodel.GameDetailsView;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ClientImpl extends UnicastRemoteObject implements Client, Runnable, StartUIListener, GameUIListener {
     private final Server server;
     private final StartUI startUI;
     private final GameUI gameUI;
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    /**
+     * This variable is used to check if the server is still alive.
+     * It is set true when the server sends a ping to the client.
+     * Every {@link Constants#pingpongTimeout} * 3 milliseconds, the client checks if this variable is still true.
+     * If it is not, the connection is considered lost and the client should be closed.
+     * @see #run()
+     */
+    private boolean pongReceived;
 
     public ClientImpl(Server server, Constants.UIType uiType) throws RemoteException {
         this.server = server;
@@ -54,6 +66,17 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void run() {
+        scheduler.scheduleWithFixedDelay(() -> {
+            if(!pongReceived){
+                try {
+                    System.err.println("Connection lost, exiting...");
+                    exit();
+                } catch (RemoteException ignored) {}
+            }
+
+            pongReceived = false;
+        }, Constants.pingpongTimeout, Constants.pingpongTimeout * 3, TimeUnit.MILLISECONDS);
+
         System.out.println("Starting StartUI...");
         startUI.run();
     }
@@ -139,6 +162,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void ping() throws RemoteException {
+        pongReceived = true;
         this.server.pong();
     }
 }
