@@ -5,6 +5,7 @@ import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.graphical.GraphicalGameUI;
+import it.polimi.ingsw.view.graphical.fx.dialogs.MoveErrorDialog;
 import it.polimi.ingsw.viewmodel.CGCData;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import javafx.application.Platform;
@@ -348,17 +349,7 @@ public class GameUIController implements Initializable {
 
     private void moveErrorMessage(){
         Platform.runLater(() -> {
-            Dialog<Void> dialog = new Dialog<>();
-            dialog.setTitle("Error");
-
-            TextArea textArea = new TextArea("You can't take that tile!\n- Taken tiles must form a straight line and have at least one free side.");
-            textArea.setPrefColumnCount(40);
-            textArea.setPrefRowCount(3);
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-            dialog.getDialogPane().setContent(textArea);
-
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            MoveErrorDialog dialog = new MoveErrorDialog();
             dialog.showAndWait();
         });
     }

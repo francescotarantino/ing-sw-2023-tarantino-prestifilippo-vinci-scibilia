@@ -5,17 +5,16 @@ import it.polimi.ingsw.view.StartUI;
 import it.polimi.ingsw.view.graphical.fx.FXApplication;
 import it.polimi.ingsw.view.graphical.fx.ImageCache;
 import it.polimi.ingsw.view.graphical.fx.StartUIController;
+import it.polimi.ingsw.view.graphical.fx.dialogs.UsernameDialog;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -140,40 +139,12 @@ public class GraphicalStartUI extends StartUI {
      * If the dialog is closed without inserting a username, it will be shown again.
      */
     private void showUsernameDialog() {
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("MyShelfie");
-        dialog.setHeaderText("Insert your username: ");
-
-        ButtonType confirmButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType);
-
-        HBox pane = new HBox();
-
-        TextField username = new TextField();
-        pane.getChildren().add(username);
-
-        Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
-        confirmButton.setDisable(true);
-
-        username.textProperty().addListener((observable, oldValue, newValue) -> {
-            confirmButton.setDisable(newValue.trim().isEmpty());
-        });
-
-        dialog.getDialogPane().setContent(pane);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == confirmButtonType) {
-                return username.getText();
-            }
-            return null;
-        });
+        UsernameDialog dialog = new UsernameDialog();
 
         dialog.showAndWait().ifPresentOrElse(x -> {
             this.controller.usernameField.textProperty().setValue(x);
             this.username = x;
-        }, () -> {
-            Platform.runLater(this::showUsernameDialog);
-        });
+        }, () -> notifyListeners(lst, StartUIListener::exit));
     }
 
     /**

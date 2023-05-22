@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.view.graphical.fx.GameUIController;
 import it.polimi.ingsw.view.graphical.fx.ImageCache;
+import it.polimi.ingsw.view.graphical.fx.dialogs.PauseDialog;
+import it.polimi.ingsw.view.graphical.fx.dialogs.ResultsDialog;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 import javafx.application.Platform;
@@ -12,10 +14,7 @@ import javafx.collections.ObservableListBase;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -42,6 +41,7 @@ public class GraphicalGameUI extends GameUI {
     private final Object lock = new Object();
 
     private Stage stage;
+    private PauseDialog pauseDialog;
 
     private GameView lastGameView;
 
@@ -77,6 +77,8 @@ public class GraphicalGameUI extends GameUI {
 
             stage.show();
 
+            pauseDialog = new PauseDialog();
+
             controller.playersList.setCellFactory(lv -> new ListCell<>(){
                 @Override
                 protected void updateItem(PlayerInfo playerInfo, boolean b) {
@@ -106,23 +108,23 @@ public class GraphicalGameUI extends GameUI {
             synchronized (lock) {
                 try {
                     lock.wait();
-                } catch (InterruptedException e) {
-                    System.out.println("Error while waiting for turn.");
+                } catch (InterruptedException ignored) {
+                    break;
                 }
             }
 
             switch (getState()){
-                case MY_TURN -> {
-                    this.executeTurn();
-                }
-                case NOT_MY_TURN -> {
-                    Platform.runLater(() -> {
-                        controller.setNotMyTurn(lastGameView.getCurrentPlayerUsername());
-                    });
-                }
-                case PAUSED -> {
-                    //TODO Disables every component
-                }
+                case MY_TURN -> Platform.runLater(() -> {
+                    pauseDialog.closeIfShown();
+
+                    this.controller.setMyTurn(this);
+                });
+                case NOT_MY_TURN -> Platform.runLater(() -> {
+                    pauseDialog.closeIfShown();
+
+                    controller.setNotMyTurn(lastGameView.getCurrentPlayerUsername());
+                });
+                case PAUSED -> Platform.runLater(pauseDialog::showIfNotShown);
             }
         }
     }
@@ -146,7 +148,6 @@ public class GraphicalGameUI extends GameUI {
         }
 
         Platform.runLater(() -> {
-            // TODO show other things
             controller.clearCardsArea();
 
             ObservableList<PlayerInfo> list = new ObservableListBase<>() {
@@ -182,12 +183,6 @@ public class GraphicalGameUI extends GameUI {
         });
     }
 
-    private void executeTurn(){
-        Platform.runLater(() -> {
-            this.controller.setMyTurn(this);
-        });
-    }
-
     public void turnExecuted(Point[] points, int column){
         notifyListeners(lst, x -> x.performTurn(column, points));
     }
@@ -195,33 +190,11 @@ public class GraphicalGameUI extends GameUI {
     @Override
     public void gameEnded(GameView gameView) {
         update(gameView);
-        String result, scores;
-        if (!gameView.isWalkover()) {
-            result = "Game has ended. Final points:";
-            StringBuilder s = new StringBuilder();
-            gameView.getPlayerInfo().forEach(x -> s.append(x).append("\n"));
-            s.append("The winner is: ").append(gameView.getPlayerInfo().get(0).username()).append("!");
-            scores = s.toString();
-        } else {
-            result = "Game has ended. You were the only player left in the game. You win!";
-            scores = "";
-        }
         Platform.runLater(() -> {
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Game result");
-            dialog.setHeaderText(result);
+            pauseDialog.closeIfShown();
 
-            TextArea textArea = new TextArea(scores);
-            textArea.setPrefColumnCount(40);
-            textArea.setPrefRowCount(6);
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-            dialog.getDialogPane().setContent(textArea);
-
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            dialog.showAndWait().ifPresent(x -> {
-                stage.close();
-            });
+            ResultsDialog dialog = new ResultsDialog(gameView);
+            dialog.showAndWait().ifPresent(x -> stage.close());
         });
     }
 
