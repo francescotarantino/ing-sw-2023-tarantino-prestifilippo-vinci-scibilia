@@ -66,6 +66,9 @@ public class StartUIController implements Initializable {
      */
     public ToggleGroup numberOfCGCs = new ToggleGroup();
 
+    /**
+     * Initializes the main components of the Graphical StartUI.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Set the background image

@@ -27,7 +27,14 @@ import java.util.concurrent.*;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
+/**
+ * Main class for the graphical version of the GameUI.
+ */
+
 public class GraphicalGameUI extends GameUI {
+    /**
+     * JavaFX FXML controller associated with the Graphical UI.
+     */
     private GameUIController controller;
 
     /**
@@ -36,19 +43,33 @@ public class GraphicalGameUI extends GameUI {
      */
     private final CountDownLatch latch = new CountDownLatch(1);
 
+    /** Enumeration representing the state of the game from the perspective of the player. */
     public enum State {
         MY_TURN,
         NOT_MY_TURN,
         PAUSED
     }
+
+    /** Current state of the player associated to this GameUI. */
     private State state = State.NOT_MY_TURN;
+
+    /** Lock used to synchronize methods inside Graphical GameUI. */
     private final Object lock = new Object();
 
+    /** The main JavaFX window. */
     private Stage stage;
+
+    /** Dialog shown when the game is paused */
     private PauseDialog pauseDialog;
 
+    /** The latest GameView received from the server.
+     * Contains data about every aspect of the current Game (board state, player state...).
+     * */
     private GameView lastGameView;
 
+    /**
+     * Runs the Graphical GameUI. Sets all basic properties for the main window, then enters a loop to wait for and execute player's turns.
+     * */
     @Override
     public void run() {
         Platform.runLater(() -> {
@@ -155,6 +176,10 @@ public class GraphicalGameUI extends GameUI {
         }
     }
 
+    /**
+     * Updates the current state of the board.
+     * @param gameView Information about the current state of the game, received from the server.
+     */
     @Override
     public void update(GameView gameView) {
         try {
@@ -197,10 +222,19 @@ public class GraphicalGameUI extends GameUI {
         });
     }
 
+    /**
+     * Called by the JavaFX controller to send back the move chosen by the player.
+     * @param points An array on Point representing the coordinates of the tiles chosen by the player.
+     * @param column An integer representing the Bookshelf column in which the player intends to put the chosen tiles.
+     */
     public void turnExecuted(Point[] points, int column){
         FXApplication.execute(() -> notifyListeners(lst, x -> x.performTurn(column, points)));
     }
 
+    /**
+     * Called by the client implementation when the game ends, shows scores for all players in a dialog.
+     * @param gameView Information about the current state of the game, received from the server.
+     */
     @Override
     public void gameEnded(GameView gameView) {
         update(gameView);

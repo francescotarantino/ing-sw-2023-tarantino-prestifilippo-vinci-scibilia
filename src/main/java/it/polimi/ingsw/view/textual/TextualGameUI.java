@@ -23,18 +23,30 @@ import static it.polimi.ingsw.view.textual.Charset.getUnicodeCharsets;
 import static it.polimi.ingsw.view.textual.TextualUtils.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * Main class for the textual version of the GameUI
+ */
+
 public class TextualGameUI extends GameUI {
-    /** Enum representing the state of the game from the perspective of the player*/
+    /** Enumeration representing the state of the game from the perspective of the player*/
     private enum State {
         MY_TURN,
         NOT_MY_TURN,
         ENDED
     }
+
+    /** Current state of the player associated to this GameUI. */
     private State state = State.NOT_MY_TURN;
+
+    /** Lock used to synchronize methods inside Textual GameUI. */
     private final Object lock = new Object();
 
+    /** A thread dedicated to accepting inputs from the player. */
     private Thread inputThread;
 
+    /** The latest GameView received from the server.
+     * Contains data about every aspect of the current Game (board state, player state...).
+     * */
     private GameView lastGameView;
 
     /** Integers representing living room board color */
@@ -52,6 +64,9 @@ public class TextualGameUI extends GameUI {
     /** Boolean used to determine how to print characters */
     private boolean isUnicodeCompatible = false;
 
+    /**
+     * TextualGameUI constructor method. Decides whether to activate certain functionalities based on the OS the game is currently running on.
+     */
     public TextualGameUI() {
         if(System.getProperty("os.name").contains("Mac OS X") || System.getProperty("os.name").contains("Linux")){
             this.isUnicodeCompatible = true;
@@ -61,6 +76,7 @@ public class TextualGameUI extends GameUI {
             this.c = getUnicodeCharsets().get(choice - 1);
         }
     }
+
     /**
      * Used in {@link #showUnicodeCharsets(List)}} to print the first line of available charsets.
      * @param charsets list of available charsets
@@ -105,6 +121,7 @@ public class TextualGameUI extends GameUI {
         }
         System.out.println();
     }
+
     /**
      * This method is used to print the available unicode charsets.
      * @param charsets the list of charsets
@@ -138,6 +155,10 @@ public class TextualGameUI extends GameUI {
         }
     }
 
+    /**
+     * Runs the Textual GameUI. Enables the usage of AnsiConsole for custom textual output.
+     * Enters a loop to wait for and execute player's turns.
+     * */
     @Override
     public void run() {
         AnsiConsole.systemInstall();
@@ -197,6 +218,10 @@ public class TextualGameUI extends GameUI {
         }
     }
 
+    /**
+     * Called by the client implementation when the game ends, shows scores for all players in a dialog.
+     * @param gameView Information about the current state of the game, received from the server.
+     */
     @Override
     public void gameEnded(GameView gameView) {
         this.lastGameView = gameView;
@@ -232,7 +257,7 @@ public class TextualGameUI extends GameUI {
     }
 
     /**
-     * This method performs the turn of the player. It asks the user to select the tiles to place and the column to place them in.
+     * This method performs the player's turn. It asks the user to select the tiles to place and the column to place them in.
      */
     private void executeTurn() throws InterruptedException {
         Scanner input = new Scanner(System.in);
@@ -334,12 +359,13 @@ public class TextualGameUI extends GameUI {
 
     /**
      * This method prints the actual living room board and the player's bookshelf.
+     * @param gameView Information about the current state of the game.
      */
     private void updateBoard(GameView gameView) {
         clearScreen(gameView);
         printLivingRoomColumnNumbers();
         for (int screenLine = (2 * (livingRoomBoardY)); screenLine >= 1; screenLine--) {
-            printLivingRoomRowNumbers(screenLine);
+            printLivingRoomRowNumber(screenLine);
             for (int column = 0; column < livingRoomBoardX; column++) {
                 if (screenLine % 2 == 0) {
                     printBorderRow(column, (screenLine/2), livingRoomBoardY, livingRoomBoardColor);
@@ -353,7 +379,9 @@ public class TextualGameUI extends GameUI {
         printLastRows();
     }
 
-
+    /** Clears the screen and reprints the game state.
+     * @param gameView Information about the current state of the game.
+     * */
     private void clearScreen(GameView gameView) {
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
         this.showPlayers(gameView);
@@ -361,13 +389,22 @@ public class TextualGameUI extends GameUI {
         System.out.println(ansi().fg(Ansi.Color.BLUE).a("Current Living Room Board:").reset());
         System.out.print("   ");
     }
+
+    /**
+     * Prints a row of integers representing column indexes.
+     * */
     private void printLivingRoomColumnNumbers() {
         for(int i = 0; i < livingRoomBoardX; i++){
             System.out.print("   " + (i + 1) + "  ");
         }
         System.out.println();
     }
-    private void printLivingRoomRowNumbers(int screenLine) {
+
+    /**
+     * Prints an integer representing a row index.
+     * @param screenLine An integer representing the current line to print.
+     */
+    private void printLivingRoomRowNumber(int screenLine) {
         if (screenLine % 2 == 0) {
             System.out.print("   ");
         }
@@ -375,8 +412,16 @@ public class TextualGameUI extends GameUI {
             System.out.print(" " + (livingRoomBoardY - (screenLine/2))  + " ");
         }
     }
+
+    /**
+     * Prints the border of a matrix's row, used when printing Living Room Board, Bookshelf and Personal Goal Card.
+     * @param column Integer representing the column to print.
+     * @param row Integer representing the row to print.
+     * @param numOfRows Integer representing the total number of rows of the matrix being currently printed.
+     * @param color Array of integers representing the color to use when printing characters, in RGB.
+     * */
     private void printBorderRow(int column, int row, int numOfRows, int[] color) {
-        if(row == (numOfRows)) {
+        if(row == numOfRows) {
             if (column == 0) {
                 fgDisambiguationPrint(c.cornerTopLeft + c.fiveCeilings, false, color);
             }
@@ -395,6 +440,13 @@ public class TextualGameUI extends GameUI {
         }
     }
 
+    /**
+     * Prints the center of a matrix's row, used when printing Living Room Board and Bookshelf.
+     * @param column Integer representing the column to print.
+     * @param row Integer representing the row to print.
+     * @param matrix Contains data about the content of the matrix.
+     * @param color Array of integers representing the color to use when printing characters, in RGB.
+     * */
     private void printCenterRow(int column, int row, Tile[][] matrix, int[] color) {
         if (matrix[column][row] != null && !matrix[column][row].isPlaceholder()) {
             fgDisambiguationPrint(c.wall + "  ", false, color);
@@ -404,6 +456,14 @@ public class TextualGameUI extends GameUI {
             fgDisambiguationPrint(c.wall + "     ", false, color);
         }
     }
+
+    /**
+     * Prints the last character of a matrix's row, used when printing Living Room Board, Bookshelf and Personal Goal Card.
+     * @param screenLine Integer representing the line being currently printed.
+     * @param color Array of integers representing the color to use when printing characters, in RGB.
+     * @param endLine Boolean value specifying whether it is necessary to end the current line after printing.
+     * @param numOfColumns Integer representing the total number of columns of the matrix being currently printed.
+     * */
     private void printLastCharacter(int screenLine, int[] color, boolean endLine, int numOfColumns) {
         if(screenLine % 2 == 0) {
             if((screenLine / 2) == numOfColumns) {
@@ -417,6 +477,12 @@ public class TextualGameUI extends GameUI {
             fgDisambiguationPrint(c.wall, endLine, color);
         }
     }
+
+    /**
+     * Prints the current state of Bookshelf and Personal Goal Card.
+     * @param screenLine Integer representing the line being currently printed.
+     * @param gameView Contains information about the game, used to print Bookshelf and Personal Goal Card.
+     * */
     private void updateBookShelfAndPGC(int screenLine, GameView gameView) {
         if (screenLine > 14) {
             System.out.println();
@@ -456,6 +522,13 @@ public class TextualGameUI extends GameUI {
         }
     }
 
+    /**
+     * Prints the border of a matrix's row, used when printing Personal Goal Card.
+     * @param column Integer representing the column to print.
+     * @param row Integer representing the row to print.
+     * @param BookshelfMatrix Contains data about the content of the matrix, specifically related to the Bookshelf.
+     * @param PGCMatrix Contains data about the content of the matrix, specifically related to the Personal Goal Card.
+     * */
     private void printPCGCenterRow(int column, int row, Tile[][] BookshelfMatrix, Constants.TileType[][] PGCMatrix) {
         if(PGCMatrix[column][row] != null) {
             //System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
@@ -473,6 +546,10 @@ public class TextualGameUI extends GameUI {
             fgDisambiguationPrint(c.wall + "     ", false, personalGoalCardColor);
         }
     }
+
+    /**
+     * Prints text used to identify the Bookshelf and Personal Goal Card.
+     */
     private void printBookshelfAndPGCText() {
         System.out.print("             ");
         System.out.print(ansi().fg(Ansi.Color.BLUE).a("Your Bookshelf:").reset());
@@ -480,6 +557,9 @@ public class TextualGameUI extends GameUI {
         System.out.println(ansi().fg(Ansi.Color.BLUE).a("Your Personal Goal Card:").reset());
     }
 
+    /**
+     * Prints a row of integers representing column indexes.
+     */
     private void printBookshelfAndPGCColumnNumbers() {
         System.out.print("             ");
         for(int l = 0; l < bookshelfX; l++){
@@ -491,12 +571,20 @@ public class TextualGameUI extends GameUI {
         }
         System.out.println();
     }
+
+    /**
+     * Prints the last row of each matrix.
+     */
     private void printLastRows() {
         System.out.print("   ");
         printLivingRoomLastRow();
         printBookshelfLastRow();
         printPersonalGoalCardLastRow();
     }
+
+    /**
+     * Prints the last row of the Living Room Board.
+     */
     private void printLivingRoomLastRow() {
         fgDisambiguationPrint(c.cornerBottomLeft + c.fiveCeilings, false, livingRoomBoardColor);
         for (int j = livingRoomBoardY - 2; j >= 0; j--) {
@@ -505,6 +593,10 @@ public class TextualGameUI extends GameUI {
         fgDisambiguationPrint(c.cornerBottomRight, false, livingRoomBoardColor);
         System.out.print("             ");
     }
+
+    /**
+     * Prints the last row of the Bookshelf.
+     */
     private void printBookshelfLastRow() {
         fgDisambiguationPrint(c.cornerBottomLeftAlternative + c.fiveCeilings, false, bookshelfColor);
         for (int j = bookshelfX - 2; j >= 0; j--) {
@@ -513,6 +605,10 @@ public class TextualGameUI extends GameUI {
         fgDisambiguationPrint(c.cornerBottomRightAlternative, false, bookshelfColor);
         System.out.print("             ");
     }
+
+    /**
+     * Prints the last row of the Personal Goal Card.
+     */
     private void printPersonalGoalCardLastRow() {
         fgDisambiguationPrint(c.cornerBottomLeft + c.fiveCeilings, false, personalGoalCardColor);
         for (int j = bookshelfX - 2; j >= 0; j--) {
@@ -520,6 +616,7 @@ public class TextualGameUI extends GameUI {
         }
         fgDisambiguationPrint(c.cornerBottomRight, true, personalGoalCardColor);
     }
+
     /**
      * This method prints the current status of all players connected to the game.
      * @param gameView Current game's data from which to extract player info.

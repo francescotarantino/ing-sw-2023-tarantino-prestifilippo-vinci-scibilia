@@ -105,6 +105,9 @@ public class GameUIController implements Initializable {
      */
     private final List<ImageView> temporaryBookshelfTiles = new ArrayList<>();
 
+    /**
+     * Initializes the game's components in the Graphical GameUI.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Calculate sizes
@@ -186,6 +189,12 @@ public class GameUIController implements Initializable {
         playersList.maxWidthProperty().bind(bookshelfWidth.multiply(0.85));
     }
 
+    /**
+     * Shows the Living Room Board on the screen.
+     * @param matrix Data about the contents of the Living Room Board.
+     * @param state The current state of the player associated with the UI.
+     */
+
     public void printLivingRoomBoard(Tile[][] matrix, GraphicalGameUI.State state) {
         livingRoomBoardGridPane.getChildren().clear();
         this.lastLivingRoomBoard = matrix;
@@ -228,6 +237,12 @@ public class GameUIController implements Initializable {
         }
     }
 
+    /**
+     * Shows the bookshelf on the screen.
+     * @param matrix Data about the contents of the Bookshelf.
+     * @param state The current state of the player associated with the UI.
+     */
+
     public void printBookshelf(Tile[][] matrix, GraphicalGameUI.State state){
         bookshelfGridPane.getChildren().clear();
         this.lastBookshelf = matrix;
@@ -250,10 +265,18 @@ public class GameUIController implements Initializable {
         }
     }
 
+    /**
+     * Clears the Cards Area of any previously shown content.
+     */
     public void clearCardsArea(){
         cardsArea.getChildren().clear();
     }
 
+    /**
+     * Shows all goal cards on the screen.
+     * @param pgcImagePath A path leading to the correct asset to show the Personal Goal Card.
+     * @param cgcData Contains information about the Common Goal Cards to show.
+     */
     public void printCards(String pgcImagePath, List<CGCData> cgcData){
         for(CGCData data : cgcData){
             GridPane card = new GridPane();
@@ -300,6 +323,10 @@ public class GameUIController implements Initializable {
         cardsArea.getChildren().add(personalGoalCard);
     }
 
+    /**
+     * Shows the scoring tokens on the screen.
+     * @param tokens Tokens owned by the player, represented as a list of integers.
+     */
     public void printTokens(List<Integer> tokens){
         FlowPane flowPane = new FlowPane();
         flowPane.setAlignment(Pos.CENTER);
@@ -313,6 +340,11 @@ public class GameUIController implements Initializable {
         }
     }
 
+    /**
+     * Shows grey tiles in each column of the Bookshelf which still has at least one free space.
+     * The grey tiles are meant to tell the player where they can currently put tiles.
+     * @param matrix
+     */
     private void createGreyTiles(Tile[][] matrix) {
         greyTiles.clear();
         for(int column = 0; column < Constants.bookshelfX; column++){
@@ -332,6 +364,11 @@ public class GameUIController implements Initializable {
         }
     }
 
+    /**
+     * Sets the behaviour of a tile in relation to a mouse Drop action.
+     * @param point The coordinates of the tile.
+     * @param tileImage The tile to which to attribute the specified behaviour.
+     */
     private void setTileOnDragDropped(Point point, ImageView tileImage) {
         tileImage.setOnDragOver(e -> {
             Dragboard db = e.getDragboard();
@@ -352,6 +389,13 @@ public class GameUIController implements Initializable {
         });
     }
 
+    /**
+     * Manages the move currently being played by the player.
+     * @param bookshelf The current bookshelf.
+     * @param coordinate The coordinate of the latest tile chosen by the player.
+     * @param tile The latest tile chosen by the player.
+     * @return
+     */
     private boolean move(Point bookshelf, Point coordinate, Tile tile){
         Point[] points = new Point[this.moveCoordinates.size() + 1];
         for(int i = 0; i < points.length - 1; i++){
@@ -389,6 +433,9 @@ public class GameUIController implements Initializable {
         return false;
     }
 
+    /**
+     * Shows an error message to notify the player that the chosen move is illegal.
+     */
     private void moveErrorMessage(){
         Platform.runLater(() -> {
             MoveErrorAlert dialog = new MoveErrorAlert();
@@ -396,6 +443,10 @@ public class GameUIController implements Initializable {
         });
     }
 
+    /**
+     * If the current move is legal, the method sends the necessary data to the GameUI.
+     * If the current move is not legal, it shows an error message and resets the move.
+     */
     private void confirmMove(){
         if(Utils.checkIfTilesCanBeTaken(this.lastLivingRoomBoard, this.moveCoordinates.toArray(Point[]::new))){
             this.ui.turnExecuted(this.moveCoordinates.toArray(new Point[0]), this.moveColumn);
@@ -407,6 +458,9 @@ public class GameUIController implements Initializable {
         }
     }
 
+    /**
+     * Resets the move being currently played.
+     */
     private void resetMove(){
         bookshelfGridPane.getChildren().removeAll(greyTiles);
         bookshelfGridPane.getChildren().removeAll(temporaryBookshelfTiles);
@@ -423,6 +477,10 @@ public class GameUIController implements Initializable {
         this.createGreyTiles(lastBookshelf);
     }
 
+    /**
+     * Sets the current state to "My turn".
+     * @param ui A reference to the GameUI.
+     */
     public void setMyTurn(GraphicalGameUI ui){
         this.ui = ui;
         this.moveCoordinates.clear();
@@ -432,6 +490,10 @@ public class GameUIController implements Initializable {
         this.resetMoveButton.setDisable(false);
     }
 
+    /**
+     * Sets the current state to "Not my turn".
+     * @param currentPlayer A string containing the name of the current player in the game.
+     */
     public void setNotMyTurn(String currentPlayer){
         turnText.setText("PLAYER " + currentPlayer + "'s TURN!");
         turnText.setFill(Color.color(0.7,0,0));
