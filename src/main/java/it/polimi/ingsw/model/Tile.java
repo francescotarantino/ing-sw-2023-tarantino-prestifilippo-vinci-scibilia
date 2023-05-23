@@ -44,10 +44,16 @@ public class Tile implements Serializable {
         this.variant = oldTile.getVariant();
     }
 
+    /**
+     * this method returns the type of the selected Tile
+     */
     public Constants.TileType getType(){
         return this.type;
     }
 
+    /**
+     * this method returns the variant of the selected Tile
+     */
     public int getVariant() {
         return this.variant;
     }
@@ -63,6 +69,10 @@ public class Tile implements Serializable {
         return tile.getType() == this.type && tile.getVariant() == this.variant;
     }
 
+    /**
+     * this method confront the current Tile type with another one passed as argument
+     * @param t tile to confront with
+     */
     public boolean sameType(Tile t) {
         return t.type.equals(this.type);
     }

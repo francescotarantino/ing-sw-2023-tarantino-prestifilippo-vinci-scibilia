@@ -15,7 +15,7 @@ import static it.polimi.ingsw.listeners.Listener.notifyListeners;
  */
 public class GameList implements GameListener {
 
-    private final List<GameListListener> lst = new ArrayList<>();
+    protected final List<GameListListener> lst = new ArrayList<>();
 
     private static final List<Game> games = new ArrayList<>();
 

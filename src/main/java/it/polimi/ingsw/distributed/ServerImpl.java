@@ -42,6 +42,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         super();
     }
 
+    /**
+     * this method register a client as listener of the server
+     * @param client the client to register
+     * @throws RemoteException
+     */
     @Override
     public void register(Client client) throws RemoteException {
         this.client = client;
@@ -52,6 +57,13 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         executorService.submit(this.pingpongThread);
     }
 
+    /**
+     * this method actually add the Player to the game
+     * @param gameID the ID of the game to join
+     * @param username the username of the player
+     * @throws RemoteException
+     * @throws InvalidChoiceException
+     */
     @Override
     public void addPlayerToGame(int gameID, String username) throws RemoteException, InvalidChoiceException {
         System.out.println("A client is joining game " + gameID + " with username " + username + "...");
@@ -91,6 +103,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         }
     }
 
+    /**
+     * this method create an instance of a game, initializing the current player as the first one
+     * @param numberOfPlayers the number of players in the game
+     * @param numberOfCommonGoalCards the number of common goal cards to use in the game
+     * @param username the username of the player
+     * @throws RemoteException
+     * @throws InvalidChoiceException
+     */
     @Override
     public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
         int gameID = GameList.getInstance().getGames().stream()
@@ -151,11 +171,19 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         }
     }
 
+    /**
+     * this method update the Player list each time a player joins the game
+     * @throws RemoteException
+     */
     @Override
     public void playerJoinedGame() throws RemoteException {
         this.client.updatePlayersList(this.model.playersList());
     }
 
+    /**
+     * this method removes the selected game from the list of games to join and then start it
+     * @throws RemoteException
+     */
     @Override
     public void gameIsFull() throws RemoteException {
         GameList.getInstance().removeListener(this);
@@ -163,6 +191,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         this.client.gameHasStarted();
     }
 
+    /**
+     * this method update the game view after a change in the model.
+     * the method also control if the game has been paused for a predetermined amount of time and if that's the case ends it
+     * @throws RemoteException
+     */
     @Override
     public void modelChanged() throws RemoteException {
         this.client.modelChanged(new GameView(this.model, this.playerIndex));
@@ -179,6 +212,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         }
     }
 
+    /**
+     * this method is called when the game ends, it erases the reference to the model and notify to the client the end
+     * of the game
+     * @throws RemoteException
+     */
     @Override
     public void gameEnded() throws RemoteException {
         GameView gameView = new GameView(this.model, this.playerIndex);
@@ -192,6 +230,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         } catch (RemoteException ignored) {}
     }
 
+    /**
+     * this method calls the controller in order to execute the turn.
+     * @param column the column where to put the tiles
+     * @param points the points of the tiles from the living room board
+     * @throws RemoteException
+     */
     @Override
     public void performTurn(int column, Point... points) throws RemoteException {
         if(this.playerIndex == this.model.getCurrentPlayerIndex()){
