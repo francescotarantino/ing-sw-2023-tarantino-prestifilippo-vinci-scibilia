@@ -65,7 +65,7 @@ public class GraphicalGameUI extends GameUI {
 
             Scene scene = new Scene(root);
 
-            stage.setTitle("GameUI");
+            stage.setTitle("MyShelfie");
             stage.setScene(scene);
             stage.setResizable(true);
             stage.setMinWidth(800);
