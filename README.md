@@ -35,8 +35,10 @@ Ciò non avviene se la JVM include già le librerie native di JavaFX.
 ### Server
 Per lanciare il server è necessario eseguire il comando:
 ```bash
-java -jar myshelfie-server.jar
+java -jar myshelfie-server.jar [socket port]
 ```
+dove `socket port` specifica la porta su cui il server deve mettersi in ascolto per le connessioni Socket.
+Se non specificata, la porta di default è la `12345`.
 >Nel caso di mal funzionamento del protocollo RMI in remoto, può essere utile impostare la proprietà **`java.rmi.server.hostname`** per specificare l'indirizzo IP del server. Ad esempio:
 >```bash
 >java -Djava.rmi.server.hostname=xxx.xxx.xxx.xxx -jar myshelfie-server.jar

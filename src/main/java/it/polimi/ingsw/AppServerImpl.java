@@ -7,7 +7,6 @@ import it.polimi.ingsw.distributed.socket.middleware.ClientSkeleton;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,6 +15,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AppServerImpl extends UnicastRemoteObject implements AppServer {
+    /**
+     * The port on which the socket server will listen.
+     */
+    private static int socketPort = Constants.defaultSocketPort;
     private static AppServerImpl instance;
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -38,9 +41,19 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
 
     /**
      * Starts the server application.
-     * @param args ignored (for now)
+     * @param args socket port
      */
     public static void main(String[] args) {
+        System.out.println("Starting server...");
+
+        if (args.length > 0) {
+            try {
+                socketPort = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid socket port. Using default port " + Constants.defaultSocketPort + "...");
+            }
+        }
+
         Thread rmiThread = new Thread(() -> {
             try {
                 startRMI();
@@ -53,7 +66,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
 
         Thread socketThread = new Thread(() -> {
             try {
-                startSocket(Constants.defaultSocketPort);
+                startSocket();
             } catch (RemoteException e) {
                 System.err.println("Cannot start socket protocol.");
                 e.printStackTrace();
@@ -77,28 +90,29 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
 
         AppServerImpl server = getInstance();
 
+        Registry registry;
         try {
-            System.out.println("RMI > Trying to get already existing RMI registry...");
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind(Constants.defaultRMIName, server);
-        } catch (ConnectException e) {
-            System.err.println("RMI > Cannot find RMI registry.");
             System.out.println("RMI > Creating a new RMI registry on port " + Constants.defaultRMIRegistryPort + "...");
 
-            Registry registry = LocateRegistry.createRegistry(Constants.defaultRMIRegistryPort);
-            registry.rebind(Constants.defaultRMIName, server);
+            registry = LocateRegistry.createRegistry(Constants.defaultRMIRegistryPort);
+        } catch (RemoteException e) {
+            System.err.println("RMI > Cannot create RMI registry.");
+            System.out.println("RMI > Trying to get already existing RMI registry...");
+
+            registry = LocateRegistry.getRegistry();
         }
+
+        registry.rebind(Constants.defaultRMIName, server);
     }
 
     /**
      * This method is used to start the socket server.
-     * @param port the port on which the server will listen
      */
-    public static void startSocket(int port) throws RemoteException {
-        System.out.println("SOCKET > Starting socket server on port " + port + "...");
+    public static void startSocket() throws RemoteException {
+        System.out.println("SOCKET > Starting socket server on port " + socketPort + "...");
 
         AppServerImpl instance = getInstance();
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(socketPort)) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("SOCKET > Accepting connection from " + socket.getInetAddress() + "...");
