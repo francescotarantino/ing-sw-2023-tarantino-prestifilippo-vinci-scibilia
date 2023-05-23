@@ -4,6 +4,10 @@ import it.polimi.ingsw.viewmodel.GameView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+/**
+ * This alert is used to display the results of the game at the end.
+ * It shows the final points of each player and the winner.
+ */
 public class ResultsAlert extends Alert {
     public ResultsAlert(GameView gameView) {
         super(AlertType.NONE);

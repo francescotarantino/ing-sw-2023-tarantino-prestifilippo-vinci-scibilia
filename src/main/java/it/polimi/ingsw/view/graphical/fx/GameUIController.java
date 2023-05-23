@@ -31,6 +31,9 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * JavaFX FXML controller for gameUI.fxml.
+ */
 public class GameUIController implements Initializable {
     @FXML
     public GridPane mainGrid;
@@ -53,24 +56,62 @@ public class GameUIController implements Initializable {
     public GridPane bookshelfGridPane;
     public StackPane bookshelfStackPane;
 
+    /**
+     * The size of a single living room board tile.
+     * Each tile is a square.
+     */
     private NumberBinding livingRoomBoardSize;
+    /**
+     * The width of the bookshelf.
+     */
     private NumberBinding bookshelfWidth;
-    private final double bookshelfTileRatio = 98.0/113.0;
+    /**
+     * This ratio is used to fit the bookshelf tiles in the bookshelf grid.
+     */
+    private static final double bookshelfTileRatio = 98.0/113.0;
+    /**
+     * Coordinates of the tiles in the living room board that are being moved.
+     */
     private final ArrayList<Point> moveCoordinates = new ArrayList<>();
+    /**
+     * The column of the living room board where the tiles are being moved.
+     */
     private int moveColumn = -1;
-    private Tile[][] lastLivingRoomBoard;
-    private Tile[][] lastBookshelf;
-    private GraphicalGameUI ui;
 
+    /**
+     * The last living room board received from the server.
+     */
+    private Tile[][] lastLivingRoomBoard;
+    /**
+     * The last bookshelf received from the server.
+     */
+    private Tile[][] lastBookshelf;
+    private GraphicalGameUI ui; // TODO togliere sta cosa qua
+
+    /**
+     * Reference to the living room board tiles ImageViews.
+     */
     private final ImageView[][] lvbTileImageViews = new ImageView[Constants.livingRoomBoardX][Constants.livingRoomBoardY];
+    /**
+     * Reference to the bookshelf greyTiles ImageViews.
+     * These tiles are part of the drag-and-drop mechanism.
+     * They are used to show the position where the tiles can be dropped.
+     */
     private final List<ImageView> greyTiles = new ArrayList<>();
+    /**
+     * Reference to the bookshelf temporary tiles ImageViews.
+     * These tiles are part of the drag-and-drop mechanism.
+     * They are used to show the tiles that are being moved, before the move is confirmed.
+     */
     private final List<ImageView> temporaryBookshelfTiles = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Calculate sizes
         livingRoomBoardSize = Bindings.min(mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2));
         bookshelfWidth = Bindings.min(mainGrid.widthProperty().multiply(0.3), mainGrid.heightProperty().multiply(0.8));
 
+        // Set window background image
         BackgroundImage backgroundImage = new BackgroundImage(
                 ImageCache.getImage("/images/background.jpg"),
                 BackgroundRepeat.NO_REPEAT,
@@ -80,6 +121,7 @@ public class GameUIController implements Initializable {
         );
         mainGrid.setBackground(new Background(backgroundImage));
 
+        // Setup of the living room board grid
         livingRoomBoardGridPane = new GridPane();
         BackgroundImage livingRoomBoardBackground = new BackgroundImage(
                 ImageCache.getImage("/images/livingRoomBoard.png"),
@@ -88,20 +130,19 @@ public class GameUIController implements Initializable {
                 BackgroundPosition.CENTER,
                 new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
         );
-
         livingRoomBoardGridPane.setBackground(new Background(livingRoomBoardBackground));
         livingRoomBoardGridPane.setGridLinesVisible(false);
         livingRoomBoardGridPane.setAlignment(Pos.CENTER);
         GridPane.setRowSpan(livingRoomBoardGridPane, 2);
         mainGrid.add(livingRoomBoardGridPane, 0, 0);
 
+        // Columns and rows constraints for the living room board grid
         for(int i = 0; i < Constants.livingRoomBoardX + 2; i++) {
             ColumnConstraints c = new ColumnConstraints();
             c.prefWidthProperty().bind(livingRoomBoardSize);
             c.setHalignment(HPos.CENTER);
             livingRoomBoardGridPane.getColumnConstraints().add(c);
         }
-
         for(int i = 0; i < Constants.livingRoomBoardY + 2; i++) {
             RowConstraints r = new RowConstraints();
             r.prefHeightProperty().bind(livingRoomBoardSize);
@@ -109,6 +150,7 @@ public class GameUIController implements Initializable {
             livingRoomBoardGridPane.getRowConstraints().add(r);
         }
 
+        // Setup of the bookshelf stack and grid
         bookshelfStackPane = new StackPane();
         bookshelfPane.getChildren().add(bookshelfStackPane);
 
@@ -122,13 +164,13 @@ public class GameUIController implements Initializable {
         bookshelfStackPane.getChildren().add(bookshelfGridPane);
         bookshelfStackPane.getChildren().add(bookshelfImage);
 
+        // Columns and rows constraints for the bookshelf grid
         for(int i = 0; i < Constants.bookshelfX + 2; i++) {
             ColumnConstraints c = new ColumnConstraints();
             c.prefWidthProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2));
             c.setHalignment(HPos.CENTER);
             bookshelfGridPane.getColumnConstraints().add(c);
         }
-
         for(int i = 0; i < Constants.bookshelfY + 2; i++) {
             RowConstraints r = new RowConstraints();
             r.prefHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));

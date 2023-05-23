@@ -3,6 +3,10 @@ package it.polimi.ingsw.view.graphical.fx.dialogs;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 
+/**
+ * This dialog is used to display the pause message when a player is the only one left in the game.
+ * When shown, it blocks the game UI until the game is resumed or the player is declared winner.
+ */
 public class PauseDialog extends Dialog<Void> {
     public PauseDialog() {
         super();

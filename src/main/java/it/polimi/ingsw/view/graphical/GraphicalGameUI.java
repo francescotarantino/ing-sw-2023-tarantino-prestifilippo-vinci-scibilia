@@ -116,6 +116,12 @@ public class GraphicalGameUI extends GameUI {
                         } else {
                             t.append("hasn't played yet!");
                         }
+                        t.append("\n");
+                        if(playerInfo.tokens().isEmpty()) {
+                            t.append("No tokens yet.");
+                        } else {
+                            t.append(playerInfo.getTokensString());
+                        }
                         Tooltip lastmoveTooltip = new Tooltip(t.toString());
                         lastmoveTooltip.setShowDelay(Duration.millis(100));
                         setTooltip(lastmoveTooltip);

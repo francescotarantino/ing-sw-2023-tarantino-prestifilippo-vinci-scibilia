@@ -118,7 +118,7 @@ public class TextualUtils {
     }
 
     /**
-     * THis method prints a list of points, formatted like [x,y], [x,y], [x,y] and [x,y]
+     * This method prints a list of points, formatted like [x,y], [x,y], [x,y] and [x,y]
      * @param points the list of points to print
      */
     public static void printPoints(List<Point> points) {

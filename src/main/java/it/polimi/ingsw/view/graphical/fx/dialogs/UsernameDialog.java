@@ -7,6 +7,11 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
+/**
+ * This dialog asks the username to the user.
+ * It cannot be closed until a valid username is inserted.
+ * @see it.polimi.ingsw.view.graphical.GraphicalStartUI
+ */
 public class UsernameDialog extends Dialog<String> {
     public UsernameDialog() {
         super();
