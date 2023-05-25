@@ -21,8 +21,9 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - run: mkdir staging && cp target/myshelfie-server.jar staging && cp target/myshelfie-client.jar staging
     - uses: actions/upload-artifact@v3
       with:
-        name: Package
-        path: staging
+        path: target/myshelfie-server.jar
+    - uses: actions/upload-artifact@v3
+      with:
+        path: target/myshelfie-client.jar

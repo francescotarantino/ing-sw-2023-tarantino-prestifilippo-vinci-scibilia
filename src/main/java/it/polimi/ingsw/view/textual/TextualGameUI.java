@@ -26,7 +26,6 @@ import static org.fusesource.jansi.Ansi.ansi;
 /**
  * Main class for the textual version of the GameUI
  */
-
 public class TextualGameUI extends GameUI {
     /** Enumeration representing the state of the game from the perspective of the player*/
     private enum State {

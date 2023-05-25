@@ -1,11 +1,13 @@
 package it.polimi.ingsw.view.graphical;
 
+import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.view.graphical.fx.FXApplication;
 import it.polimi.ingsw.view.graphical.fx.GameUIController;
 import it.polimi.ingsw.view.graphical.fx.ImageCache;
+import it.polimi.ingsw.view.graphical.fx.dialogs.MoveErrorAlert;
 import it.polimi.ingsw.view.graphical.fx.dialogs.PauseDialog;
 import it.polimi.ingsw.view.graphical.fx.dialogs.ResultsAlert;
 import it.polimi.ingsw.viewmodel.GameView;
@@ -30,7 +32,6 @@ import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 /**
  * Main class for the graphical version of the GameUI.
  */
-
 public class GraphicalGameUI extends GameUI {
     /**
      * JavaFX FXML controller associated with the Graphical UI.
@@ -62,14 +63,15 @@ public class GraphicalGameUI extends GameUI {
     /** Dialog shown when the game is paused */
     private PauseDialog pauseDialog;
 
-    /** The latest GameView received from the server.
+    /**
+     * The latest GameView received from the server.
      * Contains data about every aspect of the current Game (board state, player state...).
-     * */
+     */
     private GameView lastGameView;
 
     /**
      * Runs the Graphical GameUI. Sets all basic properties for the main window, then enters a loop to wait for and execute player's turns.
-     * */
+     */
     @Override
     public void run() {
         Platform.runLater(() -> {
@@ -104,6 +106,18 @@ public class GraphicalGameUI extends GameUI {
             stage.show();
 
             pauseDialog = new PauseDialog();
+
+            controller.confirmMoveButton.setOnAction(e -> {
+                Point[] points = controller.moveCoordinates.toArray(Point[]::new);
+                if(Utils.checkIfTilesCanBeTaken(lastGameView.getLivingRoomBoardMatrix(), points)){
+                    this.turnExecuted(points, controller.moveColumn);
+                    controller.confirmMoveButton.setDisable(true);
+                    controller.resetMoveButton.setDisable(true);
+                } else {
+                    moveErrorMessage();
+                    controller.resetMove();
+                }
+            });
 
             controller.playersList.setCellFactory(lv -> new ListCell<>(){
                 @Override
@@ -164,7 +178,7 @@ public class GraphicalGameUI extends GameUI {
                 case MY_TURN -> Platform.runLater(() -> {
                     pauseDialog.closeIfShown();
 
-                    this.controller.setMyTurn(this);
+                    this.controller.setMyTurn();
                 });
                 case NOT_MY_TURN -> Platform.runLater(() -> {
                     pauseDialog.closeIfShown();
@@ -229,6 +243,14 @@ public class GraphicalGameUI extends GameUI {
      */
     public void turnExecuted(Point[] points, int column){
         FXApplication.execute(() -> notifyListeners(lst, x -> x.performTurn(column, points)));
+    }
+
+    /**
+     * Shows an error message to notify the player that the chosen move is illegal.
+     */
+    public void moveErrorMessage(){
+        MoveErrorAlert dialog = new MoveErrorAlert();
+        dialog.showAndWait();
     }
 
     /**

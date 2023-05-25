@@ -1,14 +1,11 @@
 package it.polimi.ingsw.view.graphical.fx;
 
 import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.graphical.GraphicalGameUI;
-import it.polimi.ingsw.view.graphical.fx.dialogs.MoveErrorAlert;
 import it.polimi.ingsw.viewmodel.CGCData;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
@@ -72,26 +69,20 @@ public class GameUIController implements Initializable {
     /**
      * Coordinates of the tiles in the living room board that are being moved.
      */
-    private final ArrayList<Point> moveCoordinates = new ArrayList<>();
+    public final ArrayList<Point> moveCoordinates = new ArrayList<>();
     /**
      * The column of the living room board where the tiles are being moved.
      */
-    private int moveColumn = -1;
+    public int moveColumn = -1;
 
     /**
-     * The last living room board received from the server.
+     * Reference to the bookshelf tiles ImageViews.
      */
-    private Tile[][] lastLivingRoomBoard;
-    /**
-     * The last bookshelf received from the server.
-     */
-    private Tile[][] lastBookshelf;
-    private GraphicalGameUI ui; // TODO togliere sta cosa qua
-
+    private final ImageView[][] bookshelfTileImageViews = new ImageView[Constants.bookshelfX][Constants.bookshelfY];
     /**
      * Reference to the living room board tiles ImageViews.
      */
-    private final ImageView[][] lvbTileImageViews = new ImageView[Constants.livingRoomBoardX][Constants.livingRoomBoardY];
+    private final ImageView[][] lrbTileImageViews = new ImageView[Constants.livingRoomBoardX][Constants.livingRoomBoardY];
     /**
      * Reference to the bookshelf greyTiles ImageViews.
      * These tiles are part of the drag-and-drop mechanism.
@@ -181,7 +172,6 @@ public class GameUIController implements Initializable {
             bookshelfGridPane.getRowConstraints().add(r);
         }
 
-        confirmMoveButton.setOnAction(e -> this.confirmMove());
         resetMoveButton.setOnAction(e -> this.resetMove());
 
         GridPane.setRowSpan(cardsArea, 2);
@@ -194,19 +184,22 @@ public class GameUIController implements Initializable {
      * @param matrix Data about the contents of the Living Room Board.
      * @param state The current state of the player associated with the UI.
      */
-
     public void printLivingRoomBoard(Tile[][] matrix, GraphicalGameUI.State state) {
         livingRoomBoardGridPane.getChildren().clear();
-        this.lastLivingRoomBoard = matrix;
+
         for(int j = Constants.livingRoomBoardY - 1; j >= 0; j--){
             for(int i = 0; i < Constants.livingRoomBoardX; i++){
+                lrbTileImageViews[i][j] = null;
+
                 Tile tile = matrix[i][j];
                 if(tile != null && !tile.isPlaceholder()){
                     Image image = ImageCache.getImage(tile.getImagePath());
                     ImageView tileImage = new ImageView(image);
-                    lvbTileImageViews[i][j] = tileImage;
+                    lrbTileImageViews[i][j] = tileImage;
                     tileImage.fitWidthProperty().bind(livingRoomBoardSize.multiply(0.95));
                     tileImage.setPreserveRatio(true);
+                    Tooltip tooltip = new Tooltip("[" + i + ", " + j + "]");
+                    Tooltip.install(tileImage, tooltip);
 
                     if(state == GraphicalGameUI.State.MY_TURN){
                         int finalI = i;
@@ -242,13 +235,13 @@ public class GameUIController implements Initializable {
      * @param matrix Data about the contents of the Bookshelf.
      * @param state The current state of the player associated with the UI.
      */
-
     public void printBookshelf(Tile[][] matrix, GraphicalGameUI.State state){
         bookshelfGridPane.getChildren().clear();
-        this.lastBookshelf = matrix;
 
         for(int j = Constants.bookshelfY - 1; j >= 0; j--){
             for(int i = Constants.bookshelfX - 1; i >= 0; i--){
+                bookshelfTileImageViews[i][j] = null;
+
                 Tile tile = matrix[i][j];
                 if(tile != null && !tile.isPlaceholder()){
                     Image image = ImageCache.getImage(tile.getImagePath());
@@ -256,12 +249,13 @@ public class GameUIController implements Initializable {
                     tileImage.fitHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));
                     tileImage.setPreserveRatio(true);
                     bookshelfGridPane.add(tileImage, i + 1, Constants.bookshelfY - j);
+                    bookshelfTileImageViews[i][j] = tileImage;
                 }
             }
         }
         // Creating grey tiles to show where tiles can be put
         if(state == GraphicalGameUI.State.MY_TURN){
-            this.createGreyTiles(lastBookshelf);
+            this.createGreyTiles();
         }
     }
 
@@ -343,13 +337,12 @@ public class GameUIController implements Initializable {
     /**
      * Shows grey tiles in each column of the Bookshelf which still has at least one free space.
      * The grey tiles are meant to tell the player where they can currently put tiles.
-     * @param matrix
      */
-    private void createGreyTiles(Tile[][] matrix) {
+    private void createGreyTiles() {
         greyTiles.clear();
         for(int column = 0; column < Constants.bookshelfX; column++){
             for(int row = 0; row < Constants.bookshelfY; row++){
-                if(matrix[column][row] == null){
+                if(bookshelfTileImageViews[column][row] == null){
                     Image image = ImageCache.getImage("/images/tiles/grey.gif");
                     ImageView greyTile = new ImageView(image);
                     greyTile.setOpacity(0.7);
@@ -382,30 +375,20 @@ public class GameUIController implements Initializable {
             Dragboard db = e.getDragboard();
             Point pf = (Point) db.getContent(Point.pointFormat);
             Tile tl = (Tile) db.getContent(Tile.tileFormat);
-            if(move(point, pf, tl)){
-                lvbTileImageViews[pf.getX()][pf.getY()].setOpacity(0.3);
-                lvbTileImageViews[pf.getX()][pf.getY()].setDisable(true);
-            }
+            move(point, pf, tl);
         });
     }
 
     /**
-     * Manages the move currently being played by the player.
-     * @param bookshelf The current bookshelf.
-     * @param coordinate The coordinate of the latest tile chosen by the player.
-     * @param tile The latest tile chosen by the player.
-     * @return
+     * This method is called when the player drops a tile on a grey tile.
+     * @param bookshelfPoint coordinates of the bookshelf where the player is currently moving tiles.
+     * @param lrbPoint coordinates of the living room board tile chosen by the player.
+     * @param tile the tile chosen by the player
      */
-    private boolean move(Point bookshelf, Point coordinate, Tile tile){
-        Point[] points = new Point[this.moveCoordinates.size() + 1];
-        for(int i = 0; i < points.length - 1; i++){
-            points[i] = this.moveCoordinates.get(i);
-        }
-        points[points.length - 1] = coordinate;
-
-        if(points.length <= Constants.maxPick || Utils.checkIfTilesCanBeTaken(this.lastLivingRoomBoard, points)){
-            this.moveCoordinates.add(coordinate);
-            this.moveColumn = bookshelf.getX();
+    private void move(Point bookshelfPoint, Point lrbPoint, Tile tile){
+        if(this.moveCoordinates.size() < Constants.maxPick){
+            this.moveCoordinates.add(lrbPoint);
+            this.moveColumn = bookshelfPoint.getX();
 
             bookshelfGridPane.getChildren().removeAll(greyTiles);
             greyTiles.clear();
@@ -414,75 +397,47 @@ public class GameUIController implements Initializable {
             temporaryTile.setOpacity(0.5);
             temporaryTile.setPreserveRatio(true);
             temporaryTile.fitHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));
-            bookshelfGridPane.add(temporaryTile, bookshelf.getX() + 1, Constants.bookshelfY - bookshelf.getY());
+            bookshelfGridPane.add(temporaryTile, bookshelfPoint.getX() + 1, Constants.bookshelfY - bookshelfPoint.getY());
             temporaryBookshelfTiles.add(temporaryTile);
 
-            if(bookshelf.getY() < Constants.bookshelfY - 1 && points.length < Constants.maxPick){
+            if(bookshelfPoint.getY() < Constants.bookshelfY - 1 && this.moveCoordinates.size() < Constants.maxPick){
                 ImageView greyTile = new ImageView(ImageCache.getImage("/images/tiles/grey.gif"));
                 greyTile.setOpacity(0.7);
                 greyTile.fitHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));
                 greyTile.setPreserveRatio(true);
-                setTileOnDragDropped(new Point(bookshelf.getX(), bookshelf.getY() + 1), greyTile);
-                bookshelfGridPane.add(greyTile, bookshelf.getX() + 1, Constants.bookshelfY - bookshelf.getY() - 1);
+                setTileOnDragDropped(new Point(bookshelfPoint.getX(), bookshelfPoint.getY() + 1), greyTile);
+                bookshelfGridPane.add(greyTile, bookshelfPoint.getX() + 1, Constants.bookshelfY - bookshelfPoint.getY() - 1);
                 greyTiles.add(greyTile);
             }
 
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Shows an error message to notify the player that the chosen move is illegal.
-     */
-    private void moveErrorMessage(){
-        Platform.runLater(() -> {
-            MoveErrorAlert dialog = new MoveErrorAlert();
-            dialog.showAndWait();
-        });
-    }
-
-    /**
-     * If the current move is legal, the method sends the necessary data to the GameUI.
-     * If the current move is not legal, it shows an error message and resets the move.
-     */
-    private void confirmMove(){
-        if(Utils.checkIfTilesCanBeTaken(this.lastLivingRoomBoard, this.moveCoordinates.toArray(Point[]::new))){
-            this.ui.turnExecuted(this.moveCoordinates.toArray(new Point[0]), this.moveColumn);
-            this.confirmMoveButton.setDisable(true);
-            this.resetMoveButton.setDisable(true);
-        } else {
-            this.moveErrorMessage();
-            this.resetMove();
+            lrbTileImageViews[lrbPoint.getX()][lrbPoint.getY()].setOpacity(0.3);
+            lrbTileImageViews[lrbPoint.getX()][lrbPoint.getY()].setDisable(true);
         }
     }
 
     /**
      * Resets the move being currently played.
      */
-    private void resetMove(){
+    public void resetMove(){
         bookshelfGridPane.getChildren().removeAll(greyTiles);
         bookshelfGridPane.getChildren().removeAll(temporaryBookshelfTiles);
         greyTiles.clear();
         temporaryBookshelfTiles.clear();
 
         this.moveCoordinates.forEach(c -> {
-            lvbTileImageViews[c.getX()][c.getY()].setOpacity(1);
-            lvbTileImageViews[c.getX()][c.getY()].setDisable(false);
+            lrbTileImageViews[c.getX()][c.getY()].setOpacity(1);
+            lrbTileImageViews[c.getX()][c.getY()].setDisable(false);
         });
 
         this.moveColumn = -1;
         this.moveCoordinates.clear();
-        this.createGreyTiles(lastBookshelf);
+        this.createGreyTiles();
     }
 
     /**
      * Sets the current state to "My turn".
-     * @param ui A reference to the GameUI.
      */
-    public void setMyTurn(GraphicalGameUI ui){
-        this.ui = ui;
+    public void setMyTurn(){
         this.moveCoordinates.clear();
         turnText.setText("YOUR TURN!");
         turnText.setFill(Color.color(0,0.75,0.14));

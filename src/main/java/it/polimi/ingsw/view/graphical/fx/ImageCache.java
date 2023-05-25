@@ -25,9 +25,7 @@ public class ImageCache {
      */
     public static void loadImages() {
         if (getInstance().cache.size() == 0) {
-            Utils.iterateInResourceDirectory("images", (path) -> {
-                getInstance().cache.put(path, new Image(Objects.requireNonNull(getInstance().getClass().getResourceAsStream(path))));
-            });
+            Utils.iterateInResourceDirectory("images", ImageCache::loadImage);
         }
     }
 
@@ -39,10 +37,18 @@ public class ImageCache {
      */
     public static Image getImage(String path) {
         if(!getInstance().cache.containsKey(path)) {
-            getInstance().cache.put(path, new Image(Objects.requireNonNull(getInstance().getClass().getResourceAsStream(path))));
+            loadImage(path);
         }
 
         return getInstance().cache.get(path);
+    }
+
+    /**
+     * This method is used to load an image and cache it.
+     * @param path the path of the image
+     */
+    public static void loadImage(String path) {
+        getInstance().cache.put(path, new Image(Objects.requireNonNull(getInstance().getClass().getResourceAsStream(path))));
     }
 
     /**

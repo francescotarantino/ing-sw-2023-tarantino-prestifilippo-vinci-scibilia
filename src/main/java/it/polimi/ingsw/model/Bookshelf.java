@@ -27,7 +27,6 @@ public class Bookshelf {
     /**
      * @return the player who owns the bookshelf
      */
-
     public Player getPlayer() {
         return this.player;
     }
