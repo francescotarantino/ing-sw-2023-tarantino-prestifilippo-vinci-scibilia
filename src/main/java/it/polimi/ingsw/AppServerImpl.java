@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.distributed.Server;
+import it.polimi.ingsw.distributed.ServerExecutor;
 import it.polimi.ingsw.distributed.ServerImpl;
 import it.polimi.ingsw.distributed.socket.middleware.ClientSkeleton;
 
@@ -119,7 +120,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
                 instance.executorService.submit(() -> {
                     try {
                         ClientSkeleton clientSkeleton = new ClientSkeleton(socket);
-                        Server server = new ServerImpl();
+                        Server server = new ServerExecutor(new ServerImpl());
                         server.register(clientSkeleton);
                         while (true) {
                             clientSkeleton.receive(server);
@@ -145,6 +146,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
 
     @Override
     public Server connect() throws RemoteException {
-        return new ServerImpl();
+        return new ServerExecutor(new ServerImpl());
     }
 }
