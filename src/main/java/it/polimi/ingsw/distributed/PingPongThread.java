@@ -4,20 +4,30 @@ import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.model.GameList;
 
 import java.rmi.RemoteException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This thread is used by the server to check if the client is still connected.
  * It is started when the client registers.
- * The server sends a ping to the client and waits for a pong. If the pong is not received within a certain time, which
- * is defined in {@link Constants#pingpongTimeout}, the client is considered disconnected.
+ * The server sends a ping to the client and waits for a pong. If the pong is not received within a certain time,
+ * which is defined in {@link Constants#pingpongTimeout}, the client is considered disconnected.
  */
 public class PingPongThread extends Thread {
     /**
      * This boolean is used in the ping-pong mechanism to check if the client is still connected to the server.
-     * It is set to false before the ping is sent. If the server receives a pong, this should be set as true using {@link #pongReceived()}.
+     * It is set to false before the ping is sent.
+     * If the server receives a pong, this should be set as true using {@link #pongReceived()}.
      */
     private boolean pong;
+    /**
+     * Instance of the server that started the thread.
+     */
     private final ServerImpl server;
+    /**
+     * This timer is used to schedule the ping-pong timeout.
+     */
+    private final static Timer timer = new Timer(true);
 
     /**
      * Constructor of the thread.
@@ -33,9 +43,14 @@ public class PingPongThread extends Thread {
     public void run() {
         while (true) {
             pong = false;
+
+            TimerTask task = new PingPongTimerTask();
+            timer.schedule(task, Constants.pingpongTimeout);
             try {
                 server.client.ping();
+                task.cancel();
             } catch (RemoteException e) {
+                task.cancel();
                 break;
             }
 
@@ -50,7 +65,21 @@ public class PingPongThread extends Thread {
             }
         }
 
-        this.handlePlayerDisconnection();
+        if(!currentThread().isInterrupted()){
+            this.handlePlayerDisconnection();
+        }
+    }
+
+    /**
+     * This task is used to interrupt the thread and trigger player disconnection handling
+     * when the ping-pong timeout expires.
+     */
+    private class PingPongTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            interrupt();
+            handlePlayerDisconnection();
+        }
     }
 
     /**
