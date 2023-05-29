@@ -13,8 +13,8 @@ public class PointTest {
         for(int i = 0; i < Constants.livingRoomBoardX; i++){
             for(int j = 0; j < Constants.livingRoomBoardY; j++){
                 Point point = new Point(i, j);
-                assertEquals(point.getX(), i);
-                assertEquals(point.getY(), j);
+                assertEquals(point.x(), i);
+                assertEquals(point.y(), j);
             }
 
         }

@@ -15,13 +15,13 @@ public class CGCSquares extends CommonGoalCard {
         squareSize = size;
     }
     private boolean checkSquare(Point point, Tile[][] matrix) {
-        if (matrix[point.getX()][point.getY()] == null) {
+        if (matrix[point.x()][point.y()] == null) {
             return false;
         }
         for (int i = 0; i < squareSize; i++) {
             for (int j = 0; j < squareSize; j++) {
-                if (matrix[point.getX() + i][point.getY() + j] == null ||
-                    !matrix[point.getX() + i][point.getY() + j].sameType(matrix[point.getX()][point.getY()])) {
+                if (matrix[point.x() + i][point.y() + j] == null ||
+                    !matrix[point.x() + i][point.y() + j].sameType(matrix[point.x()][point.y()])) {
                     return false;
                 }
             }
@@ -31,42 +31,42 @@ public class CGCSquares extends CommonGoalCard {
     private void setDone(Point point, boolean[][] done) {
         for (int i = 0; i < squareSize; i++) {
             for (int j = 0; j < squareSize; j++) {
-                done[point.getX() + i][point.getY() + j] = true;
+                done[point.x() + i][point.y() + j] = true;
             }
         }
     }
     private boolean checkSquareEdges(Point point, Tile[][] matrix) {
-        if (matrix[point.getX()][point.getY()] == null) {
+        if (matrix[point.x()][point.y()] == null) {
             return false;
         }
-       if (point.getX() != 0) {
+       if (point.x() != 0) {
            for (int i = 0; i < squareSize; i++) {
-               if (matrix[point.getX() - 1][point.getY() + i] != null &&
-                   matrix[point.getX() - 1][point.getY() + i].sameType(matrix[point.getX()][point.getY()])) {
+               if (matrix[point.x() - 1][point.y() + i] != null &&
+                   matrix[point.x() - 1][point.y() + i].sameType(matrix[point.x()][point.y()])) {
                    return false;
                }
            }
        }
-       if (point.getY() != 0) {
+       if (point.y() != 0) {
            for (int i = 0; i < squareSize; i++) {
-               if (matrix[point.getX() + i][point.getY() - 1] != null &&
-                   matrix[point.getX() + i][point.getY() - 1].sameType(matrix[point.getX()][point.getY()])) {
+               if (matrix[point.x() + i][point.y() - 1] != null &&
+                   matrix[point.x() + i][point.y() - 1].sameType(matrix[point.x()][point.y()])) {
                    return false;
                }
            }
        }
-       if(point.getX() < Constants.bookshelfX - 2) {
+       if(point.x() < Constants.bookshelfX - 2) {
            for (int i = 0; i < squareSize; i++) {
-               if (matrix[point.getX() + squareSize][point.getY() + i] != null &&
-                   matrix[point.getX() + squareSize][point.getY() + i].sameType(matrix[point.getX()][point.getY()])) {
+               if (matrix[point.x() + squareSize][point.y() + i] != null &&
+                   matrix[point.x() + squareSize][point.y() + i].sameType(matrix[point.x()][point.y()])) {
                    return false;
                }
            }
        }
-       if(point.getY() < Constants.bookshelfY - 2) {
+       if(point.y() < Constants.bookshelfY - 2) {
            for (int i = 0; i < squareSize; i++) {
-               if (matrix[point.getX() + i][point.getY() + squareSize] != null &&
-                   matrix[point.getX() + i][point.getY() + squareSize].sameType(matrix[point.getX()][point.getY()])) {
+               if (matrix[point.x() + i][point.y() + squareSize] != null &&
+                   matrix[point.x() + i][point.y() + squareSize].sameType(matrix[point.x()][point.y()])) {
                    return false;
                }
            }

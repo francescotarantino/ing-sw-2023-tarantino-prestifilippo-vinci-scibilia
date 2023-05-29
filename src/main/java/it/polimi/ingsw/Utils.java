@@ -38,22 +38,22 @@ public class Utils {
      * The method is recursive, and it builds the biggest possible block by checking the adjacent tiles in all directions
      */
     public static int findGroup(Point point, Tile[][] matrix, boolean[][] done) {
-        if (done[point.getX()][point.getY()]) {
+        if (done[point.x()][point.y()]) {
             return 0;
         }
-        done[point.getX()][point.getY()] = true;
-        if(matrix[point.getX()][point.getY()] == null) {
+        done[point.x()][point.y()] = true;
+        if(matrix[point.x()][point.y()] == null) {
             return 0;
         }
         int currentSize = 1;
         for (Constants.Direction direction : Constants.Direction.values()) {
             Tile tile = checkAdjacentTile(point, matrix, direction);
-            if (tile != null && tile.sameType(matrix[point.getX()][point.getY()])) {
+            if (tile != null && tile.sameType(matrix[point.x()][point.y()])) {
                 switch (direction) {
-                    case UP -> currentSize += findGroup(new Point(point.getX(), point.getY() + 1), matrix, done);
-                    case RIGHT -> currentSize += findGroup(new Point(point.getX() + 1, point.getY()), matrix, done);
-                    case DOWN -> currentSize += findGroup(new Point(point.getX(), point.getY() - 1), matrix, done);
-                    case LEFT -> currentSize += findGroup(new Point(point.getX() - 1, point.getY()), matrix, done);
+                    case UP -> currentSize += findGroup(new Point(point.x(), point.y() + 1), matrix, done);
+                    case RIGHT -> currentSize += findGroup(new Point(point.x() + 1, point.y()), matrix, done);
+                    case DOWN -> currentSize += findGroup(new Point(point.x(), point.y() - 1), matrix, done);
+                    case LEFT -> currentSize += findGroup(new Point(point.x() - 1, point.y()), matrix, done);
                 }
             }
         }
@@ -67,25 +67,25 @@ public class Utils {
     public static Tile checkAdjacentTile(Point point, Tile[][] matrix, Constants.Direction direction) {
         int xSize = matrix.length;
         int ySize = matrix[0].length;
-        if (point.getX() < 0 || point.getX() >= xSize || point.getY() < 0 || point.getY() >= ySize) {
+        if (point.x() < 0 || point.x() >= xSize || point.y() < 0 || point.y() >= ySize) {
             return null;
         }
         switch (direction) {
             case UP -> {
-                if(point.getY() == ySize - 1) return null;
-                return matrix[point.getX()][point.getY() + 1];
+                if(point.y() == ySize - 1) return null;
+                return matrix[point.x()][point.y() + 1];
             }
             case RIGHT -> {
-                if(point.getX() == xSize - 1) return null;
-                return matrix[point.getX() + 1][point.getY()];
+                if(point.x() == xSize - 1) return null;
+                return matrix[point.x() + 1][point.y()];
             }
             case DOWN -> {
-                if(point.getY() == 0) return null;
-                return matrix[point.getX()][point.getY() - 1];
+                if(point.y() == 0) return null;
+                return matrix[point.x()][point.y() - 1];
             }
             case LEFT -> {
-                if(point.getX() == 0) return null;
-                return matrix[point.getX() - 1][point.getY()];
+                if(point.x() == 0) return null;
+                return matrix[point.x() - 1][point.y()];
             }
             default -> throw new IllegalStateException("Invalid direction: " + direction);
         }
@@ -103,47 +103,47 @@ public class Utils {
         }
         // Check if the tiles are not null or placeholders
         for (Point point : points) {
-            if (boardMatrix[point.getX()][point.getY()] == null || boardMatrix[point.getX()][point.getY()].isPlaceholder()) return false;
+            if (boardMatrix[point.x()][point.y()] == null || boardMatrix[point.x()][point.y()].isPlaceholder()) return false;
         }
 
         // Check if tiles are adjacent
         if(points.length != 1){
-            if(Arrays.stream(points).mapToInt(Point::getX).allMatch(x -> x == points[0].getX()) && !checkContiguity(Point::getY, points)) return false;
+            if(Arrays.stream(points).mapToInt(Point::x).allMatch(x -> x == points[0].x()) && !checkContiguity(Point::y, points)) return false;
 
-            if(Arrays.stream(points).mapToInt(Point::getY).allMatch(y -> y == points[0].getY()) && !checkContiguity(Point::getX, points)) return false;
+            if(Arrays.stream(points).mapToInt(Point::y).allMatch(y -> y == points[0].y()) && !checkContiguity(Point::x, points)) return false;
 
-            if(!Arrays.stream(points).mapToInt(Point::getX).allMatch(x -> x == points[0].getX()) &&
-               !Arrays.stream(points).mapToInt(Point::getY).allMatch(y -> y == points[0].getY())) return false;
+            if(!Arrays.stream(points).mapToInt(Point::x).allMatch(x -> x == points[0].x()) &&
+               !Arrays.stream(points).mapToInt(Point::y).allMatch(y -> y == points[0].y())) return false;
         }
 
         // Check if tiles have at least one free side
         for (Point point : points) {
             boolean flag = false;
             // Up
-            if (point.getX() != 0) {
-                if (boardMatrix[point.getX() - 1][point.getY()] == null ||
-                        boardMatrix[point.getX() - 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
+            if (point.x() != 0) {
+                if (boardMatrix[point.x() - 1][point.y()] == null ||
+                        boardMatrix[point.x() - 1][point.y()].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
 
             // Down
-            if (point.getX() != Constants.livingRoomBoardX - 1) {
-                if (boardMatrix[point.getX() + 1][point.getY()] == null ||
-                        boardMatrix[point.getX() + 1][point.getY()].getType().equals(Constants.TileType.PLACEHOLDER))
+            if (point.x() != Constants.livingRoomBoardX - 1) {
+                if (boardMatrix[point.x() + 1][point.y()] == null ||
+                        boardMatrix[point.x() + 1][point.y()].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
 
             // Left
-            if (point.getY() != 0) {
-                if (boardMatrix[point.getX()][point.getY() - 1] == null ||
-                        boardMatrix[point.getX()][point.getY() - 1].getType().equals(Constants.TileType.PLACEHOLDER))
+            if (point.y() != 0) {
+                if (boardMatrix[point.x()][point.y() - 1] == null ||
+                        boardMatrix[point.x()][point.y() - 1].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
 
             // Right
-            if (point.getY() != Constants.livingRoomBoardY - 1) {
-                if (boardMatrix[point.getX()][point.getY() + 1] == null ||
-                        boardMatrix[point.getX()][point.getY() + 1].getType().equals(Constants.TileType.PLACEHOLDER))
+            if (point.y() != Constants.livingRoomBoardY - 1) {
+                if (boardMatrix[point.x()][point.y() + 1] == null ||
+                        boardMatrix[point.x()][point.y() + 1].getType().equals(Constants.TileType.PLACEHOLDER))
                     flag = true;
             } else flag = true;
 

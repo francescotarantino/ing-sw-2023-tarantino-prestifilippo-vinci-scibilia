@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.textual;
 
 import it.polimi.ingsw.model.Point;
-import it.polimi.ingsw.model.Tile;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -123,7 +122,7 @@ public class TextualUtils {
      */
     public static void printPoints(List<Point> points) {
         for (int i = 0; i < points.size(); i++) {
-            System.out.print(" " + new Point(livingRoomBoardY - points.get(i).getY(), points.get(i).getX() + 1));
+            System.out.print(" " + new Point(livingRoomBoardY - points.get(i).y(), points.get(i).x() + 1));
             if (i < points.size() - 2) {
                 System.out.print(",");
             }

@@ -388,7 +388,7 @@ public class GameUIController implements Initializable {
     private void move(Point bookshelfPoint, Point lrbPoint, Tile tile){
         if(this.moveCoordinates.size() < Constants.maxPick){
             this.moveCoordinates.add(lrbPoint);
-            this.moveColumn = bookshelfPoint.getX();
+            this.moveColumn = bookshelfPoint.x();
 
             bookshelfGridPane.getChildren().removeAll(greyTiles);
             greyTiles.clear();
@@ -397,21 +397,21 @@ public class GameUIController implements Initializable {
             temporaryTile.setOpacity(0.5);
             temporaryTile.setPreserveRatio(true);
             temporaryTile.fitHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));
-            bookshelfGridPane.add(temporaryTile, bookshelfPoint.getX() + 1, Constants.bookshelfY - bookshelfPoint.getY());
+            bookshelfGridPane.add(temporaryTile, bookshelfPoint.x() + 1, Constants.bookshelfY - bookshelfPoint.y());
             temporaryBookshelfTiles.add(temporaryTile);
 
-            if(bookshelfPoint.getY() < Constants.bookshelfY - 1 && this.moveCoordinates.size() < Constants.maxPick){
+            if(bookshelfPoint.y() < Constants.bookshelfY - 1 && this.moveCoordinates.size() < Constants.maxPick){
                 ImageView greyTile = new ImageView(ImageCache.getImage("/images/tiles/grey.gif"));
                 greyTile.setOpacity(0.7);
                 greyTile.fitHeightProperty().bind(bookshelfWidth.divide(Constants.bookshelfX + 2).multiply(bookshelfTileRatio));
                 greyTile.setPreserveRatio(true);
-                setTileOnDragDropped(new Point(bookshelfPoint.getX(), bookshelfPoint.getY() + 1), greyTile);
-                bookshelfGridPane.add(greyTile, bookshelfPoint.getX() + 1, Constants.bookshelfY - bookshelfPoint.getY() - 1);
+                setTileOnDragDropped(new Point(bookshelfPoint.x(), bookshelfPoint.y() + 1), greyTile);
+                bookshelfGridPane.add(greyTile, bookshelfPoint.x() + 1, Constants.bookshelfY - bookshelfPoint.y() - 1);
                 greyTiles.add(greyTile);
             }
 
-            lrbTileImageViews[lrbPoint.getX()][lrbPoint.getY()].setOpacity(0.3);
-            lrbTileImageViews[lrbPoint.getX()][lrbPoint.getY()].setDisable(true);
+            lrbTileImageViews[lrbPoint.x()][lrbPoint.y()].setOpacity(0.3);
+            lrbTileImageViews[lrbPoint.x()][lrbPoint.y()].setDisable(true);
         }
     }
 
@@ -425,8 +425,8 @@ public class GameUIController implements Initializable {
         temporaryBookshelfTiles.clear();
 
         this.moveCoordinates.forEach(c -> {
-            lrbTileImageViews[c.getX()][c.getY()].setOpacity(1);
-            lrbTileImageViews[c.getX()][c.getY()].setDisable(false);
+            lrbTileImageViews[c.x()][c.y()].setOpacity(1);
+            lrbTileImageViews[c.x()][c.y()].setDisable(false);
         });
 
         this.moveColumn = -1;

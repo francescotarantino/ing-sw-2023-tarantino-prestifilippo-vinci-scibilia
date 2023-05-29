@@ -649,8 +649,8 @@ public class TextualGameUI extends GameUI {
                 }
                 System.out.print(" from ");
                 for(int i = 0; i < playerInfo.lastMovePoints().length; i++){
-                    System.out.print(new Point(livingRoomBoardY - playerInfo.lastMovePoints()[i].getY(),
-                            playerInfo.lastMovePoints()[i].getX() + 1));
+                    System.out.print(new Point(livingRoomBoardY - playerInfo.lastMovePoints()[i].y(),
+                            playerInfo.lastMovePoints()[i].x() + 1));
                     if(i < playerInfo.lastMovePoints().length - 1)
                         System.out.print(", ");
                 }

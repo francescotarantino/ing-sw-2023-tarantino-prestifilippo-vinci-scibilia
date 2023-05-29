@@ -62,10 +62,10 @@ public class Bookshelf {
      * @return the tile at the specified coordinates
      */
     public Tile getTile(Point point) {
-        if(point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY)
+        if(point.x() < 0 || point.x() >= Constants.bookshelfX || point.y() < 0 || point.y() >= Constants.bookshelfY)
             throw new IndexOutOfBoundsException("Invalid bookshelf coordinates");
 
-        return this.matrix[point.getX()][point.getY()];
+        return this.matrix[point.x()][point.y()];
     }
 
     /**
@@ -77,15 +77,15 @@ public class Bookshelf {
     public void insertTile(Point point, Tile tile) {
         if (point == null || tile == null){
             throw new NullPointerException("Arguments cannot be null");
-        } else if(point.getX() < 0 || point.getX() >= Constants.bookshelfX || point.getY() < 0 || point.getY() >= Constants.bookshelfY){
+        } else if(point.x() < 0 || point.x() >= Constants.bookshelfX || point.y() < 0 || point.y() >= Constants.bookshelfY){
             throw new IndexOutOfBoundsException("Invalid bookshelf coordinates");
-        } else if (this.matrix[point.getX()][point.getY()] != null){
+        } else if (this.matrix[point.x()][point.y()] != null){
             throw new IllegalArgumentException("There is already a tile in that position");
-        } else if (point.getY() != 0 && this.matrix[point.getX()][point.getY()-1] == null){
+        } else if (point.y() != 0 && this.matrix[point.x()][point.y()-1] == null){
             throw new IllegalArgumentException("There is no tile below, gravity is not respected");
         }
 
-        this.matrix[point.getX()][point.getY()] = tile;
+        this.matrix[point.x()][point.y()] = tile;
     }
 
     /**
