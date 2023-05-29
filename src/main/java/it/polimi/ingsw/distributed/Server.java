@@ -6,6 +6,11 @@ import it.polimi.ingsw.model.Point;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * This interface represents all the methods that can be called by the client on the server.
+ *
+ * @see ServerImpl
+ */
 public interface Server extends Remote {
     /**
      * Register a client to the server.

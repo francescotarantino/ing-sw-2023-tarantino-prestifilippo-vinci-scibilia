@@ -12,18 +12,30 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.listeners.GameListListener;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ServerImpl extends UnicastRemoteObject implements Server, GameListListener, GameListener {
+/**
+ * This class is the implementation of the {@link Server} interface.
+ * Each ServerImpl instance is associated to a specific client, and it is used to handle all the requests coming
+ * from that client.
+ * It is also a {@link GameList} and a {@link GameListListener}, so it is notified of all model changes and can notify the client
+ * accordingly.
+ *
+ * @see Server
+ * @see PingPongThread
+ */
+public class ServerImpl implements Server, GameListListener, GameListener {
     /**
      * The executor service used to run all the ping-pong threads.
      */
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+    private static final ExecutorService pingpongExecutor = Executors.newCachedThreadPool();
 
+    /**
+     * This scheduler is used to handle paused games.
+     */
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     protected Game model;
@@ -34,18 +46,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
      */
     protected int playerIndex;
     /**
-     * The ping-pong thread used to check if the client is still connected.
+     * The ping-pong thread reference used to check if the client is still connected.
      */
     private final PingPongThread pingpongThread = new PingPongThread(this);
 
-    public ServerImpl() throws RemoteException {
-        super();
-    }
-
     /**
-     * this method register a client as listener of the server
+     * This method saves the instance of the client that is registering to the server and starts the ping-pong thread.
+     * It also adds this ServerImpl to the GameListListener list, so the client will be notified when the list of games changes.
      * @param client the client to register
-     * @throws RemoteException
      */
     @Override
     public void register(Client client) throws RemoteException {
@@ -54,15 +62,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
         System.out.println("A client is registering to the server...");
 
-        executorService.submit(this.pingpongThread);
+        pingpongExecutor.submit(this.pingpongThread);
     }
 
     /**
-     * this method actually add the Player to the game
-     * @param gameID the ID of the game to join
-     * @param username the username of the player
-     * @throws RemoteException
-     * @throws InvalidChoiceException
+     * This method is called when a player wants to join a game.
+     * It will also handle the case where a player is reconnecting to a game in which he was already playing.
+     *
+     * @see Server#addPlayerToGame(int, String)
      */
     @Override
     public void addPlayerToGame(int gameID, String username) throws RemoteException, InvalidChoiceException {
@@ -82,7 +89,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
 
             this.playerIndex = this.controller.reconnectPlayer(username);
 
-            // Force update of the client
+            // Force the update of the client
             this.client.modelChanged(new GameView(this.model, this.playerIndex));
             this.model.addListener(this);
         } else {
@@ -104,12 +111,9 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     }
 
     /**
-     * this method create an instance of a game, initializing the current player as the first one
-     * @param numberOfPlayers the number of players in the game
-     * @param numberOfCommonGoalCards the number of common goal cards to use in the game
-     * @param username the username of the player
-     * @throws RemoteException
-     * @throws InvalidChoiceException
+     * This method is called when a client player wants to create a new game.
+     * The gameID is obtained from the maximum gameID of the games list.
+     * @see Server#create(int, int, String)
      */
     @Override
     public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
@@ -171,18 +175,15 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
         }
     }
 
-    /**
-     * this method update the Player list each time a player joins the game
-     * @throws RemoteException
-     */
     @Override
     public void playerJoinedGame() throws RemoteException {
         this.client.updatePlayersList(this.model.playersList());
     }
 
     /**
-     * this method removes the selected game from the list of games to join and then start it
-     * @throws RemoteException
+     * This method is called by the {@link Game} class when the game the player is waiting for starts.
+     * It will trigger the {@link Client#gameHasStarted()} method on the client
+     * and removes this ServerImpl from the GameListListener list.
      */
     @Override
     public void gameIsFull() throws RemoteException {
@@ -192,9 +193,9 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     }
 
     /**
-     * this method update the game view after a change in the model.
-     * the method also control if the game has been paused for a predetermined amount of time and if that's the case ends it
-     * @throws RemoteException
+     * This method sends the updated model to the client.
+     * It is called by the {@link Game} class when the model changes.
+     * It will also schedule a walkover if the game is paused for too long.
      */
     @Override
     public void modelChanged() throws RemoteException {
@@ -213,9 +214,9 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     }
 
     /**
-     * this method is called when the game ends, it erases the reference to the model and notify to the client the end
-     * of the game
-     * @throws RemoteException
+     * This method is called by the {@link Game} class when the game ends.
+     * It will trigger the {@link Client#gameEnded(GameView)} method on the client and removes the Game from the
+     * GameList.
      */
     @Override
     public void gameEnded() throws RemoteException {
@@ -231,10 +232,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server, GameListL
     }
 
     /**
-     * this method calls the controller in order to execute the turn.
-     * @param column the column where to put the tiles
-     * @param points the points of the tiles from the living room board
-     * @throws RemoteException
+     * This method calls the controller in order to execute the turn.
+     * If the player who's trying to perform the turn is not the current player, it will throw a RemoteException.
+     *
+     * @see Controller#performTurn(int, Point...)
      */
     @Override
     public void performTurn(int column, Point... points) throws RemoteException {

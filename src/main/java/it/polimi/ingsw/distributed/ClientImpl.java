@@ -22,6 +22,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class is the implementation of the {@link Client} interface.
+ * Each ClientImpl is the client-side counterpart of a {@link ServerImpl}.
+ * It is used to handle all the requests coming from the server.
+ *
+ * @see Client
+ */
 public class ClientImpl extends UnicastRemoteObject implements Client, Runnable, StartUIListener, GameUIListener {
     private final Server server;
     private final StartUI startUI;
@@ -30,7 +37,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     /**
      * This variable is used to check if the server is still alive.
      * It is set true when the server sends a ping to the client.
-     * Every {@link Constants#pingpongTimeout} * 3 milliseconds, the client checks if this variable is still true.
+     * Every 3 * {@link Constants#pingpongTimeout} milliseconds, the client checks if this variable is still true.
      * If it is not, the connection is considered lost and the client should be closed.
      * @see #run()
      */
@@ -48,12 +55,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
                 this.startUI = new GraphicalStartUI();
                 this.gameUI = new GraphicalGameUI();
             }
-            default -> {
-                this.startUI = null;
-                this.gameUI = null;
-                System.out.println("UI type not supported");
-                exit();
-            }
+            default -> throw new RuntimeException("UI type not supported");
         }
 
         initialize();

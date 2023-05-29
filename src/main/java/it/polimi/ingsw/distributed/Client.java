@@ -7,6 +7,11 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * This interface represents all the methods that can be called by the server on the client.
+ *
+ * @see ClientImpl
+ */
 public interface Client extends Remote {
     /**
      * This method is called by the server to notify the client of the list of games.

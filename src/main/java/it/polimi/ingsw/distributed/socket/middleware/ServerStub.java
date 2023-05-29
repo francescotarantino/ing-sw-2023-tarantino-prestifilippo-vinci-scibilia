@@ -122,6 +122,7 @@ public class ServerStub implements Server {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void receive(Client client) throws RemoteException {
         try {
             ClientSkeleton.Methods method = (ClientSkeleton.Methods) ois.readObject();
@@ -137,9 +138,10 @@ public class ServerStub implements Server {
             }
         } catch (SocketException e) {
             System.exit(0);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new RemoteException("Cannot receive event");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Cannot deserialize object", e);
+        } catch (IOException e) {
+            throw new RemoteException("Connection error", e);
         }
     }
 

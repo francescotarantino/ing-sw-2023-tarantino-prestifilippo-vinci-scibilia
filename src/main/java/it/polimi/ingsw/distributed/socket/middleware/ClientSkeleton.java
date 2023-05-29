@@ -134,7 +134,9 @@ public class ClientSkeleton implements Client {
                 case PERFORM_TURN -> server.performTurn((Integer) ois.readObject(), (Point[]) ois.readObject());
                 case PONG -> server.pong();
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
+            throw new RemoteException("Cannot deserialize object", e);
+        } catch (IOException e) {
             throw new RemoteException("Connection seems to be closed", e);
         } catch (InvalidChoiceException e) {
             this.showError(e.getMessage());

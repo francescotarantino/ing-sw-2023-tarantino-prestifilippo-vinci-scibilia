@@ -4,7 +4,6 @@ import it.polimi.ingsw.listeners.GameListListener;
 import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,16 +103,25 @@ public class GameList implements GameListener {
     }
 
     @Override
-    public void playerJoinedGame() throws RemoteException {
+    public void playerJoinedGame() {
         notifyListeners(lst, GameListListener::updatedGame);
     }
 
+    /**
+     * Changes of the model are not relevant for the GameList.
+     */
     @Override
-    public void modelChanged() throws RemoteException {}
+    public void gameEnded() {}
 
+    /**
+     * Changes of the model are not relevant for the GameList.
+     */
     @Override
-    public void gameEnded() throws RemoteException {}
+    public void modelChanged() {}
 
+    /**
+     * Changes of the model are not relevant for the GameList.
+     */
     @Override
-    public void gameIsFull() throws RemoteException {}
+    public void gameIsFull() {}
 }
