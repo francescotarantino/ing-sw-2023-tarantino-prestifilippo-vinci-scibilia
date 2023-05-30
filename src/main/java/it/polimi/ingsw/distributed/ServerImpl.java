@@ -33,7 +33,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
     /**
      * The executor service used to run all the ping-pong threads.
      */
-    private static final ExecutorService pingpongExecutor = Executors.newCachedThreadPool();
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     /**
      * This scheduler is used to handle paused games.
@@ -64,7 +64,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
 
         System.out.println("A client is registering to the server...");
 
-        pingpongExecutor.submit(this.pingpongThread);
+        executor.submit(this.pingpongThread);
     }
 
     /**
@@ -205,7 +205,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
                 if(this.model.isPaused()){
                     System.out.println("Game " + this.model.getGameID() + " has been paused for too long. It will be ended.");
 
-                    this.controller.walkover();
+                    executor.submit(() -> this.controller.walkover());
                 }
             }, Constants.walkoverTimeout, TimeUnit.MILLISECONDS);
         }

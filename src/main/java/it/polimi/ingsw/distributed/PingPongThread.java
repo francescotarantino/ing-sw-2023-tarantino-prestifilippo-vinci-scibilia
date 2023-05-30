@@ -50,7 +50,6 @@ public class PingPongThread extends Thread {
                 server.client.ping();
                 task.cancel();
             } catch (RemoteException e) {
-                task.cancel();
                 break;
             }
 
@@ -61,12 +60,9 @@ public class PingPongThread extends Thread {
             }
 
             if (!pong) {
+                handlePlayerDisconnection();
                 break;
             }
-        }
-
-        if(!currentThread().isInterrupted()){
-            this.handlePlayerDisconnection();
         }
     }
 
