@@ -41,6 +41,8 @@ public class GameUIController implements Initializable {
     @FXML
     public Text turnText;
     @FXML
+    public Text dragAndDropText;
+    @FXML
     public Button confirmMoveButton;
     @FXML
     public Button resetMoveButton;
@@ -423,6 +425,7 @@ public class GameUIController implements Initializable {
         this.moveCoordinates.clear();
         turnText.setText("YOUR TURN!");
         turnText.setFill(Color.color(0,0.75,0.14));
+        dragAndDropText.setVisible(true);
         this.confirmMoveButton.setDisable(false);
         this.resetMoveButton.setDisable(false);
     }
@@ -434,6 +437,7 @@ public class GameUIController implements Initializable {
     public void setNotMyTurn(String currentPlayer){
         turnText.setText("PLAYER " + currentPlayer + "'s TURN!");
         turnText.setFill(Color.color(0.7,0,0));
+        dragAndDropText.setVisible(false);
         this.confirmMoveButton.setDisable(true);
         this.resetMoveButton.setDisable(true);
     }

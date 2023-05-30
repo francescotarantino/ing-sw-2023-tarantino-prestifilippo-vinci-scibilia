@@ -39,6 +39,11 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Text>
+            <Text fx:id="dragAndDropText" strokeType="OUTSIDE" strokeWidth="0.0" text="Use drag-and-drop to play!" textAlignment="CENTER" wrappingWidth="235.89453125">
+               <font>
+                  <Font name="System Italic" size="16.0" />
+               </font>
+            </Text>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Button fx:id="confirmMoveButton" mnemonicParsing="false" text="Confirm Move">
