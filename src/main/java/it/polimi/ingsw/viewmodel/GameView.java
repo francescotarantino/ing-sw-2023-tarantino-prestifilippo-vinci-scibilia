@@ -1,6 +1,6 @@
 package it.polimi.ingsw.viewmodel;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Tile;
 

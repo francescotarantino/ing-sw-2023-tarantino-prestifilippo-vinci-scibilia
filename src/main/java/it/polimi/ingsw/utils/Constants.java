@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

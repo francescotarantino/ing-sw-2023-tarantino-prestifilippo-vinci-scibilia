@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
-import static it.polimi.ingsw.Constants.TileType.*;
+import static it.polimi.ingsw.utils.Constants.TileType.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 

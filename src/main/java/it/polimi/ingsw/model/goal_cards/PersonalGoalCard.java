@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.Utils.checkMatrixSize;
+import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
 public class PersonalGoalCard extends GoalCard {
     private final Constants.TileType[][] matrix;

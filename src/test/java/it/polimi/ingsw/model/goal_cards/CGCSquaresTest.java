@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.Constants.TileType.*;
-import static it.polimi.ingsw.Constants.TileType.CATS;
+import static it.polimi.ingsw.utils.Constants.TileType.*;
+import static it.polimi.ingsw.utils.Constants.TileType.CATS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 

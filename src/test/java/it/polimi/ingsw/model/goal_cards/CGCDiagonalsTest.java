@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.Constants.TileType.*;
-import static it.polimi.ingsw.Constants.TileType.CATS;
+import static it.polimi.ingsw.utils.Constants.TileType.*;
+import static it.polimi.ingsw.utils.Constants.TileType.CATS;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCDiagonalsTest {
@@ -46,7 +46,7 @@ public class CGCDiagonalsTest {
     @Test
     void testCGC7() {
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 7);
-        assert cgc != null;
+
         assertFalse(cgc.check(boardFail));
         assertTrue(cgc.check(boardPass));
         assertTrue(cgc.check(boardPass2));

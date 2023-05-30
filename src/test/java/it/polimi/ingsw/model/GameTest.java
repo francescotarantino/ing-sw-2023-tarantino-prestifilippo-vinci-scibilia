@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.utils.Constants;
+import it.polimi.ingsw.utils.Utils;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.exception.NoFreeBookshelfException;
 import it.polimi.ingsw.exception.PreGameException;

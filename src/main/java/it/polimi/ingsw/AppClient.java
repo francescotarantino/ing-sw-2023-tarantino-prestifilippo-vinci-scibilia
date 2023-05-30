@@ -2,7 +2,8 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.distributed.ClientImpl;
 import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
-import it.polimi.ingsw.view.textual.TextualUtils;
+import it.polimi.ingsw.utils.Constants;
+import it.polimi.ingsw.utils.TextualUtils;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -10,8 +11,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
-import it.polimi.ingsw.Constants.UIType;
-import it.polimi.ingsw.Constants.ConnectionType;
+import it.polimi.ingsw.utils.Constants.UIType;
+import it.polimi.ingsw.utils.Constants.ConnectionType;
 
 public class AppClient {
     private static UIType uiType;

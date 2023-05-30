@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.Constants.TileType.*;
+import static it.polimi.ingsw.utils.Constants.TileType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCTriangularTest {
@@ -63,7 +63,6 @@ public class CGCTriangularTest {
     void checkCGC12() {
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 12);
 
-        assert cgc != null;
         assertTrue(cgc.check(triangular_matrix_ascending));
         assertTrue(cgc.check(triangular_matrix_descending));
         assertFalse(cgc.check(non_triangular_matrix));

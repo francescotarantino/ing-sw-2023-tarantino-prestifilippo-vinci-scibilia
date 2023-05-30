@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import static it.polimi.ingsw.Constants.TileType.*;
+import static it.polimi.ingsw.utils.Constants.TileType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,6 @@ public class CGCCrossTest {
     void checkCGC11() {
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 11);
 
-        assert cgc != null;
         assertTrue(cgc.check(matrix_with_cross));
         assertFalse(cgc.check(matrix_without_cross));
         assertThrows(NullPointerException.class, () -> cgc.check(matrix_null));

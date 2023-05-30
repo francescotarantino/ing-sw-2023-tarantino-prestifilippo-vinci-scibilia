@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
-import static it.polimi.ingsw.Utils.checkMatrixSize;
 
+import static it.polimi.ingsw.utils.GameUtils.findGroup;
+import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
 public class CGCGroupsOfEquals extends CommonGoalCard {
 
@@ -39,7 +39,7 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
                 for (int i = 0; i < Constants.bookshelfX; i++) {
                     for (int j = 0; j < Constants.bookshelfY; j++) {
                         if(!done[i][j]) {
-                            if(Utils.findGroup(new Point(i, j), matrix, done) >= 2) {
+                            if(findGroup(new Point(i, j), matrix, done) >= 2) {
                                 groupsFound++;
                             }
                         }
@@ -54,7 +54,7 @@ public class CGCGroupsOfEquals extends CommonGoalCard {
                 for (int i = 0; i < Constants.bookshelfX; i++) {
                     for (int j = 0; j < Constants.bookshelfY; j++) {
                         if(!done[i][j]) {
-                            if(Utils.findGroup(new Point(i, j), matrix, done) >= 4) {
+                            if(findGroup(new Point(i, j), matrix, done) >= 4) {
                                 groupsFound++;
                             }
                         }

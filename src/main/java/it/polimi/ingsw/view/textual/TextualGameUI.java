@@ -1,9 +1,10 @@
 package it.polimi.ingsw.view.textual;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.utils.TextualUtils;
 import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
@@ -14,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.Constants.*;
-import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
-import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
+import static it.polimi.ingsw.utils.Constants.*;
+import static it.polimi.ingsw.utils.GameUtils.checkIfColumnHasEnoughSpace;
+import static it.polimi.ingsw.utils.GameUtils.checkIfTilesCanBeTaken;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 import static it.polimi.ingsw.view.textual.Charset.getUnicodeCharsets;
 
-import static it.polimi.ingsw.view.textual.TextualUtils.*;
+import static it.polimi.ingsw.utils.TextualUtils.*;
 import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
 

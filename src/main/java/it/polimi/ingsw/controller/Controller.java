@@ -1,15 +1,13 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.exception.InvalidMoveException;
 import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
-import static it.polimi.ingsw.Constants.getAdjacentTilesPoints;
-import static it.polimi.ingsw.Utils.checkIfColumnHasEnoughSpace;
-import static it.polimi.ingsw.Utils.checkIfTilesCanBeTaken;
+import static it.polimi.ingsw.utils.Constants.getAdjacentTilesPoints;
+import static it.polimi.ingsw.utils.GameUtils.*;
 
 public class Controller {
     private final Game game;
@@ -224,7 +222,7 @@ public class Controller {
         for (int i = 0; i < Constants.bookshelfX; i++) {
             for (int j = 0; j < Constants.bookshelfY; j++) {
                 if(!done[i][j]) {
-                    int groupSize = Utils.findGroup(new Point(i, j), matrix, done);
+                    int groupSize = findGroup(new Point(i, j), matrix, done);
                     if(groupSize >= 3) {
                         player.addPoints(getAdjacentTilesPoints(groupSize));
                     }

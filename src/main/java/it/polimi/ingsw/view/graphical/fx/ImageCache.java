@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.graphical.fx;
 
-import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.utils.Utils;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;

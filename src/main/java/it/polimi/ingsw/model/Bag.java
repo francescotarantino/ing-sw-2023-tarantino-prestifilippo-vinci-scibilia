@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Constants;
-import it.polimi.ingsw.Constants.TileType;
+import it.polimi.ingsw.utils.Constants;
+import it.polimi.ingsw.utils.Constants.TileType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

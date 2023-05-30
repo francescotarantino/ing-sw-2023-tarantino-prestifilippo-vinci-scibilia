@@ -1,7 +1,8 @@
 package it.polimi.ingsw.view.textual;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.listeners.StartUIListener;
+import it.polimi.ingsw.utils.TextualUtils;
 import it.polimi.ingsw.view.StartUI;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 import it.polimi.ingsw.viewmodel.PlayerInfo;

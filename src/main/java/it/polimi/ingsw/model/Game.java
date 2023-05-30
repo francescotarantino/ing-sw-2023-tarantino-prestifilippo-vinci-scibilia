@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.exception.NoFreeBookshelfException;
@@ -12,7 +12,7 @@ import it.polimi.ingsw.viewmodel.PlayerInfo;
 
 import java.util.*;
 
-import static it.polimi.ingsw.Utils.extractRandomIDsWithoutDuplicates;
+import static it.polimi.ingsw.utils.Utils.extractRandomIDsWithoutDuplicates;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
 public class Game {

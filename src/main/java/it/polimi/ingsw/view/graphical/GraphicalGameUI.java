@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.graphical;
 
-import it.polimi.ingsw.Utils;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.GameUI;
@@ -29,6 +28,7 @@ import java.util.Arrays;
 import java.util.concurrent.*;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
+import static it.polimi.ingsw.utils.GameUtils.checkIfTilesCanBeTaken;
 
 /**
  * Main class for the graphical version of the GameUI.
@@ -113,7 +113,7 @@ public class GraphicalGameUI extends GameUI {
 
             controller.confirmMoveButton.setOnAction(e -> {
                 Point[] points = controller.moveCoordinates.toArray(Point[]::new);
-                if(Utils.checkIfTilesCanBeTaken(lastGameView.getLivingRoomBoardMatrix(), points)){
+                if(checkIfTilesCanBeTaken(lastGameView.getLivingRoomBoardMatrix(), points)){
                     this.turnExecuted(points, controller.moveColumn);
                     controller.confirmMoveButton.setDisable(true);
                     controller.resetMoveButton.setDisable(true);

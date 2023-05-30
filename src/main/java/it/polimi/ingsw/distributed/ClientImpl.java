@@ -1,6 +1,6 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
 import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.listeners.GameUIListener;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.graphical.fx;
 
 import it.polimi.ingsw.AppClient;
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

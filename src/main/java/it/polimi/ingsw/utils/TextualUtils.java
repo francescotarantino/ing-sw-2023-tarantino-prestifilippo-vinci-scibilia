@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.textual;
+package it.polimi.ingsw.utils;
 
 import it.polimi.ingsw.model.Point;
 
@@ -7,7 +7,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.Constants.livingRoomBoardY;
+import static it.polimi.ingsw.utils.Constants.livingRoomBoardY;
 
 public class TextualUtils {
 

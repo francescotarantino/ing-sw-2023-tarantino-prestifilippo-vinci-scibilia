@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.textual;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.utils.Utils;
 
 import java.util.List;
 import java.util.ArrayList;

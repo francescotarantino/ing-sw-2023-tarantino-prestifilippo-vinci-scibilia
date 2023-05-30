@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
-import static it.polimi.ingsw.Utils.checkMatrixSize;
+import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
 public class CGCDiagonals extends CommonGoalCard {
     public CGCDiagonals(int numberOfPlayers, int ID) {

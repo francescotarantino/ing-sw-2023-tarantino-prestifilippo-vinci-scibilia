@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.exception.GameException;
 import it.polimi.ingsw.exception.InvalidMoveException;
 import it.polimi.ingsw.exception.PreGameException;

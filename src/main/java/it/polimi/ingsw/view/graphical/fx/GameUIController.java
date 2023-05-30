@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.graphical.fx;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 import it.polimi.ingsw.view.graphical.GraphicalGameUI;

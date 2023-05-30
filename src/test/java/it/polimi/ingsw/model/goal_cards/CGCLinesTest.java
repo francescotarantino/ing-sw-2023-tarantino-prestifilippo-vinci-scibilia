@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.Constants.TileType.*;
+import static it.polimi.ingsw.utils.Constants.TileType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCLinesTest {
@@ -57,7 +57,6 @@ public class CGCLinesTest {
     void testCGC5(){
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 5);
 
-        assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertFalse(cgc.check(matrix));
         assertFalse(cgc.check(aleMatrix));
@@ -69,7 +68,6 @@ public class CGCLinesTest {
     void testCGC8(){
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 8);
 
-        assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertFalse(cgc.check(matrix));
         assertFalse(cgc.check(aleMatrix));
@@ -81,7 +79,6 @@ public class CGCLinesTest {
     void testCGC9(){
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 9);
 
-        assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertTrue(cgc.check(matrix));
         assertTrue(cgc.check(aleMatrix));
@@ -93,7 +90,6 @@ public class CGCLinesTest {
     void testCGC10(){
         CommonGoalCard cgc = CommonGoalCard.create(Constants.playersLowerBound, 10);
 
-        assert cgc != null;
         assertFalse(cgc.check(matrix_rulebook));
         assertFalse(cgc.check(matrix));
         assertFalse(cgc.check(aleMatrix));

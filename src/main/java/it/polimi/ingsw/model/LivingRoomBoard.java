@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 
 import java.util.Set;
 
-import static it.polimi.ingsw.Utils.checkAdjacentTile;
+import static it.polimi.ingsw.utils.GameUtils.checkAdjacentTile;
 
 public class LivingRoomBoard {
     private final Tile[][] board;

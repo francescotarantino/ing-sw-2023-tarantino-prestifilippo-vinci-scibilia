@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,6 @@ public class TileTest {
         Tile myTile = new Tile(Constants.TileType.values()[0], 1);
         Tile myTile2 = new Tile(Constants.TileType.values()[0], 1);
         assertEquals(myTile, myTile2);
-        assertEquals(myTile, myTile);
 
         Tile myTile3 = new Tile(Constants.TileType.values()[0], 2);
         assertNotEquals(myTile, myTile3);
@@ -37,6 +36,7 @@ public class TileTest {
         assertNull(path);
         Tile mySecondTile = new Tile(Constants.TileType.CATS);
         String secondPath = mySecondTile.getImagePath();
+        assertNotNull(secondPath);
     }
 
     @Test

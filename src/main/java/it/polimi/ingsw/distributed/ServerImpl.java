@@ -1,6 +1,6 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.GameException;
 import it.polimi.ingsw.exception.InvalidChoiceException;
