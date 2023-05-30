@@ -71,7 +71,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         scheduler.scheduleWithFixedDelay(() -> {
             if(!pongReceived){
                 try {
-                    System.err.println("Connection lost, exiting...");
+                    System.err.println("\nConnection lost, exiting...");
                     exit();
                 } catch (RemoteException ignored) {}
             }
