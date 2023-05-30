@@ -21,6 +21,7 @@ import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 import static it.polimi.ingsw.view.textual.Charset.getUnicodeCharsets;
 
 import static it.polimi.ingsw.view.textual.TextualUtils.*;
+import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -201,6 +202,10 @@ public class TextualGameUI extends GameUI {
             this.gamePaused();
             setState(State.NOT_MY_TURN);
             return;
+        }
+
+        if(gameView.getErrorMessage() != null){
+            System.out.println("\n" + ansi().fg(RED).bold().a(gameView.getErrorMessage()).reset() + "\n");
         }
 
         if (gameView.getCurrentPlayerIndex() == gameView.getMyIndex() && getState() == State.MY_TURN) {
@@ -530,7 +535,6 @@ public class TextualGameUI extends GameUI {
      * */
     private void printPCGCenterRow(int column, int row, Tile[][] BookshelfMatrix, Constants.TileType[][] PGCMatrix) {
         if(PGCMatrix[column][row] != null) {
-            //System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
             fgDisambiguationPrint(c.wall, false, personalGoalCardColor);
             if(BookshelfMatrix[column][row] == null)
                 System.out.print("  " + ansi().bold().fg(PGCMatrix[column][row].color())
@@ -539,7 +543,7 @@ public class TextualGameUI extends GameUI {
                 System.out.print(" " + ansi().bold().fg(Ansi.Color.DEFAULT).bg(Ansi.Color.GREEN)
                         .a(" " + PGCMatrix[column][row].toString().charAt(0) + " ").reset() + " ");
             else
-                System.out.print(" " + ansi().bold().fg(Ansi.Color.DEFAULT).bg(Ansi.Color.RED)
+                System.out.print(" " + ansi().bold().fg(Ansi.Color.DEFAULT).bg(RED)
                         .a(" " + PGCMatrix[column][row].toString().charAt(0) + " ").reset() + " ");
         } else {
             fgDisambiguationPrint(c.wall + "     ", false, personalGoalCardColor);
@@ -627,13 +631,13 @@ public class TextualGameUI extends GameUI {
             if(playerInfo.isConnected())
                 System.out.print(ansi().fg(Ansi.Color.GREEN).a("(CONNECTED) ").reset() + "| ");
             else
-                System.out.print(ansi().fg(Ansi.Color.RED).a("(DISCONNECTED) ").reset() + "| ");
+                System.out.print(ansi().fg(RED).a("(DISCONNECTED) ").reset() + "| ");
             if(playerInfo.username().equals(gameView.getFirstPlayerUsername()))
                 System.out.print(ansi().fg(Ansi.Color.YELLOW).a("[FIRST] ").reset() + "| ");
             if(playerInfo.username().equals(gameView.getCurrentPlayerUsername()))
                 System.out.print(ansi().fg(Ansi.Color.GREEN).a("[CURRENT] ").reset() + "| ");
             if(gameView.getFinalPlayerUsername() != null && gameView.getFinalPlayerUsername().equals(playerInfo.username()))
-                System.out.print(ansi().fg(Ansi.Color.RED).a("[LAST] ").reset() + "| ");
+                System.out.print(ansi().fg(RED).a("[LAST] ").reset() + "| ");
             if(playerInfo.tokens().isEmpty())
                 System.out.println("no tokens");
             else

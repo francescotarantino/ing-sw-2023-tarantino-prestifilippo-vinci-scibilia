@@ -71,6 +71,10 @@ public class GameView implements Serializable {
      * The key is the score, the value is the username. Always contains scoring tokens in possession of each player.
      */
     private final List<PlayerInfo> playersData;
+    /**
+     * This string contains the latest error message that occurred in the game.
+     */
+    private final String errorMessage;
 
     public GameView(Game game, int receivingPlayerIndex){
         this.myIndex = receivingPlayerIndex;
@@ -96,6 +100,7 @@ public class GameView implements Serializable {
                 .map(card -> new CGCData(card.getDescription(), card.getAvailableScores(), card.getImagePath()))
                 .toList();
         this.playersData = game.getPlayerInfo();
+        this.errorMessage = game.getErrorMessage();
     }
 
     public Tile[][] getBookshelfMatrix() {
@@ -152,5 +157,9 @@ public class GameView implements Serializable {
 
     public String getPersonalGoalCardImagePath() {
         return personalGoalCardImagePath;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

@@ -69,6 +69,11 @@ public class Game {
      * A game is paused when there is only one player connected to the game.
      */
     private boolean isPaused = false;
+    /**
+     * This string contains the latest error message that occurred in the game.
+     * The error message is received from the controller and sent to the view.
+     */
+    private String errorMessage;
 
     /**
      * Creates a new game
@@ -115,6 +120,8 @@ public class Game {
         // Current and final player indexes are set -1 by default
         this.currentPlayerIndex = -1;
         this.finalPlayerIndex = -1;
+
+        this.errorMessage = null;
     }
 
     /**
@@ -363,6 +370,15 @@ public class Game {
 
     public void setWalkover(boolean walkover) {
         this.walkover = walkover;
+    }
+
+    public void setErrorMessage(String error) {
+        this.errorMessage = error;
+        notifyListeners(lst, GameListener::modelChanged);
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     public void addListener(GameListener o){

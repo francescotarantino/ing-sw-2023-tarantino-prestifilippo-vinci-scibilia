@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.exception.InvalidMoveException;
 import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
@@ -43,17 +44,19 @@ public class Controller {
      * @param column is the column where the player wants to insert the tiles
      * @param points is an array of points from which the player wants to take the tiles
      */
-    public void performTurn(int column, Point...points){
+    public void performTurn(int column, Point...points) throws InvalidMoveException {
+        this.game.setErrorMessage(null);
+
         if(this.game.isPaused())
-            throw new IllegalStateException("Game is paused.");
+            throw new InvalidMoveException("Player " + this.game.getCurrentPlayer().getUsername() + " can't make a move because the game is paused.");
         if(column < 0 || column > Constants.bookshelfX)
-            throw new IndexOutOfBoundsException("Invalid column.");
+            throw new InvalidMoveException("Player " + this.game.getCurrentPlayer().getUsername() + " entered an invalid column.");
         if (points.length > Constants.maxPick || points.length == 0)
-            throw new IllegalArgumentException("Invalid number of tiles.");
+            throw new InvalidMoveException("Player " + this.game.getCurrentPlayer().getUsername() + " tried to pick an invalid number of tiles.");
         if(!checkIfTilesCanBeTaken(this.game.getLivingRoomBoard().getMatrix(), points))
-            throw new IllegalArgumentException("Provided tiles can't be taken.");
+            throw new InvalidMoveException("Player " + this.game.getCurrentPlayer().getUsername() + " tried to pick an invalid set of tiles.");
         if(!checkIfColumnHasEnoughSpace(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()].getMatrix(), column, points.length))
-            throw new IllegalArgumentException("Provided column doesn't have enough space.");
+            throw new InvalidMoveException("Player " + this.game.getCurrentPlayer().getUsername() + " tried to insert tiles in a column that doesn't have enough space.");
         Tile[] tempTiles = this.takeTiles(points);
         this.game.getCurrentPlayer().setLastMove(tempTiles, points);
         this.insertTiles(this.game.getBookshelves()[this.game.getCurrentPlayerIndex()], column, tempTiles);
@@ -304,5 +307,14 @@ public class Controller {
     public void walkover(){
         this.game.setWalkover(true);
         this.game.setGameEnded();
+    }
+
+    /**
+     * This method is a wrapper for the {@link Game#setErrorMessage(String)} method.
+     * It can be used to set an error message on the model.
+     * @param error the error message
+     */
+    public void setError(String error){
+        this.game.setErrorMessage(error);
     }
 }

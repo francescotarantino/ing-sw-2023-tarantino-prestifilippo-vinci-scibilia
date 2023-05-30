@@ -1,6 +1,8 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.exception.GameException;
+import it.polimi.ingsw.exception.InvalidMoveException;
 import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
@@ -29,6 +31,12 @@ public class ControllerTest {
     }
 
     @Test
+    void setErrorTest(){
+        controller.setError("test");
+        assertEquals("test", game.getErrorMessage());
+    }
+
+    @Test
     void checkStartIfFull() throws PreGameException {
         Game gameNotFull = new Game(222,3,new Player("playerOne"),2);
         Controller controllerGNF = new Controller(gameNotFull);
@@ -37,29 +45,29 @@ public class ControllerTest {
         assertNotEquals(gameNotFull.getCurrentPlayerIndex() , gameNotFull.getFirstPlayerIndex());
     }
     @Test
-    void checkPerformTurn(){
+    void checkPerformTurn() throws GameException {
         //Checks if exception is thrown when column index assumes an illegal value
-        assertThrows(IndexOutOfBoundsException.class, () -> {
+        assertThrows(InvalidMoveException.class, () -> {
             controller.performTurn( -1, new Point(1,2));
         });
         //Checks if exception is thrown when column index assumes an illegal value
-        assertThrows(IndexOutOfBoundsException.class, () -> {
+        assertThrows(InvalidMoveException.class, () -> {
             controller.performTurn( 10, new Point(0,0));
         });
         //Checks if the method performTurn correctly throws an exception when trying to insert no tiles
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(InvalidMoveException.class, () -> {
             Point[] emptyArray = {};
             controller.performTurn( 2, emptyArray);
         });
         //Checks if the method performTurn correctly throws an exception when trying to insert more tiles than allowed
         Point[] fourPointsArray = {new Point(1,2), new Point(3,4), new Point(6,7),new Point(3,2)};
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(InvalidMoveException.class, () -> {
             controller.performTurn( 2, fourPointsArray);
         });
         //Checks if the method performTurn correctly throws an exception when trying to take an illegal tile
         for (Point point : Constants.getInvalidPositions(2)) {
             Point[] invalidPosition = {point};
-            assertThrows(IllegalArgumentException.class, () -> {
+            assertThrows(InvalidMoveException.class, () -> {
                 controller.performTurn(3, invalidPosition);
             });
         }
@@ -78,7 +86,7 @@ public class ControllerTest {
         Point[] secondPlayerSecondChoice = {new Point(3,6), new Point(4,6), new Point(5,6)};
         controller.performTurn( 1, secondPlayerSecondChoice);
         //Third turn for the first player, tries to take three tiles and insert them in a column with only one empty space
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(InvalidMoveException.class, () -> {
             controller.performTurn( 1, new Point(4,6));
         });
     }

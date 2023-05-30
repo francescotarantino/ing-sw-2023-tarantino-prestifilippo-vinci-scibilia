@@ -2,6 +2,7 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.exception.GameException;
 import it.polimi.ingsw.exception.InvalidChoiceException;
 import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.listeners.GameListener;
@@ -236,10 +237,15 @@ public class ServerImpl implements Server, GameListListener, GameListener {
      */
     @Override
     public void performTurn(int column, Point... points) throws RemoteException {
-        if(this.playerIndex == this.model.getCurrentPlayerIndex()){
+        if(this.playerIndex != this.model.getCurrentPlayerIndex()){
+            this.controller.setError("Player " + this.model.getPlayer(this.playerIndex).getUsername() + " tried to perform a turn while it was not his turn.");
+            return;
+        }
+
+        try {
             this.controller.performTurn(column, points);
-        } else {
-            throw new RemoteException("It's not your turn.");
+        } catch (GameException e) {
+            this.controller.setError(e.getMessage());
         }
     }
 

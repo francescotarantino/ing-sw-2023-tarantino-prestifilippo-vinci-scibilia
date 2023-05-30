@@ -7,6 +7,7 @@ import it.polimi.ingsw.view.GameUI;
 import it.polimi.ingsw.view.graphical.fx.FXApplication;
 import it.polimi.ingsw.view.graphical.fx.GameUIController;
 import it.polimi.ingsw.view.graphical.fx.ImageCache;
+import it.polimi.ingsw.view.graphical.fx.dialogs.ErrorAlert;
 import it.polimi.ingsw.view.graphical.fx.dialogs.MoveErrorAlert;
 import it.polimi.ingsw.view.graphical.fx.dialogs.PauseDialog;
 import it.polimi.ingsw.view.graphical.fx.dialogs.ResultsAlert;
@@ -68,6 +69,9 @@ public class GraphicalGameUI extends GameUI {
      * Contains data about every aspect of the current Game (board state, player state...).
      */
     private GameView lastGameView;
+
+    /** Dialog used to show game errors. */
+    private ErrorAlert errorAlert;
 
     /**
      * Runs the Graphical GameUI. Sets all basic properties for the main window, then enters a loop to wait for and execute player's turns.
@@ -234,6 +238,17 @@ public class GraphicalGameUI extends GameUI {
             controller.printLivingRoomBoard(gameView.getLivingRoomBoardMatrix(), state);
             controller.printCards(gameView.getPersonalGoalCardImagePath(), gameView.getCGCData());
         });
+
+        if(gameView.getErrorMessage() != null){
+            Platform.runLater(() -> {
+                if(errorAlert != null && errorAlert.isShowing()){
+                    errorAlert.close();
+                }
+
+                errorAlert = new ErrorAlert(gameView.getErrorMessage());
+                errorAlert.show();
+            });
+        }
     }
 
     /**
