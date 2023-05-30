@@ -36,4 +36,13 @@ public class BagTest {
             j++;
         }
     }
+    @Test
+    void checkConditions() {
+        assertThrows(IndexOutOfBoundsException.class, () -> this.bag.popTile(-1));
+        assertThrows(IndexOutOfBoundsException.class, () -> this.bag.popTile(this.bound));
+        for(int i = 0; i < bound; i++) {
+            this.bag.popTile(0);
+        }
+        assertThrows(IllegalStateException.class, () -> this.bag.getRandomTile());
+    }
 }
