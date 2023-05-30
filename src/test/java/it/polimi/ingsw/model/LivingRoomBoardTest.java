@@ -79,4 +79,43 @@ public class LivingRoomBoardTest {
             assertEquals(livingRoomBoard.getTile(new Point(invalidPositionsFourPlayers[i][0], invalidPositionsFourPlayers[i][1])), new Tile(Constants.TileType.PLACEHOLDER, 0));
         }
     }
+    @Test
+    void checkBoundaries() {
+        LivingRoomBoard livingRoomBoard = new LivingRoomBoard(2);
+        assertThrows(IllegalArgumentException.class, () -> new LivingRoomBoard(6));
+        Tile t1 = new Tile(Constants.TileType.PLACEHOLDER);
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(-1, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(0, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(-1, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(12, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(-1, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(12, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(12, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.insertTile(t, new Point(0, 12)));
+        assertThrows(IllegalArgumentException.class, () -> livingRoomBoard.insertTile(t1, new Point(5, 6)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(-1, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(0, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(-1, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(12, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(-1, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(12, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(12, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.getTile(new Point(0, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(-1, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(0, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(-1, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(12, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(-1, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(12, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(12, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.removeTile(new Point(0, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(-1, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(0, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(-1, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(12, -1)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(-1, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(12, 12)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(12, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> livingRoomBoard.checkIsolatedTile(new Point(0, 12)));
+    }
 }
