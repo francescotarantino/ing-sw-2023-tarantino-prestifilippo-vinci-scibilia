@@ -102,7 +102,7 @@ public class Controller {
         return tiles;
     }
     /**
-     * This method insert the given tiles into the current player's bookshelf at the specified column,
+     * This method inserts the given tiles into the current player's bookshelf at the specified column,
      * it is taken for granted that the column has enough space.
      * @param bookshelf the player's bookshelf
      * @param column the column where the player wants to insert the tiles
@@ -205,7 +205,7 @@ public class Controller {
     }
 
     /**
-     * This method add to the player's total points the ones from his personal goal.
+     * This method adds to the player's total points the ones from his personal goal.
      * @param player the player who's getting the points
      * @param bookshelf the player's bookshelf
      */

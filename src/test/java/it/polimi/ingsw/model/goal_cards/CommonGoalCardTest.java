@@ -12,21 +12,21 @@ public class CommonGoalCardTest {
 
     @BeforeEach
     void init() {
-        cgc2 = new CommonGoalCard(2, -1){
+        cgc2 = new CommonGoalCard(2, 1){
             @Override
             public boolean check(Tile[][] matrix){
                 return true;
             }
         };
 
-        cgc3 = new CommonGoalCard(3, -1){
+        cgc3 = new CommonGoalCard(3, 2){
             @Override
             public boolean check(Tile[][] matrix){
                 return true;
             }
         };
 
-        cgc4 = new CommonGoalCard(4, -1){
+        cgc4 = new CommonGoalCard(4, 3){
             @Override
             public boolean check(Tile[][] matrix){
                 return true;
@@ -36,6 +36,18 @@ public class CommonGoalCardTest {
 
     @Test
     void getAvailableScoresTest() {
+        assertEquals(1, cgc2.getID());
+        assertEquals(2, cgc3.getID());
+        assertEquals(3, cgc4.getID());
+
+        assertEquals("/images/commonGoalCards/cgc1.jpg", cgc2.getImagePath());
+        assertEquals("/images/commonGoalCards/cgc2.jpg", cgc3.getImagePath());
+        assertEquals("/images/commonGoalCards/cgc3.jpg", cgc4.getImagePath());
+
+        assertNotNull(cgc2.getDescription());
+        assertNotNull(cgc3.getDescription());
+        assertNotNull(cgc4.getDescription());
+
         assertEquals(2, cgc2.getAvailableScores().length);
         assertEquals(3, cgc3.getAvailableScores().length);
         assertEquals(4, cgc4.getAvailableScores().length);

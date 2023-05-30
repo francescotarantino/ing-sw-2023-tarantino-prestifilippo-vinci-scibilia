@@ -15,6 +15,7 @@ public class PointTest {
                 Point point = new Point(i, j);
                 assertEquals(point.x(), i);
                 assertEquals(point.y(), j);
+                assertEquals("[" + i + "," + j + "]", point.toString());
             }
 
         }

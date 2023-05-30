@@ -28,6 +28,7 @@ public class GameListTest {
         gameList.addGame(game2);
 
         assertEquals(gameList.getGame(2), game2);
+        assertEquals(2, gameList.getGamesDetails().size());
 
         gameList.removeGame(game2);
 

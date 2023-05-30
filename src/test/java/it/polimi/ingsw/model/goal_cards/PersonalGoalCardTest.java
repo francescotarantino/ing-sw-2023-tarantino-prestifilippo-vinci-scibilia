@@ -22,10 +22,10 @@ public class PersonalGoalCardTest {
         for(int i = 0; i < Constants.getPersonalGoalCards().size(); i++){
             Map<String, ?> data = Constants.getPersonalGoalCards().get(i);
 
-            // Check if image path is present
+            // Check if the image path is present
             assertNotNull(data.get("image_path"));
 
-            // Check if matrix is valid
+            // Check if the matrix is valid
             for (int j = 0; j < Constants.getPersonalGoalCards().get(i).size(); j++){
                 List<?> rawList = (List<?>) data.get("matrix");
                 List<String> matrix = new ArrayList<>();
@@ -49,7 +49,7 @@ public class PersonalGoalCardTest {
     }
 
     @Test
-    void checkValidityTest(){
+    void pgcTest(){
         Constants.TileType[][] matrix = {
                 {Constants.TileType.PLANTS, null, Constants.TileType.TROPHIES, null, null, null},
                 {Constants.TileType.FRAMES, null, null, null, null, null},
@@ -58,6 +58,9 @@ public class PersonalGoalCardTest {
                 {null, null, null, null, null, Constants.TileType.TROPHIES},
         };
         PersonalGoalCard pgc = new PersonalGoalCard(matrix);
+
+        assertEquals(matrix, pgc.getMatrix());
+        assertNull(pgc.getImagePath());
 
         Tile[][] bookshelf1 = {{
                 new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.PLANTS), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.TROPHIES), new Tile(Constants.TileType.BOOKS)

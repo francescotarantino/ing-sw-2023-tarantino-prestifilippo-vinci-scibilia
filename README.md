@@ -20,7 +20,7 @@
 ## Compilazione
 La compilazione avviene tramite Maven.
 ```bash
-mvn clean package
+mvn package
 ```
 Verranno generati due file jar nella cartella `target`:
 - `myshelfie-client.jar` è il client, sia testuale che grafico (include anche le librerie di JavaFX).
