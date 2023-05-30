@@ -157,9 +157,10 @@ public class TextualGameUI extends GameUI {
     }
 
     /**
-     * Runs the Textual GameUI. Enables the usage of AnsiConsole for custom textual output.
-     * Enters a loop to wait for and execute player's turns.
-     * */
+     * Runs the Textual GameUI.
+     * This method enables the usage of AnsiConsole for custom textual output
+     * and enters a loop to wait for and execute player's turns.
+     */
     @Override
     public void run() {
         AnsiConsole.systemInstall();
@@ -678,7 +679,7 @@ public class TextualGameUI extends GameUI {
     }
 
     /**
-     * This method decides whether to print given string with default color or another given color.
+     * This method decides whether to print the given string with default color or another given color.
      * Default color is used for Windows, other colors are used for operative systems compatible with Unicode and more colors.
      * @param toPrint String to be printed
      * @param endLine Boolean representing the necessity to end the current line after printing

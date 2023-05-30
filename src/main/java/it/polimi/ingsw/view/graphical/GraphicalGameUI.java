@@ -74,7 +74,9 @@ public class GraphicalGameUI extends GameUI {
     private ErrorAlert errorAlert;
 
     /**
-     * Runs the Graphical GameUI. Sets all basic properties for the main window, then enters a loop to wait for and execute player's turns.
+     * Runs the Graphical GameUI.
+     * This method sets all basic properties for the main window,
+     * then enters a loop to wait for and execute player's turns.
      */
     @Override
     public void run() {

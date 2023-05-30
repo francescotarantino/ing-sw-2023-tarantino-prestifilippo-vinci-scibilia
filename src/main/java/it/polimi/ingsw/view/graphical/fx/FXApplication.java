@@ -27,12 +27,12 @@ public class FXApplication extends Application {
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         latch.countDown();
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // If OS supports taskbar icons (e.g. macOS), set the icon
         if(Taskbar.isTaskbarSupported() && Taskbar.getTaskbar().isSupported(Taskbar.Feature.ICON_IMAGE)){
             Taskbar.getTaskbar().setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/icons/icon.png")));

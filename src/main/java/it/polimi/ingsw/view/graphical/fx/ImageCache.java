@@ -14,7 +14,7 @@ import java.util.Objects;
 public class ImageCache {
     /**
      * This map is used to store the cached images.
-     * The path of the image is used as key, while the {@link Image} object is used as value.
+     * The path of the image is used as the key, while the {@link Image} object is used as value.
      */
     private final Map<String, Image> cache = new HashMap<>();
     private static ImageCache instance;

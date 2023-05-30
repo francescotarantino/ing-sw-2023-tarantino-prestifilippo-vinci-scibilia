@@ -15,25 +15,15 @@ public class GameTest {
     void checkConstruction(){
         //Checks if the constructor correctly throws an exception in the following cases:
         //The program tries to create a Game with less than the minimum amount of Players
-        assertThrows(InvalidChoiceException.class, () -> {
-            this.game = new Game(1,1,new Player("TestName1"),1);
-        });
+        assertThrows(InvalidChoiceException.class, () -> this.game = new Game(1,1,new Player("TestName1"),1));
         //The program tries to create a Game with more than the maximum amount of Players
-        assertThrows(InvalidChoiceException.class, () -> {
-            this.game = new Game(1,5,new Player("TestName1"),1);
-        });
+        assertThrows(InvalidChoiceException.class, () -> this.game = new Game(1,5,new Player("TestName1"),1));
         //The program tries to create a Game with an ID smaller than the smallest accepted one
-        assertThrows(IllegalArgumentException.class, () -> {
-            this.game = new Game(0,4,new Player("TestName1"),1);
-        });
+        assertThrows(IllegalArgumentException.class, () -> this.game = new Game(0,4,new Player("TestName1"),1));
         //The program tries to create a Game with less than the minimum amount of CommonGoalCards
-        assertThrows(InvalidChoiceException.class, () -> {
-            this.game = new Game(1,3,new Player("TestName1"),0);
-        });
+        assertThrows(InvalidChoiceException.class, () -> this.game = new Game(1,3,new Player("TestName1"),0));
         //The program tries to create a Game with more than the maximum amount of CommonGoalCards
-        assertThrows(InvalidChoiceException.class, () -> {
-            this.game = new Game(1,3,new Player("TestName1"),3);
-        });
+        assertThrows(InvalidChoiceException.class, () -> this.game = new Game(1,3,new Player("TestName1"),3));
     }
 
     @Test
@@ -49,9 +39,7 @@ public class GameTest {
         }
         assertEquals(c,1);
         //Checks if an exception is thrown by trying to create a new Bookshelf with a duplicate username
-        assertThrows(UsernameTakenException.class, () -> {
-            this.game.addBookshelf(new Player("TestName1"));
-        });
+        assertThrows(UsernameTakenException.class, () -> this.game.addBookshelf(new Player("TestName1")));
         //Checks if the amount of non-null bookshelves is consistent with the addition of new bookshelves
         assertDoesNotThrow(() -> this.game.addBookshelf(new Player("TestName2")));
         assertDoesNotThrow(() -> this.game.addBookshelf(new Player("TestName3")));
@@ -64,9 +52,7 @@ public class GameTest {
         }
         assertEquals(c,4);
         //Checks if an exception is thrown when trying to add more bookshelves than the current Game supports
-        assertThrows(NoFreeBookshelfException.class, () -> {
-           this.game.addBookshelf(new Player("TestName5"));
-        });
+        assertThrows(NoFreeBookshelfException.class, () -> this.game.addBookshelf(new Player("TestName5")));
     }
 
     @Test
@@ -86,7 +72,7 @@ public class GameTest {
 
     @Test
     void checkRandomGeneration(){
-        /* Checks if the method "extractRandomIDsWithoutDuplicates" correctly returns an adequate amount of random numbers
+        /* Checks if the method "extractRandomIDsWithoutDuplicates" correctly returns an adequate number of random numbers
             in the specified boundary with no repetitions */
         int[] test;
         //the method is Static, so it is not necessary to create an instance of Game to test it

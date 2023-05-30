@@ -33,7 +33,7 @@ public class Player {
     }
 
     /**
-     * Adds the given points to the player's points counter
+     * Adds the given points to the player's point counter
      * @param newPoints the points to add
      */
     public void addPoints(int newPoints){

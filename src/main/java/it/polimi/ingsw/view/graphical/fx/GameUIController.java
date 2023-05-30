@@ -93,7 +93,7 @@ public class GameUIController implements Initializable {
     /**
      * Reference to the bookshelf temporary tiles ImageViews.
      * These tiles are part of the drag-and-drop mechanism.
-     * They are used to show the tiles that are being moved, before the move is confirmed.
+     * They are used to show the tiles that are being moved before the move is confirmed.
      */
     private final List<ImageView> temporaryBookshelfTiles = new ArrayList<>();
 
@@ -257,7 +257,7 @@ public class GameUIController implements Initializable {
     }
 
     /**
-     * Clears the Cards Area of any previously shown content.
+     * Clears the cards area of any previously shown content.
      */
     public void clearCardsArea(){
         cardsArea.getChildren().clear();
@@ -342,9 +342,9 @@ public class GameUIController implements Initializable {
     }
 
     /**
-     * Sets the behaviour of a tile in relation to a mouse Drop action.
+     * Sets the behavior of a tile in relation to a mouse Drop action.
      * @param point The coordinates of the tile.
-     * @param tileImage The tile to which to attribute the specified behaviour.
+     * @param tileImage The tile to which to attribute the specified behavior.
      */
     private void setTileOnDragDropped(Point point, ImageView tileImage) {
         tileImage.setOnDragOver(e -> {

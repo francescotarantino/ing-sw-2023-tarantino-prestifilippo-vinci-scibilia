@@ -114,7 +114,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
 
     /**
      * This method is called when a client player wants to create a new game.
-     * The gameID is obtained from the maximum gameID of the games list.
+     * The gameID is obtained from the maximum gameID of the game list.
      * @see Server#create(int, int, String)
      */
     @Override
@@ -137,7 +137,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
 
         this.model.addListener(this);
 
-        // Triggers the update of the players list on the client
+        // Triggers the update of the player list on the client
         this.playerJoinedGame();
     }
 
@@ -217,7 +217,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
      * GameList.
      */
     @Override
-    public void gameEnded() throws RemoteException {
+    public void gameEnded() {
         GameView gameView = new GameView(this.model, this.playerIndex);
 
         GameList.getInstance().removeGame(this.model);

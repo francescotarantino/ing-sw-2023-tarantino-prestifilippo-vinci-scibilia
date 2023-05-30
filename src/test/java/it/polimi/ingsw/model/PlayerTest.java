@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PlayerTest {
-    Player player = new Player("TestUsername");
+    final Player player = new Player("TestUsername");
 
     @Test
     void checkPlayer(){

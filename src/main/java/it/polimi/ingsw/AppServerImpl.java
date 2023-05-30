@@ -110,6 +110,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
     /**
      * This method is used to start the socket server.
      */
+    @SuppressWarnings("InfiniteLoopStatement")
     public static void startSocket() throws RemoteException {
         System.out.println("SOCKET > Starting socket server on port " + socketPort + "...");
 

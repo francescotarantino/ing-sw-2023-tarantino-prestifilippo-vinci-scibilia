@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
 public class Utils {
     /**
      * Extracts random numbers without duplicates from 0 to bound-1
-     * @param amount the amount of random numbers to be extracted
+     * @param amount the number of random numbers to be extracted
      * @param bound the upper bound (exclusive) of the random numbers to be extracted
      */
     public static int[] extractRandomIDsWithoutDuplicates(int amount, int bound){
@@ -85,7 +85,7 @@ public class Utils {
 
                     zip.close();
                 } else {
-                    // The game is not running from jar (e.g. it's running with IntelliJ)
+                    // The game is not running from jar (e.g., it's running with IntelliJ)
                     Path path = Paths.get(Objects.requireNonNull(Utils.class.getResource("/" + resourcePath)).toURI());
                     try(Stream<Path> stream = Files.walk(path)){
                         stream

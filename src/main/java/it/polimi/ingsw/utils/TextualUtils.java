@@ -13,7 +13,7 @@ public class TextualUtils {
 
     /**
      * This method gets an int from the scanner.
-     * If the input is not an int, an error message is shown and user is asked to try again.
+     * If the input is not an int, an error message is shown and the user is asked to try again.
      * @param in the scanner
      * @return the input integer
      */
@@ -30,7 +30,7 @@ public class TextualUtils {
 
     /**
      * This method gets an int from the scanner like {@link #nextInt(Scanner)}.
-     * If the input is not in the range [lowerBound, higherBound], an error message is shown and user can try again.
+     * If the input is not in the range [lowerBound, higherBound], an error message is shown and the user can try again.
      * @param in the scanner
      * @param lowerBound the lower bound
      * @param upperBound the higher bound
@@ -78,7 +78,7 @@ public class TextualUtils {
 
     /**
      * This method gets an integer from the scanner like {@link #nextIntInterruptible(Scanner)}.
-     * If the input is not in the range [lowerBound, higherBound], an error message is shown and user can try again.
+     * If the input is not in the range [lowerBound, higherBound], an error message is shown and the user can try again.
      * @param in the scanner
      * @param lowerBound the lower bound
      * @param upperBound the higher bound

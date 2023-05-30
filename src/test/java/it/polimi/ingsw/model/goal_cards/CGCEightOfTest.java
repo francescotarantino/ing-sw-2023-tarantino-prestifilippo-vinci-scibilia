@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.utils.Constants.TileType.*;
-import static it.polimi.ingsw.utils.Constants.TileType.CATS;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CGCEightOfTest {

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface Client extends Remote {
     /**
-     * This method is called by the server to notify the client of the list of games.
+     * This method is called by the server to notify the client about the list of games.
      * @param o the list of games
      */
     void updateGamesList(List<GameDetailsView> o) throws RemoteException;

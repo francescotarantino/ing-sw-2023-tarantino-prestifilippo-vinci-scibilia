@@ -15,43 +15,43 @@ public class Charset {
     /** Name of the charset */
     public String name = "Default";
 
-    /** Character used by the UI to display part of a table */
+    /** Vertical wall of the table */
     public String wall = "|";
 
-    /** Character used by the UI to display part of a table */
+    /** Ceiling of the table (5 characters) */
     public String fiveCeilings = "-----";
 
-    /** Character used by the UI to display part of a table */
+    /** Corner top left of the table */
     public String cornerTopLeft = "/";
 
-    /** Character used by the UI to display part of a table */
+    /** Corner top right of the table */
     public String cornerTopRight = "\\";
 
-    /** Character used by the UI to display part of a table */
+    /** Corner bottom left of the table */
     public String cornerBottomLeft = "\\";
 
-    /** Character used by the UI to display part of a table */
+    /** Corner bottom left (alternative) of the table */
     public String cornerBottomLeftAlternative = "!";
 
-    /** Character used by the UI to display part of a table */
+    /** Corner bottom right of the table */
     public String cornerBottomRight = "/";
 
-    /** Character used by the UI to display part of a table */
+    /** Corner bottom right (alternative) of the table */
     public String cornerBottomRightAlternative = "!";
 
-    /** Character used by the UI to display part of a table */
+    /** Edge top of the table */
     public String edgeTop = "-";
 
-    /** Character used by the UI to display part of a table */
+    /** Edge bottom of the table */
     public String edgeBottom = "-";
 
-    /** Character used by the UI to display part of a table */
+    /** Edge left of the table */
     public String edgeLeft = "|";
 
-    /** Character used by the UI to display part of a table */
+    /** Edge right of the table */
     public String edgeRight = "|";
 
-    /** Character used by the UI to display part of a table */
+    /** Intersection of the table */
     public String cross = "+";
 
     /**

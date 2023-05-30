@@ -58,13 +58,13 @@ public class StartUIController implements Initializable {
     public Text connectionMethodText;
 
     /**
-     * Toggle group for the number of players radio buttons.
+     * Toggle group for the number of player radio buttons.
      */
-    public ToggleGroup numberOfPlayers = new ToggleGroup();
+    public final ToggleGroup numberOfPlayers = new ToggleGroup();
     /**
      * Toggle group for the number of common goal cards radio buttons.
      */
-    public ToggleGroup numberOfCGCs = new ToggleGroup();
+    public final ToggleGroup numberOfCGCs = new ToggleGroup();
 
     /**
      * Initializes the main components of the Graphical StartUI.

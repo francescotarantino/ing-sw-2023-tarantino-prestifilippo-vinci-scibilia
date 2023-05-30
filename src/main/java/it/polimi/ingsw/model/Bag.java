@@ -12,7 +12,7 @@ public class Bag {
     private final List<Tile> tiles;
 
     /**
-     * Creates a bag filled with the right amount of tiles.
+     * Creates a bag filled with the right number of tiles.
      */
     public Bag(){
         tiles = new ArrayList<>();

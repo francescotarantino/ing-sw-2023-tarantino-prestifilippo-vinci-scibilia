@@ -41,7 +41,7 @@ public abstract class CommonGoalCard extends GoalCard {
      * Creates a specific common goal card based on the number of players and the ID
      * @param numPlayers the number of players in the game
      * @param ID the ID of the common goal card
-     * @return the common goal card, that is an instance of a subclass of CommonGoalCard
+     * @return the common goal card, that is an instance of a subclass of {@link CommonGoalCard}
      */
     public static CommonGoalCard create(int numPlayers, int ID) {
         if (numPlayers < Constants.playersLowerBound || numPlayers > Constants.playersUpperBound) {
@@ -118,6 +118,7 @@ public abstract class CommonGoalCard extends GoalCard {
     /**
      * @return the image path of the common goal card
      */
+    @Override
     public String getImagePath() {
         return "/images/commonGoalCards/cgc" + this.getID() + ".jpg";
     }

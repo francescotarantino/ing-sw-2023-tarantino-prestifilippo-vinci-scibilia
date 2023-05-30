@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PersonalGoalCardTest {
 
     /**
-     * Checks if PGC file is read correctly: every element is a valid TileType and there are no PLACEHOLDERs.
+     * Checks if PGC file is read correctly: every element is a valid TileType, and there are no PLACEHOLDERs.
      */
     @Test
     void checkReadFromFile(){

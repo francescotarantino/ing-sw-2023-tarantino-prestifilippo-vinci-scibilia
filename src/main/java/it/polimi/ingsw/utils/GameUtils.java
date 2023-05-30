@@ -20,8 +20,8 @@ public class GameUtils {
     }
 
     /**
-     * @return is the size of the group found starting from the tile in position (x,y) in the matrix
-     * The method is recursive, and it builds the biggest possible block by checking the adjacent tiles in all directions
+     * The method is recursive, and it builds the biggest possible block by checking the adjacent tiles in all directions.
+     * @return the size of the group found starting from the tile in position (x,y) in the matrix
      */
     public static int findGroup(Point point, Tile[][] matrix, boolean[][] done) {
         if (done[point.x()][point.y()]) {

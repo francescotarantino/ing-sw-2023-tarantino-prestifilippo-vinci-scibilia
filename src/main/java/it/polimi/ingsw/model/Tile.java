@@ -45,14 +45,14 @@ public class Tile implements Serializable {
     }
 
     /**
-     * this method returns the type of the selected Tile
+     * This method returns the type of the tile.
      */
     public Constants.TileType getType(){
         return this.type;
     }
 
     /**
-     * this method returns the variant of the selected Tile
+     * This method returns the variant of the tile.
      */
     public int getVariant() {
         return this.variant;
@@ -70,7 +70,7 @@ public class Tile implements Serializable {
     }
 
     /**
-     * this method confront the current Tile type with another one passed as argument
+     * This method confronts the current tile type with another one passed as argument
      * @param t tile to confront with
      */
     public boolean sameType(Tile t) {
@@ -86,7 +86,7 @@ public class Tile implements Serializable {
 
 
     /**
-     * @return the path of the image of the tile, based on its type and variant
+     * @return the path of the tile image, based on its type and variant
      */
     public String getImagePath() {
         if(!isPlaceholder()) {

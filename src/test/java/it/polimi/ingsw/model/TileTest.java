@@ -23,6 +23,8 @@ public class TileTest {
         Tile myTile = new Tile(Constants.TileType.values()[0], 1);
         Tile myTile2 = new Tile(Constants.TileType.values()[0], 1);
         assertEquals(myTile, myTile2);
+        //noinspection EqualsWithItself
+        assertEquals(myTile, myTile);
 
         Tile myTile3 = new Tile(Constants.TileType.values()[0], 2);
         assertNotEquals(myTile, myTile3);
@@ -45,6 +47,10 @@ public class TileTest {
         Tile mySecondTile = new Tile(Constants.TileType.CATS);
         assertEquals(myTile.toString()," ");
         assertEquals(mySecondTile.toString(),Constants.TileType.CATS.toString());
+    }
 
+    @Test
+    void checkVariant() {
+        assertThrows(IllegalArgumentException.class, () -> new Tile(Constants.TileType.CATS, Constants.tileVariants + 1));
     }
 }

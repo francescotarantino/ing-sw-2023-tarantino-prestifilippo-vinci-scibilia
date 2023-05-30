@@ -46,30 +46,22 @@ public class ControllerTest {
     }
     @Test
     void checkPerformTurn() throws GameException {
-        //Checks if exception is thrown when column index assumes an illegal value
-        assertThrows(InvalidMoveException.class, () -> {
-            controller.performTurn( -1, new Point(1,2));
-        });
-        //Checks if exception is thrown when column index assumes an illegal value
-        assertThrows(InvalidMoveException.class, () -> {
-            controller.performTurn( 10, new Point(0,0));
-        });
-        //Checks if the method performTurn correctly throws an exception when trying to insert no tiles
+        //Check if exception is thrown when column index assumes an illegal value
+        assertThrows(InvalidMoveException.class, () -> controller.performTurn( -1, new Point(1,2)));
+        //Check if exception is thrown when column index assumes an illegal value
+        assertThrows(InvalidMoveException.class, () -> controller.performTurn( 10, new Point(0,0)));
+        //Check if the method performTurn correctly throws an exception when trying to insert no tiles
         assertThrows(InvalidMoveException.class, () -> {
             Point[] emptyArray = {};
             controller.performTurn( 2, emptyArray);
         });
-        //Checks if the method performTurn correctly throws an exception when trying to insert more tiles than allowed
+        //Check if the method performTurn correctly throws an exception when trying to insert more tiles than allowed
         Point[] fourPointsArray = {new Point(1,2), new Point(3,4), new Point(6,7),new Point(3,2)};
-        assertThrows(InvalidMoveException.class, () -> {
-            controller.performTurn( 2, fourPointsArray);
-        });
-        //Checks if the method performTurn correctly throws an exception when trying to take an illegal tile
+        assertThrows(InvalidMoveException.class, () -> controller.performTurn( 2, fourPointsArray));
+        //Check if the method performTurn correctly throws an exception when trying to take an illegal tile
         for (Point point : Constants.getInvalidPositions(2)) {
             Point[] invalidPosition = {point};
-            assertThrows(InvalidMoveException.class, () -> {
-                controller.performTurn(3, invalidPosition);
-            });
+            assertThrows(InvalidMoveException.class, () -> controller.performTurn(3, invalidPosition));
         }
         /* Performs two turns for each player, testing the regular flow of the game,
          * whilst filling up the bookshelves for the next test*/
@@ -86,9 +78,7 @@ public class ControllerTest {
         Point[] secondPlayerSecondChoice = {new Point(3,6), new Point(4,6), new Point(5,6)};
         controller.performTurn( 1, secondPlayerSecondChoice);
         //Third turn for the first player, tries to take three tiles and insert them in a column with only one empty space
-        assertThrows(InvalidMoveException.class, () -> {
-            controller.performTurn( 1, new Point(4,6));
-        });
+        assertThrows(InvalidMoveException.class, () -> controller.performTurn( 1, new Point(4,6)));
     }
     @Test
     void testCheckBoardNeedRefill1() {
@@ -169,13 +159,9 @@ public class ControllerTest {
                 }
             }
         }
-        assertThrows(InvalidMoveException.class, () -> {
-            controller.performTurn(0, new Point(5,6));
-        });
+        assertThrows(InvalidMoveException.class, () -> controller.performTurn(0, new Point(5,6)));
         game.setPaused(true);
-        assertThrows(InvalidMoveException.class, () -> {
-            controller.performTurn(Constants.bookshelfX - 1, new Point(5, 6));
-        });
+        assertThrows(InvalidMoveException.class, () -> controller.performTurn(Constants.bookshelfX - 1, new Point(5, 6)));
         game.setPaused(false);
         try {
             controller.performTurn(Constants.bookshelfX - 1, new Point(5, 6));
