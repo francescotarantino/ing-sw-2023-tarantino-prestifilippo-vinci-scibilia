@@ -2,6 +2,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.exception.NoFreeBookshelfException;
+import it.polimi.ingsw.exception.PreGameException;
+import it.polimi.ingsw.exception.UsernameTakenException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,11 +15,11 @@ public class GameTest {
     void checkConstruction(){
         //Checks if the constructor correctly throws an exception in the following cases:
         //The program tries to create a Game with less than the minimum amount of Players
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(InvalidChoiceException.class, () -> {
             this.game = new Game(1,1,new Player("TestName1"),1);
         });
         //The program tries to create a Game with more than the maximum amount of Players
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(InvalidChoiceException.class, () -> {
             this.game = new Game(1,5,new Player("TestName1"),1);
         });
         //The program tries to create a Game with an ID smaller than the smallest accepted one
@@ -23,19 +27,19 @@ public class GameTest {
             this.game = new Game(0,4,new Player("TestName1"),1);
         });
         //The program tries to create a Game with less than the minimum amount of CommonGoalCards
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(InvalidChoiceException.class, () -> {
             this.game = new Game(1,3,new Player("TestName1"),0);
         });
         //The program tries to create a Game with more than the maximum amount of CommonGoalCards
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(InvalidChoiceException.class, () -> {
             this.game = new Game(1,3,new Player("TestName1"),3);
         });
     }
 
     @Test
-    void checkAddBookshelf(){
+    void checkAddBookshelf() throws PreGameException {
         //Checks if the addBookshelf works correctly in the following situations:
-        //A valid game is created and an amount of non-null bookshelves is expected
+        //A valid game is created, and a number of non-null bookshelves is expected
         this.game = new Game(1,4,new Player("TestName1"),2);
         int c = 0;
         for(int i=0; i<this.game.getTotalPlayersNumber(); i++){
@@ -45,13 +49,13 @@ public class GameTest {
         }
         assertEquals(c,1);
         //Checks if an exception is thrown by trying to create a new Bookshelf with a duplicate username
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(UsernameTakenException.class, () -> {
             this.game.addBookshelf(new Player("TestName1"));
         });
         //Checks if the amount of non-null bookshelves is consistent with the addition of new bookshelves
-        this.game.addBookshelf(new Player("TestName2"));
-        this.game.addBookshelf(new Player("TestName3"));
-        this.game.addBookshelf(new Player("TestName4"));
+        assertDoesNotThrow(() -> this.game.addBookshelf(new Player("TestName2")));
+        assertDoesNotThrow(() -> this.game.addBookshelf(new Player("TestName3")));
+        assertDoesNotThrow(() -> this.game.addBookshelf(new Player("TestName4")));
         c = 0;
         for(int i=0; i<this.game.getTotalPlayersNumber(); i++){
             if(this.game.getBookshelves()[i] != null) {
@@ -60,13 +64,13 @@ public class GameTest {
         }
         assertEquals(c,4);
         //Checks if an exception is thrown when trying to add more bookshelves than the current Game supports
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(NoFreeBookshelfException.class, () -> {
            this.game.addBookshelf(new Player("TestName5"));
         });
     }
 
     @Test
-    void checkGetters(){
+    void checkGetters() throws PreGameException {
         //Checks if all the getters return the expected results on a valid new Game
         this.game = new Game (1,4,new Player("TestName1"),2);
         assertNotNull(this.game.getBookshelves());
@@ -101,7 +105,7 @@ public class GameTest {
     }
 
     @Test
-    void checkSetCurrentPlayerIndex(){
+    void checkSetCurrentPlayerIndex() throws PreGameException {
         //Tests the "setCurrentPlayerIndex" method
         this.game = new Game (1,4,new Player("TestName1"),2);
         int t1 = this.game.getCurrentPlayerIndex();

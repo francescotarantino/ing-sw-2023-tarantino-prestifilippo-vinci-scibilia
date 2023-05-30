@@ -1,6 +1,6 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.Point;
 
 import java.rmi.RemoteException;
@@ -37,11 +37,11 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
     }
 
     @Override
-    public void addPlayerToGame(int gameID, String username) throws RemoteException, InvalidChoiceException {
+    public void addPlayerToGame(int gameID, String username) throws RemoteException {
         executorService.submit(() -> {
             try {
                 server.addPlayerToGame(gameID, username);
-            } catch (RemoteException | InvalidChoiceException e) {
+            } catch (RemoteException | PreGameException e) {
                 try {
                     client.showError(e.getMessage());
                 } catch (RemoteException ignored) {}
@@ -50,11 +50,11 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
     }
 
     @Override
-    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
+    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
         executorService.submit(() -> {
             try {
                 server.create(numberOfPlayers, numberOfCommonGoalCards, username);
-            } catch (RemoteException | InvalidChoiceException e) {
+            } catch (RemoteException | PreGameException e) {
                 try {
                     client.showError(e.getMessage());
                 } catch (RemoteException ignored) {}

@@ -2,7 +2,7 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
-import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.listeners.GameUIListener;
 import it.polimi.ingsw.listeners.StartUIListener;
 import it.polimi.ingsw.model.Point;
@@ -92,7 +92,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void createGame(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
         try {
             this.server.create(numberOfPlayers, numberOfCommonGoalCards, username);
-        } catch (InvalidChoiceException e) {
+        } catch (PreGameException e) {
             this.showError(e.getMessage());
         }
     }
@@ -101,7 +101,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void joinGame(int gameID, String username) throws RemoteException {
         try {
             this.server.addPlayerToGame(gameID, username);
-        } catch (InvalidChoiceException e) {
+        } catch (PreGameException e) {
             this.showError(e.getMessage());
         }
     }

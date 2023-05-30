@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.Utils;
+import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
@@ -290,8 +291,9 @@ public class Controller {
      * This method is a wrapper for the {@link Game#addBookshelf(Player)}} method.
      * @param username the username of the new player
      * @return the index of the new player
+     * @throws PreGameException if the username is already taken or the game is full
      */
-    public int addPlayer(String username){
+    public int addPlayer(String username) throws PreGameException {
         return this.game.addBookshelf(new Player(username));
     }
 

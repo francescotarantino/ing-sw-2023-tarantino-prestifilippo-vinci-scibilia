@@ -1,6 +1,6 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.Point;
 
 import java.rmi.Remote;
@@ -22,18 +22,18 @@ public interface Server extends Remote {
      * This method is called by the client to join an already existing game.
      * @param gameID the ID of the game to join
      * @param username the username of the player
-     * @throws InvalidChoiceException if the player cannot join the game (e.g. invalid gameID, the game is full, the username is already taken, etc.)
+     * @throws PreGameException if the player cannot join the game (e.g., invalid gameID, the game is full, the username is already taken, etc.)
      */
-    void addPlayerToGame(int gameID, String username) throws RemoteException, InvalidChoiceException;
+    void addPlayerToGame(int gameID, String username) throws RemoteException, PreGameException;
 
     /**
      * This method is called by the client to create a new game.
      * @param numberOfPlayers the number of players in the game
      * @param numberOfCommonGoalCards the number of common goal cards to use in the game
      * @param username the username of the player
-     * @throws InvalidChoiceException if the player cannot create the game
+     * @throws PreGameException if the player cannot create the game
      */
-    void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException;
+    void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, PreGameException;
 
     /**
      * This method is called by the client to get the list of games.

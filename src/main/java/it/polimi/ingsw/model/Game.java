@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.exception.PreGameException;
+import it.polimi.ingsw.exception.NoFreeBookshelfException;
+import it.polimi.ingsw.exception.UsernameTakenException;
 import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
@@ -41,7 +45,7 @@ public class Game {
      */
     private final int firstPlayerIndex;
     /**
-     * Index of the current player that has to make a move. If it's equal to -1 the game has not started yet.
+     * Index of the current player that has to make a move. If it's equal to -1, the game has not started yet.
      */
     private int currentPlayerIndex;
     /**
@@ -73,15 +77,15 @@ public class Game {
      * @param newPlayer the first player that will be added to the game
      * @param numberOfCommonGoalCards the number of common goal cards in the game
      */
-    public Game(int ID, int numberOfPlayers, Player newPlayer, int numberOfCommonGoalCards){
+    public Game(int ID, int numberOfPlayers, Player newPlayer, int numberOfCommonGoalCards) throws PreGameException {
         if(numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound)
-            throw new IllegalArgumentException("Illegal number of players. A game should have " + Constants.playersLowerBound + " to " + Constants.playersUpperBound + " players");
+            throw new InvalidChoiceException("Illegal number of players. A game should have " + Constants.playersLowerBound + " to " + Constants.playersUpperBound + " players");
 
         if(ID <= Constants.IDLowerBound)
             throw new IllegalArgumentException("Game ID must be greater than " + Constants.IDLowerBound);
 
         if(numberOfCommonGoalCards < Constants.minCommonGoalCards || numberOfCommonGoalCards > Constants.maxCommonGoalCards)
-            throw new IllegalArgumentException("Illegal number of common goal cards. A game should have between " + Constants.minCommonGoalCards + " and " + Constants.maxCommonGoalCards + " common goal cards");
+            throw new InvalidChoiceException("Illegal number of common goal cards. A game should have between " + Constants.minCommonGoalCards + " and " + Constants.maxCommonGoalCards + " common goal cards");
 
         // Game construction
 
@@ -90,10 +94,11 @@ public class Game {
         this.livingRoomBoard = new LivingRoomBoard(numberOfPlayers);
         this.bag = new Bag();
 
-        // Generating an adequate amount of random numbers, used as indexes for class PersonalGoalCards to generate cards with no repetition
+        // Generating an adequate number of random numbers,
+        // used as indexes for class PersonalGoalCards to generate cards with no repetition
         randomPGCNumbers = extractRandomIDsWithoutDuplicates(numberOfPlayers, Constants.getPersonalGoalCards().size());
 
-        // Generating an adequate amount of bookshelves and creating the first bookshelf for the first player
+        // Generating an adequate number of bookshelves and creating the first bookshelf for the first player
         this.bookshelves = new Bookshelf[numberOfPlayers];
         this.addBookshelf(newPlayer);
 
@@ -117,18 +122,18 @@ public class Game {
      * @param player the new player that will be added to the game
      * @return the index of the new bookshelf
      */
-    public int addBookshelf(Player player){
+    public int addBookshelf(Player player) throws PreGameException {
         int i;
         for (i = 0; i < this.getTotalPlayersNumber(); i++) {
             if (this.bookshelves[i] != null){
                 if(this.bookshelves[i].getPlayer().getUsername().equals(player.getUsername())) {
-                    throw new IllegalArgumentException("Username already present in this game");
+                    throw new UsernameTakenException();
                 }
             } else break;
         }
 
         if(i == this.getTotalPlayersNumber()) {
-            throw new IllegalStateException("No free bookshelf available");
+            throw new NoFreeBookshelfException();
         }
 
         bookshelves[i] = new Bookshelf(player, new PersonalGoalCard(randomPGCNumbers[i]));
@@ -260,7 +265,7 @@ public class Game {
     }
 
     /**
-     * This method return the list of players in the game
+     * This method returns the list of players in the game
      * @return an ArrayList of Strings containing the usernames of the players in the game
      */
     public List<String> playersList() {

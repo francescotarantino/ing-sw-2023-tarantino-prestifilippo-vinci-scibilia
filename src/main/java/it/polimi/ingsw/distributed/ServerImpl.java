@@ -3,6 +3,7 @@ package it.polimi.ingsw.distributed;
 import it.polimi.ingsw.Constants;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameList;
@@ -72,7 +73,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
      * @see Server#addPlayerToGame(int, String)
      */
     @Override
-    public void addPlayerToGame(int gameID, String username) throws RemoteException, InvalidChoiceException {
+    public void addPlayerToGame(int gameID, String username) throws RemoteException, PreGameException {
         System.out.println("A client is joining game " + gameID + " with username " + username + "...");
 
         this.model = GameList.getInstance().getGame(gameID);
@@ -97,11 +98,11 @@ public class ServerImpl implements Server, GameListListener, GameListener {
 
             try {
                 this.playerIndex = this.controller.addPlayer(username);
-            } catch (IllegalArgumentException | IllegalStateException e) {
+            } catch (PreGameException e) {
                 this.model.removeListener(this);
                 this.model = null;
                 this.controller = null;
-                throw new InvalidChoiceException(e.getMessage());
+                throw e;
             }
 
             this.playerJoinedGame();
@@ -116,7 +117,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
      * @see Server#create(int, int, String)
      */
     @Override
-    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, InvalidChoiceException {
+    public void create(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException, PreGameException {
         int gameID = GameList.getInstance().getGames().stream()
                 .mapToInt(Game::getGameID)
                 .max()
@@ -124,11 +125,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
 
         System.out.println("A client is creating game " + gameID + " with username " + username + "...");
 
-        try {
-            this.model = new Game(gameID, numberOfPlayers, new Player(username), numberOfCommonGoalCards);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            throw new InvalidChoiceException(e.getMessage());
-        }
+        this.model = new Game(gameID, numberOfPlayers, new Player(username), numberOfCommonGoalCards);
 
         // The player that creates the game is the first player to join it
         this.playerIndex = 0;

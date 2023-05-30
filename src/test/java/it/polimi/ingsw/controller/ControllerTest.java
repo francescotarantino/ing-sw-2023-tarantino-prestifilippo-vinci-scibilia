@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Constants;
+import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Point;
@@ -16,10 +17,10 @@ public class ControllerTest {
     private static Controller controller;
     private static Game game;
     @BeforeEach
-    void initializing(){
+    void initializing() throws PreGameException {
         game = new Game(111,2,new Player("playerOne"),2);
         controller = new Controller(game);
-        controller.addPlayer("playerTwo");
+        assertDoesNotThrow(() -> controller.addPlayer("playerTwo"));
         controller.start();
     }
     @Test
@@ -28,20 +29,20 @@ public class ControllerTest {
     }
 
     @Test
-    void checkStartIfFull(){
+    void checkStartIfFull() throws PreGameException {
         Game gameNotFull = new Game(222,3,new Player("playerOne"),2);
         Controller controllerGNF = new Controller(gameNotFull);
-        controllerGNF.addPlayer("playerTwo");
+        assertDoesNotThrow(() -> controllerGNF.addPlayer("playerTwo"));
         controllerGNF.startIfFull();
         assertNotEquals(gameNotFull.getCurrentPlayerIndex() , gameNotFull.getFirstPlayerIndex());
     }
     @Test
     void checkPerformTurn(){
-        //Checks if exceptions is thrown when column index assumes an illegal value
+        //Checks if exception is thrown when column index assumes an illegal value
         assertThrows(IndexOutOfBoundsException.class, () -> {
             controller.performTurn( -1, new Point(1,2));
         });
-        //Checks if exceptions is thrown when column index assumes an illegal value
+        //Checks if exception is thrown when column index assumes an illegal value
         assertThrows(IndexOutOfBoundsException.class, () -> {
             controller.performTurn( 10, new Point(0,0));
         });

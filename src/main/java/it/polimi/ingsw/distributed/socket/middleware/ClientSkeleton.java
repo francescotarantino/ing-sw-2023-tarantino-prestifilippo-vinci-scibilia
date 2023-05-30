@@ -2,7 +2,7 @@ package it.polimi.ingsw.distributed.socket.middleware;
 
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
-import it.polimi.ingsw.exception.InvalidChoiceException;
+import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.viewmodel.GameView;
 import it.polimi.ingsw.viewmodel.GameDetailsView;
@@ -138,7 +138,7 @@ public class ClientSkeleton implements Client {
             throw new RemoteException("Cannot deserialize object", e);
         } catch (IOException e) {
             throw new RemoteException("Connection seems to be closed", e);
-        } catch (InvalidChoiceException e) {
+        } catch (PreGameException e) {
             this.showError(e.getMessage());
         }
     }
