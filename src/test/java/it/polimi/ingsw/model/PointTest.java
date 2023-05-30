@@ -26,10 +26,11 @@ public class PointTest {
         Point point1 = new Point(0, 6);
         Point point2 = new Point(0, 6);
         LivingRoomBoard livingRoomBoard = new LivingRoomBoard(2);
+        //noinspection EqualsWithItself
         assertEquals(point1, point1);
         assertEquals(point1, point2);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(point1, livingRoomBoard);
-
         Point point3 = new Point(1, 6);
         assertNotEquals(point1, point3);
     }

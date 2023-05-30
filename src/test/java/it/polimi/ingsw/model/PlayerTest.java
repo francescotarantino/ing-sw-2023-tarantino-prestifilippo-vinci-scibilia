@@ -28,4 +28,10 @@ public class PlayerTest {
         player.addScoringToken(2, 4);
         assertEquals(player.getScoringTokens().get(0), 2);
     }
+    @Test
+    void checkToStringOverride(){
+        assertEquals(player.toString(), "@TestUsername");
+        player.setConnected(false);
+        assertEquals(player.toString(), "@TestUsername (disconnected)");
+    }
 }

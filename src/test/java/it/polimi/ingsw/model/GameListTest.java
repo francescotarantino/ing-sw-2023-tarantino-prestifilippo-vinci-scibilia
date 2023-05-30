@@ -44,4 +44,12 @@ public class GameListTest {
         gameList.removeListener(myServer);
         assertFalse(gameList.lst.contains(myServer));
     }
+    @Test
+    void emptyMethodCalls() {
+        //Just to cover the empty methods
+        gameList.playerJoinedGame();
+        gameList.gameEnded();
+        gameList.modelChanged();
+        gameList.gameIsFull();
+    }
 }
