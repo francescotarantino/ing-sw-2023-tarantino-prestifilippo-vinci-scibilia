@@ -37,7 +37,7 @@ public class GameUIController implements Initializable {
     @FXML
     public VBox bookshelfArea;
     @FXML
-    public Pane bookshelfPane;
+    public StackPane bookshelfStackPane;
     @FXML
     public Text turnText;
     @FXML
@@ -51,7 +51,6 @@ public class GameUIController implements Initializable {
 
     public GridPane livingRoomBoardGridPane;
     public GridPane bookshelfGridPane;
-    public StackPane bookshelfStackPane;
 
     /**
      * The size of a single living room board tile.
@@ -143,10 +142,6 @@ public class GameUIController implements Initializable {
             r.setValignment(VPos.CENTER);
             livingRoomBoardGridPane.getRowConstraints().add(r);
         }
-
-        // Setup of the bookshelf stack and grid
-        bookshelfStackPane = new StackPane();
-        bookshelfPane.getChildren().add(bookshelfStackPane);
 
         ImageView bookshelfImage = new ImageView(ImageCache.getImage("/images/bookshelf.png"));
         bookshelfImage.fitWidthProperty().bind(bookshelfWidth);
