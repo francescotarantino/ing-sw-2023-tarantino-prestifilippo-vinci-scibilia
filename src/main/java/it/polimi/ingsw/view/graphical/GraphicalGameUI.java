@@ -137,11 +137,11 @@ public class GraphicalGameUI extends GameUI {
                         else
                             s.append(" (DISCONNECTED)");
                         if(playerInfo.username().equals(lastGameView.getFirstPlayerUsername()))
-                            s.append(" | (FIRST)");
+                            s.append(" | [FIRST]");
                         if(playerInfo.username().equals(lastGameView.getCurrentPlayerUsername()))
-                            s.append(" | (CURRENT)");
+                            s.append(" | [CURRENT]");
                         if(lastGameView.getFinalPlayerUsername() != null && lastGameView.getFinalPlayerUsername().equals(playerInfo.username()))
-                            s.append(" | (LAST)");
+                            s.append(" | [LAST]");
                         setText(s.toString());
 
                         StringBuilder t = new StringBuilder();

@@ -103,7 +103,7 @@ public class GameUIController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // Calculate sizes
         livingRoomBoardSize = Bindings.min(mainGrid.widthProperty().multiply(0.5/(Constants.livingRoomBoardX + 2)), mainGrid.heightProperty().divide(Constants.livingRoomBoardY + 2));
-        bookshelfWidth = Bindings.min(mainGrid.widthProperty().multiply(0.3), mainGrid.heightProperty().multiply(0.8));
+        bookshelfWidth = Bindings.min(mainGrid.widthProperty().multiply(0.3), mainGrid.heightProperty().multiply(0.5));
 
         // Set window background image
         BackgroundImage backgroundImage = new BackgroundImage(
@@ -273,46 +273,33 @@ public class GameUIController implements Initializable {
      */
     public void printCards(String pgcImagePath, List<CGCData> cgcData){
         for(CGCData data : cgcData){
-            GridPane card = new GridPane();
-            BackgroundImage cardBackground = new BackgroundImage(
-                    ImageCache.getImage(data.image_path()),
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
-            );
-            card.setBackground(new Background(cardBackground));
-            card.prefWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.15), mainGrid.widthProperty().multiply(0.15 * 0.66).multiply(1.54)));
-            card.prefHeightProperty().bind(mainGrid.widthProperty().multiply(0.15 * 0.66));
+            StackPane cardStack = new StackPane();
+
+            ImageView card = new ImageView(ImageCache.getImage(data.image_path()));
+            card.fitWidthProperty().bind(mainGrid.widthProperty().multiply(0.15));
+            card.fitHeightProperty().bind(mainGrid.heightProperty().multiply(0.5 / cgcData.size()));
+            card.setPreserveRatio(true);
+
+            cardStack.getChildren().add(card);
+
+            if(data.tokens().length > 0) {
+                ImageView token = new ImageView(ImageCache.getImage("/images/commonGoalCards/tokens/scoring_" + Arrays.stream(data.tokens()).max().getAsInt() + ".png"));
+                token.fitWidthProperty().bind(mainGrid.widthProperty().multiply(0.15));
+                token.fitHeightProperty().bind(mainGrid.heightProperty().multiply(0.5 / cgcData.size()));
+                token.setPreserveRatio(true);
+                cardStack.getChildren().add(token);
+            }
+
             Tooltip tooltip = new Tooltip(data.description());
             tooltip.setShowDelay(Duration.millis(1));
-            Tooltip.install(card, tooltip);
-            if(data.tokens().length > 0) {
-                ColumnConstraints cc = new ColumnConstraints();
-                cc.setPercentWidth(40);
-                cc.setHalignment(HPos.CENTER);
-                card.getColumnConstraints().add(cc);
-                cc = new ColumnConstraints();
-                cc.setPercentWidth(60);
-                cc.setHalignment(HPos.CENTER);
-                card.getColumnConstraints().add(cc);
-                RowConstraints rc = new RowConstraints();
-                rc.setPercentHeight(91);
-                rc.setValignment(VPos.CENTER);
-                card.getRowConstraints().add(rc);
-                ImageView upperToken = new ImageView(ImageCache.getImage(
-                        "/images/scoringTokens/scoring_" + Arrays.stream(data.tokens()).max().getAsInt() + ".jpg"
-                ));
-                upperToken.fitWidthProperty().bind(Bindings.min(card.widthProperty().multiply(0.3), card.heightProperty().multiply(0.6)));
-                upperToken.setPreserveRatio(true);
-                upperToken.setRotate(-11);
-                card.add(upperToken, 1, 0);
-            }
-            cardsArea.getChildren().add(card);
+            Tooltip.install(cardStack, tooltip);
+
+            cardsArea.getChildren().add(cardStack);
         }
 
         ImageView personalGoalCard = new ImageView(ImageCache.getImage(pgcImagePath));
-        personalGoalCard.fitWidthProperty().bind(Bindings.min(mainGrid.widthProperty().multiply(0.15), mainGrid.heightProperty().multiply(0.5)));
+        personalGoalCard.fitWidthProperty().bind(mainGrid.widthProperty().multiply(0.15));
+        personalGoalCard.fitHeightProperty().bind(mainGrid.heightProperty().multiply(0.5));
         personalGoalCard.setPreserveRatio(true);
         cardsArea.getChildren().add(personalGoalCard);
     }
