@@ -23,7 +23,7 @@ public class ControllerTest {
         game = new Game(111,2,new Player("playerOne"),2);
         controller = new Controller(game);
         assertDoesNotThrow(() -> controller.addPlayer("playerTwo"));
-        controller.start();
+        controller.startIfFull();
     }
     @Test
     void checkStart(){
@@ -112,8 +112,104 @@ public class ControllerTest {
         assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
         controller.takeTiles(new Point(4, 4)); //the additional point should trigger the refill
         assertTrue(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
+        for(int i = 0; i < Constants.livingRoomBoardX; i++) {
+            for(int j = 0; j < Constants.livingRoomBoardY; j++) {
+                if(game.getLivingRoomBoard().getTile(new Point(i,j)) != null && !game.getLivingRoomBoard().getTile(new Point(i,j)).isPlaceholder() && !(i == 5 && j == 6)) {
+                    game.getLivingRoomBoard().removeTile(new Point(i,j));
+                }
+            }
+        }
+        try {
+            controller.performTurn(1, new Point(5, 6));
+        } catch (InvalidMoveException e) {
+            e.printStackTrace();
+        }
     }
-
+    @Test
+    void testCheckBoardNeedRefill2() {
+        controller.fillLivingRoomBoard(game.getLivingRoomBoard(), game.getBag());
+        assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
+        Point[] selection = {   //this selection shouldn't trigger the refill
+                new Point(2, 3),
+                new Point(3, 3),
+                new Point(4, 3),
+                new Point(1, 4),
+                new Point(2, 4),
+                new Point(3, 4),
+                new Point(4, 4),
+                new Point(5, 4),
+                new Point(6, 4),
+                new Point(2, 5),
+                new Point(3, 5),
+                new Point(4, 5),
+                new Point(5, 5),
+                new Point(6, 5),
+                new Point(7, 5),
+                new Point(3, 6),
+                new Point(4, 6),
+                new Point(5, 6),
+                new Point(3, 7),
+                new Point(4, 7)
+        };
+        controller.takeTiles(selection);
+        assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
+        controller.takeTiles(new Point(5, 1));
+        assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
+        controller.takeTiles(new Point(4, 2));
+        assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
+        controller.takeTiles(new Point(5, 3));
+        assertTrue(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
+    }
+    @Test
+    void testCheckFinalPhases() {
+        for (int i = 0; i < Constants.bookshelfX; i++) {
+            for (int j = 0; j < Constants.bookshelfY; j++) {
+                if (!((i == Constants.bookshelfX - 1 && j == Constants.bookshelfY - 1))) {
+                    game.getBookshelves()[game.getCurrentPlayerIndex()].insertTile(new Point(i, j), new Tile(Constants.TileType.PLANTS));
+                }
+            }
+        }
+        assertThrows(InvalidMoveException.class, () -> {
+            controller.performTurn(0, new Point(5,6));
+        });
+        game.setPaused(true);
+        assertThrows(InvalidMoveException.class, () -> {
+            controller.performTurn(Constants.bookshelfX - 1, new Point(5, 6));
+        });
+        game.setPaused(false);
+        try {
+            controller.performTurn(Constants.bookshelfX - 1, new Point(5, 6));
+        } catch (InvalidMoveException e) {
+            e.printStackTrace();
+        }
+        assertTrue(game.getFinalPlayerIndex() != -1);
+        try {
+            controller.performTurn(1, new Point(5, 5));
+        } catch (InvalidMoveException e) {
+            e.printStackTrace();
+        }
+        assertTrue(game.isEnded());
+    }
+    @Test
+    void checkDisconnectionHandling() throws PreGameException, InvalidMoveException {
+        game = new Game(112,3,new Player("playerOne"),2);
+        controller = new Controller(game);
+        assertDoesNotThrow(() -> controller.addPlayer("playerTwo"));
+        assertDoesNotThrow(() -> controller.addPlayer("playerThree"));
+        controller.startIfFull();
+        int nextPlayer = (game.getCurrentPlayerIndex() + 1) % game.getTotalPlayersNumber();
+        String nextPlayerName = game.getPlayer((game.getCurrentPlayerIndex() + 1) % game.getTotalPlayersNumber()).getUsername();
+        game.getPlayer(nextPlayer).setConnected(false);
+        controller.performTurn(1, new Point(5, 6));
+        assertTrue(game.getCurrentPlayerIndex() != nextPlayer);
+        String currentPlayerName = game.getPlayer(game.getCurrentPlayerIndex()).getUsername();
+        game.getPlayer(game.getCurrentPlayerIndex()).setConnected(false);
+        controller.reconnectPlayer(nextPlayerName);
+        controller.reconnectPlayer(currentPlayerName);
+        for (int i = 0; i < 3; i++) {
+            assertTrue(game.getPlayer(i).isConnected());
+        }
+    }
     @Test
     void checkWalkover(){
         controller.walkover();
@@ -141,41 +237,6 @@ public class ControllerTest {
         controller.handlePlayerDisconnection(1);
         assertTrue(controller.hasPlayerDisconnected("playerTwo"));
     }
-   @Test
-   void testCheckBoardNeedRefill2() {
-       controller.fillLivingRoomBoard(game.getLivingRoomBoard(), game.getBag());
-       assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
-       Point[] selection = {   //this selection shouldn't trigger the refill
-               new Point(2, 3),
-               new Point(3, 3),
-               new Point(4, 3),
-               new Point(1, 4),
-               new Point(2, 4),
-               new Point(3, 4),
-               new Point(4, 4),
-               new Point(5, 4),
-               new Point(6, 4),
-               new Point(2, 5),
-               new Point(3, 5),
-               new Point(4, 5),
-               new Point(5, 5),
-               new Point(6, 5),
-               new Point(7, 5),
-               new Point(3, 6),
-               new Point(4, 6),
-               new Point(5, 6),
-               new Point(3, 7),
-               new Point(4, 7)
-       };
-       controller.takeTiles(selection);
-       assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
-       controller.takeTiles(new Point(5, 1));
-       assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
-       controller.takeTiles(new Point(4, 2));
-       assertFalse(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
-       controller.takeTiles(new Point(5, 3));
-       assertTrue(controller.checkBoardNeedRefill(game.getLivingRoomBoard()));
-   }
     @Test
     void checkPoints() {
         game.getPlayer(0).addScoringToken(8, 2);
