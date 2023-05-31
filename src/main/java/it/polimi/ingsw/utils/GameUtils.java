@@ -5,7 +5,10 @@ import it.polimi.ingsw.model.Tile;
 
 import java.util.Arrays;
 
-public class GameUtils {
+/**
+ * This class contains some utility methods useful for checks on the game.
+ */
+public abstract class GameUtils {
     /**
      * Checks if the matrix has the correct size of the bookshelf (Constants.bookshelfX x Constants.bookshelfY)
      * @param matrix matrix to check

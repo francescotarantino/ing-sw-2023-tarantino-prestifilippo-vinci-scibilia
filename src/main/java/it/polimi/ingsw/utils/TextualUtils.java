@@ -9,8 +9,10 @@ import java.util.Scanner;
 
 import static it.polimi.ingsw.utils.Constants.livingRoomBoardY;
 
-public class TextualUtils {
-
+/**
+ * This class contains some utility methods useful for the textual user interface.
+ */
+public abstract class TextualUtils {
     /**
      * This method gets an int from the scanner.
      * If the input is not an int, an error message is shown and the user is asked to try again.

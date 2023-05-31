@@ -9,11 +9,15 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Constants {
+/**
+ * This class contains all the constants used in the game.
+ */
+public abstract class Constants {
     /**
      * Game version
      */
     public static final String version = "0.2a";
+
     /**
      * Number of columns in the Bookshelf.
      */
@@ -31,6 +35,7 @@ public class Constants {
      * y-size of the Living Room Board.
      */
     public static final int livingRoomBoardY = 9;
+
     /**
      * This method is used to retrieve the invalid positions for the living room board.
      * @param numPlayers the number of players in the game
@@ -149,6 +154,7 @@ public class Constants {
             return color;
         }
     }
+
     /**
      * Minimum number of Common Goal Cards in a game.
      */
@@ -231,7 +237,6 @@ public class Constants {
      * This private attribute stores temporarily the descriptions of all the Common Goal Cards from the JSON file.
      */
     private static Map<String, String> commonGoalCardsDescriptions;
-
     /**
      * Returns the description of a Common Goal Card given its ID.
      * @param ID the id of the Common Goal Card

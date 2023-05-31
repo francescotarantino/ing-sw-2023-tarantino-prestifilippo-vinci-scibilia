@@ -8,7 +8,7 @@ import java.util.List;
  * This interface defines a generic listener.
  * It is used to implement a more sophisticated Observer/Observable pattern.
  */
-interface Listener {
+public interface Listener {
     /**
      * This interface is useful to define a lambda expression that can throw a RemoteException.
      * The exception will be caught inside the {@link #notifyListeners(List, ConsumerWithRemoteException)} method.

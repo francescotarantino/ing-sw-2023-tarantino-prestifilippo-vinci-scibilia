@@ -16,7 +16,10 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class Utils {
+/**
+ * This class contains some generic utility methods.
+ */
+public abstract class Utils {
     /**
      * Extracts random numbers without duplicates from 0 to bound-1
      * @param amount the number of random numbers to be extracted
