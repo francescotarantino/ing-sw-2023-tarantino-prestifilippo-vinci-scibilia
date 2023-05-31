@@ -4,7 +4,11 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface Listener {
+/**
+ * This interface defines a generic listener.
+ * It is used to implement a more sophisticated Observer/Observable pattern.
+ */
+interface Listener {
     /**
      * This interface is useful to define a lambda expression that can throw a RemoteException.
      * The exception will be caught inside the {@link #notifyListeners(List, ConsumerWithRemoteException)} method.

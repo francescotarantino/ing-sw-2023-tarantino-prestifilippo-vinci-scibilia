@@ -70,10 +70,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
             if(!pongReceived){
-                try {
-                    System.err.println("\nConnection lost, exiting...");
-                    exit();
-                } catch (RemoteException ignored) {}
+                System.err.println("\nConnection lost, exiting...");
+                exit();
             }
 
             pongReceived = false;
@@ -84,30 +82,42 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
-    public void refreshStartUI() throws RemoteException {
-        server.getGamesList();
+    public void refreshStartUI() {
+        try {
+            server.getGamesList();
+        } catch (RemoteException e) {
+            System.err.println("Network error while requesting games list.");
+        }
     }
 
     @Override
-    public void createGame(int numberOfPlayers, int numberOfCommonGoalCards, String username) throws RemoteException {
+    public void createGame(int numberOfPlayers, int numberOfCommonGoalCards, String username) {
         try {
             this.server.create(numberOfPlayers, numberOfCommonGoalCards, username);
         } catch (PreGameException e) {
-            this.showError(e.getMessage());
+            try {
+                this.showError(e.getMessage());
+            } catch (RemoteException ignored) {}
+        } catch (RemoteException e) {
+            System.err.println("Network error while creating game.");
         }
     }
 
     @Override
-    public void joinGame(int gameID, String username) throws RemoteException {
+    public void joinGame(int gameID, String username) {
         try {
             this.server.addPlayerToGame(gameID, username);
         } catch (PreGameException e) {
-            this.showError(e.getMessage());
+            try {
+                this.showError(e.getMessage());
+            } catch (RemoteException ignored) {}
+        } catch (RemoteException e) {
+            System.err.println("Network error while joining game.");
         }
     }
 
     @Override
-    public void exit() throws RemoteException {
+    public void exit() {
         closeConnection();
 
         System.exit(0);
@@ -149,16 +159,24 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
-    public void performTurn(int column, Point...points) throws RemoteException {
-        this.server.performTurn(column, points);
+    public void performTurn(int column, Point...points) {
+        try {
+            this.server.performTurn(column, points);
+        } catch (RemoteException e) {
+            System.err.println("Network error while performing turn.");
+        }
     }
 
     /**
      * This method closes the connection with the server if the connection is SOCKET.
      */
-    private void closeConnection() throws RemoteException {
+    private void closeConnection() {
         if(this.server instanceof ServerStub) {
-            ((ServerStub) this.server).close();
+            try {
+                ((ServerStub) this.server).close();
+            } catch (RemoteException e) {
+                throw new RuntimeException("Error while closing connection.", e);
+            }
         }
     }
 

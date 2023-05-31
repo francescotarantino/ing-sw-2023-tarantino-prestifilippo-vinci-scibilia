@@ -165,7 +165,6 @@ public class ServerImpl implements Server, GameListListener, GameListener {
         this.client.updateGamesList(GameList.getInstance().getGamesDetails());
 
         if(GameList.getInstance().getGame(this.model.getGameID()) == null){
-            //GameList.getInstance().removeListener(this); // should be removed?
             this.model.removeListener(this);
             this.model = null;
 

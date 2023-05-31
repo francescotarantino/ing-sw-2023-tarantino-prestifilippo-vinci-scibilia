@@ -2,6 +2,11 @@ package it.polimi.ingsw.listeners;
 
 import java.rmi.RemoteException;
 
+/**
+ * This interface identifies a listener for the {@link it.polimi.ingsw.model.GameList} class.
+ *
+ * @see it.polimi.ingsw.model.GameList
+ */
 public interface GameListListener extends Listener {
     /**
      * This method is invoked when there is a new game in the game list.
