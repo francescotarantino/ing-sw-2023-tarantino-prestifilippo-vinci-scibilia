@@ -295,7 +295,12 @@ public class Game {
 
         System.out.println("Game " + this.getGameID() + " has ended.");
         if(!isWalkover()){
-            System.out.println("The winner is " + getPlayerInfo().get(0).username() + " with " + getPlayerInfo().get(0).points() + " points.");
+            getPlayerInfo()
+                    .stream()
+                    .max(Comparator.comparingInt(PlayerInfo::points))
+                    .ifPresent(winner ->
+                        System.out.println("The winner is " + winner.username() + " with " + winner.points() + " points.")
+                    );
         }
     }
 
@@ -358,9 +363,24 @@ public class Game {
     public List<PlayerInfo> getPlayerInfo(){
         return this.getPlayers()
                 .stream()
-                .sorted(Comparator.comparingInt(Player::getPoints).reversed())
-                .map(p -> new PlayerInfo(p.getUsername(), p.getPoints(), p.getScoringTokens(),
-                        p.getLastMovePoints(), p.getLastMoveTiles(), p.isConnected()))
+                .map(p -> {
+                    boolean isLast = false;
+                    if (getFinalPlayerIndex() != -1) {
+                        isLast = p.equals(
+                                getPlayer((getFinalPlayerIndex() - 1) >= 0 ? (getFinalPlayerIndex() - 1) : (getTotalPlayersNumber() - 1))
+                        );
+                    }
+
+                    return new PlayerInfo(
+                            p.getUsername(),
+                            p.getPoints(),
+                            p.getScoringTokens(),
+                            p.getLastMovePoints(),
+                            p.getLastMoveTiles(),
+                            p.isConnected(),
+                            isLast
+                    );
+                })
                 .toList();
     }
 

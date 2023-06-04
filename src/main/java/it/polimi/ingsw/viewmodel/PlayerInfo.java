@@ -9,7 +9,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public record PlayerInfo(String username, int points, List<Integer> tokens,
-                            Point[] lastMovePoints, Tile[] lastMoveTiles, boolean isConnected) implements Serializable {
+                         Point[] lastMovePoints, Tile[] lastMoveTiles,
+                         boolean isConnected, boolean isLast) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

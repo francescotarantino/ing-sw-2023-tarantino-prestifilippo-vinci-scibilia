@@ -142,7 +142,7 @@ public class GraphicalGameUI extends GameUI {
                             s.append(" | [FIRST]");
                         if(playerInfo.username().equals(lastGameView.getCurrentPlayerUsername()))
                             s.append(" | [CURRENT]");
-                        if(lastGameView.getFinalPlayerUsername() != null && lastGameView.getFinalPlayerUsername().equals(playerInfo.username()))
+                        if(playerInfo.isLast())
                             s.append(" | [LAST]");
                         setText(s.toString());
 
@@ -161,7 +161,7 @@ public class GraphicalGameUI extends GameUI {
                         if(playerInfo.tokens().isEmpty()) {
                             t.append("No tokens yet.");
                         } else {
-                            t.append(playerInfo.getTokensString());
+                            t.append("Tokens: ").append(playerInfo.getTokensString());
                         }
                         Tooltip lastmoveTooltip = new Tooltip(t.toString());
                         lastmoveTooltip.setShowDelay(Duration.millis(100));
@@ -223,7 +223,7 @@ public class GraphicalGameUI extends GameUI {
 
             controller.playersList.setItems(FXCollections.observableList(gameView.getPlayerInfo()));
 
-            if(gameView.getFinalPlayerUsername() != null){
+            if(gameView.getFinalPlayerIndex() != -1){
                 BackgroundImage livingRoomBoardBackground = new BackgroundImage(
                         ImageCache.getImage("/images/livingRoomBoardNoToken.png"),
                         BackgroundRepeat.NO_REPEAT,

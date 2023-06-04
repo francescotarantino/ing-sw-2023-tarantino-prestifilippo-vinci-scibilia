@@ -39,7 +39,10 @@ public class GameView implements Serializable {
      * The index of the current player who's playing.
      */
     private final int currentPlayerIndex;
-
+    /**
+     * The index of the player who filled the bookshelf first.
+     */
+    private final int finalPlayerIndex;
     /**
      * The current player's username.
      */
@@ -51,7 +54,6 @@ public class GameView implements Serializable {
     /**
      * The descriptions and tokens of the common goal cards in the game.
      */
-    private final String finalPlayerUsername;
     private final List<CGCData> cgcData;
     /**
      * True if the game is ended, false otherwise.
@@ -84,17 +86,9 @@ public class GameView implements Serializable {
         this.personalGoalCardMatrix = game.getBookshelves()[this.myIndex].getPersonalGoalCard().getMatrix();
         this.personalGoalCardImagePath = game.getBookshelves()[this.myIndex].getPersonalGoalCard().getImagePath();
         this.currentPlayerIndex = game.getCurrentPlayerIndex();
+        this.finalPlayerIndex = game.getFinalPlayerIndex();
         this.currentPlayerUsername = game.getCurrentPlayer().getUsername();
         this.firstPlayerUsername = game.getBookshelves()[game.getFirstPlayerIndex()].getPlayer().getUsername();
-
-        if(game.getFinalPlayerIndex() == -1) {
-            this.finalPlayerUsername = null;
-        } else {
-            // The last player has the index of 1 less than the one who filled the bookshelf first
-            this.finalPlayerUsername = game.getPlayers().get(
-                    (game.getFinalPlayerIndex() - 1) >= 0 ? (game.getFinalPlayerIndex() - 1) : (game.getTotalPlayersNumber() - 1)
-            ).getUsername();
-        }
 
         this.gameEnded = game.isEnded();
         this.gamePaused = game.isPaused();
@@ -126,10 +120,6 @@ public class GameView implements Serializable {
 
     public String getFirstPlayerUsername(){
         return firstPlayerUsername;
-    }
-
-    public String getFinalPlayerUsername(){
-        return finalPlayerUsername;
     }
 
     public boolean isGameEnded() {
@@ -166,5 +156,9 @@ public class GameView implements Serializable {
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    public int getFinalPlayerIndex() {
+        return finalPlayerIndex;
     }
 }

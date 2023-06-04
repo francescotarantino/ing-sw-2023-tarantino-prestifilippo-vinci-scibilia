@@ -12,6 +12,7 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -233,10 +234,14 @@ public class TextualGameUI extends GameUI {
         this.lastGameView = gameView;
         this.updateBoard(gameView);
         if (!gameView.isWalkover()) {
+            List<PlayerInfo> orderedPlayers = gameView.getPlayerInfo()
+                    .stream()
+                    .sorted(Comparator.comparingInt(PlayerInfo::points).reversed())
+                    .toList();
 
             System.out.println("Game has ended. Final points:");
-            gameView.getPlayerInfo().forEach(System.out::println);
-            System.out.println("The winner is: " + gameView.getPlayerInfo().get(0).username() + "!");
+            orderedPlayers.forEach(System.out::println);
+            System.out.println("The winner is: " + orderedPlayers.get(0).username() + "!");
 
         } else {
             System.out.println("Game has ended. You were the only player left in the game. You win!");
@@ -638,7 +643,7 @@ public class TextualGameUI extends GameUI {
                 System.out.print(ansi().fg(Ansi.Color.YELLOW).a("[FIRST] ").reset() + "| ");
             if(playerInfo.username().equals(gameView.getCurrentPlayerUsername()))
                 System.out.print(ansi().fg(Ansi.Color.GREEN).a("[CURRENT] ").reset() + "| ");
-            if(gameView.getFinalPlayerUsername() != null && gameView.getFinalPlayerUsername().equals(playerInfo.username()))
+            if(playerInfo.isLast())
                 System.out.print(ansi().fg(RED).a("[LAST] ").reset() + "| ");
             if(playerInfo.tokens().isEmpty())
                 System.out.println("no tokens");
