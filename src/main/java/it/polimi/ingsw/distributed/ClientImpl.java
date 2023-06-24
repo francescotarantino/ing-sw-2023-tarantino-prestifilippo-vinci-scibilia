@@ -75,7 +75,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             }
 
             pongReceived = false;
-        }, Constants.pingpongTimeout, Constants.pingpongTimeout * 3, TimeUnit.MILLISECONDS);
+        }, Constants.pingpongTimeout, Constants.connectionLostTimeout, TimeUnit.MILLISECONDS);
 
         System.out.println("Starting StartUI...");
         startUI.run();

@@ -342,9 +342,14 @@ public abstract class Constants {
      */
     public static final long pingpongTimeout = 1000;
     /**
+     * Timeout (in milliseconds) used by the client to determine if the connection to the server is lost.
+     * This value should be greater than the ping-pong timeout.
+     */
+    public static final long connectionLostTimeout = pingpongTimeout * 3;
+    /**
      * Time (in milliseconds) after which the only player left in the game wins.
      */
-    public static final long walkoverTimeout = 30 * 1000;
+    public static final long walkoverTimeout = 600 * 1000;
     /**
      * Type of connection that can be used to connect to the server.
      */

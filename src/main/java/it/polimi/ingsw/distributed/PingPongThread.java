@@ -4,8 +4,6 @@ import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.GameList;
 
 import java.rmi.RemoteException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * This thread is used by the server to check if the client is still connected.
@@ -24,10 +22,6 @@ public class PingPongThread extends Thread {
      * Instance of the server that started the thread.
      */
     private final ServerImpl server;
-    /**
-     * This timer is used to schedule the ping-pong timeout.
-     */
-    private final static Timer timer = new Timer(true);
 
     /**
      * Constructor of the thread.
@@ -44,11 +38,8 @@ public class PingPongThread extends Thread {
         while (true) {
             pong = false;
 
-            TimerTask task = new PingPongTimerTask();
-            timer.schedule(task, Constants.pingpongTimeout);
             try {
                 server.client.ping();
-                task.cancel();
             } catch (RemoteException e) {
                 break;
             }
@@ -60,22 +51,11 @@ public class PingPongThread extends Thread {
             }
 
             if (!pong) {
-                handlePlayerDisconnection();
                 break;
             }
         }
-    }
 
-    /**
-     * This task is used to interrupt the thread and trigger player disconnection handling
-     * when the ping-pong timeout expires.
-     */
-    private class PingPongTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            interrupt();
-            handlePlayerDisconnection();
-        }
+        this.handlePlayerDisconnection();
     }
 
     /**

@@ -394,7 +394,9 @@ public class Game {
 
     public void setErrorMessage(String error) {
         this.errorMessage = error;
-        notifyListeners(lst, GameListener::modelChanged);
+        if(error != null){
+            notifyListeners(lst, GameListener::modelChanged);
+        }
     }
 
     public String getErrorMessage() {

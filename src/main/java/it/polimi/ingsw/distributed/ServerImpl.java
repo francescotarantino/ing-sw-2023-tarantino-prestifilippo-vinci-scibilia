@@ -164,7 +164,7 @@ public class ServerImpl implements Server, GameListListener, GameListener {
     public void removedGame() throws RemoteException {
         this.client.updateGamesList(GameList.getInstance().getGamesDetails());
 
-        if(GameList.getInstance().getGame(this.model.getGameID()) == null){
+        if(this.model != null && GameList.getInstance().getGame(this.model.getGameID()) == null){
             this.model.removeListener(this);
             this.model = null;
 
