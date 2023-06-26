@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.utils.Constants;
+import it.polimi.ingsw.utils.GameUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ public class Player {
             return;
         }
 
-        if(token != Constants.endGameToken && Arrays.stream(Constants.getScoringTokens(numberOfPlayers)).noneMatch(x -> x == token)){
+        if(token != Constants.endGameToken && Arrays.stream(GameUtils.getScoringTokens(numberOfPlayers)).noneMatch(x -> x == token)){
             throw new IllegalArgumentException(token + " is not a valid scoring token supported by this game");
         }
 

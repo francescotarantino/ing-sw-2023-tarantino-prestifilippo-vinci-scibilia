@@ -6,7 +6,6 @@ import it.polimi.ingsw.exception.PreGameException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 
-import static it.polimi.ingsw.utils.Constants.getAdjacentTilesPoints;
 import static it.polimi.ingsw.utils.GameUtils.*;
 
 /**
@@ -226,9 +225,7 @@ public class Controller {
             for (int j = 0; j < Constants.bookshelfY; j++) {
                 if(!done[i][j]) {
                     int groupSize = findGroup(new Point(i, j), matrix, done);
-                    if(groupSize >= 3) {
-                        player.addPoints(getAdjacentTilesPoints(groupSize));
-                    }
+                    player.addPoints(getAdjacentTilesPoints(groupSize));
                 }
             }
         }

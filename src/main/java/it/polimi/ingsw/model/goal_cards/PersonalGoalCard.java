@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.goal_cards;
 
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.utils.GameUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class PersonalGoalCard extends GoalCard {
         super(index);
         this.matrix = new Constants.TileType[Constants.bookshelfX][Constants.bookshelfY];
 
-        Map<String, ?> pgcData = Constants.getPersonalGoalCards().get(index);
+        Map<String, ?> pgcData = GameUtils.getPersonalGoalCards().get(index);
 
         List<?> rawList = (List<?>) pgcData.get("matrix");
         List<String> matrixData = new ArrayList<>();
@@ -85,7 +86,7 @@ public class PersonalGoalCard extends GoalCard {
             }
         }
 
-        return Constants.getPersonalGoalCardPoints(count);
+        return GameUtils.getPersonalGoalCardPoints(count);
     }
 
     @Override

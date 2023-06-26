@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.goal_cards;
 
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.utils.GameUtils;
 
 import java.util.*;
 
@@ -17,9 +18,9 @@ public abstract class CommonGoalCard extends GoalCard {
     public CommonGoalCard(int numberOfPlayers, int ID) {
         super(ID);
         this.scoringTokenStack = new Stack<>();
-        Arrays.stream(Constants.getScoringTokens(numberOfPlayers)).forEach(this.scoringTokenStack::push);
+        Arrays.stream(GameUtils.getScoringTokens(numberOfPlayers)).forEach(this.scoringTokenStack::push);
 
-        this.description = Constants.getCGCDescriptionByID(ID);
+        this.description = GameUtils.getCGCDescriptionByID(ID);
     }
 
     /**

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.goal_cards;
 
-import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.utils.GameUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,23 +52,23 @@ public class CommonGoalCardTest {
         assertEquals(3, cgc3.getAvailableScores().length);
         assertEquals(4, cgc4.getAvailableScores().length);
 
-        assertArrayEquals(Constants.getScoringTokens(2), cgc2.getAvailableScores());
-        assertArrayEquals(Constants.getScoringTokens(3), cgc3.getAvailableScores());
-        assertArrayEquals(Constants.getScoringTokens(4), cgc4.getAvailableScores());
+        assertArrayEquals(GameUtils.getScoringTokens(2), cgc2.getAvailableScores());
+        assertArrayEquals(GameUtils.getScoringTokens(3), cgc3.getAvailableScores());
+        assertArrayEquals(GameUtils.getScoringTokens(4), cgc4.getAvailableScores());
 
-        assertEquals(Constants.getScoringTokens(2)[1], cgc2.takeScore());
-        assertEquals(Constants.getScoringTokens(2)[0], cgc2.takeScore());
+        assertEquals(GameUtils.getScoringTokens(2)[1], cgc2.takeScore());
+        assertEquals(GameUtils.getScoringTokens(2)[0], cgc2.takeScore());
         assertEquals(0, cgc2.getAvailableScores().length);
 
-        assertEquals(Constants.getScoringTokens(3)[2], cgc3.takeScore());
-        assertEquals(Constants.getScoringTokens(3)[1], cgc3.takeScore());
-        assertEquals(Constants.getScoringTokens(3)[0], cgc3.takeScore());
+        assertEquals(GameUtils.getScoringTokens(3)[2], cgc3.takeScore());
+        assertEquals(GameUtils.getScoringTokens(3)[1], cgc3.takeScore());
+        assertEquals(GameUtils.getScoringTokens(3)[0], cgc3.takeScore());
         assertEquals(0, cgc3.getAvailableScores().length);
 
-        assertEquals(Constants.getScoringTokens(4)[3], cgc4.takeScore());
-        assertEquals(Constants.getScoringTokens(4)[2], cgc4.takeScore());
-        assertEquals(Constants.getScoringTokens(4)[1], cgc4.takeScore());
-        assertEquals(Constants.getScoringTokens(4)[0], cgc4.takeScore());
+        assertEquals(GameUtils.getScoringTokens(4)[3], cgc4.takeScore());
+        assertEquals(GameUtils.getScoringTokens(4)[2], cgc4.takeScore());
+        assertEquals(GameUtils.getScoringTokens(4)[1], cgc4.takeScore());
+        assertEquals(GameUtils.getScoringTokens(4)[0], cgc4.takeScore());
         assertEquals(0, cgc4.getAvailableScores().length);
     }
 }

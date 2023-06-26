@@ -5,6 +5,7 @@ import it.polimi.ingsw.utils.Constants;
 import java.util.Set;
 
 import static it.polimi.ingsw.utils.GameUtils.checkAdjacentTile;
+import static it.polimi.ingsw.utils.GameUtils.getInvalidPositions;
 
 public class LivingRoomBoard {
     private final Tile[][] board;
@@ -84,7 +85,7 @@ public class LivingRoomBoard {
         }
 
         board = new Tile[Constants.livingRoomBoardX][Constants.livingRoomBoardY];
-        Set<Point> invalidPositions = Constants.getInvalidPositions(numPlayers);
+        Set<Point> invalidPositions = getInvalidPositions(numPlayers);
         for (Point p : invalidPositions) {
             board[p.x()][p.y()] = new Tile(Constants.TileType.PLACEHOLDER);
         }

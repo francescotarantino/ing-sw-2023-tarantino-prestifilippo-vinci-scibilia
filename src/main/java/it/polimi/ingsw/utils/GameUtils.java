@@ -1,12 +1,17 @@
 package it.polimi.ingsw.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
 
-import java.util.Arrays;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
- * This class contains some utility methods useful for checks on the game.
+ * This class contains some utility methods useful for the game.
  */
 public abstract class GameUtils {
     /**
@@ -177,5 +182,163 @@ public abstract class GameUtils {
             } else return false;
         }
         return false;
+    }
+
+    /**
+     * Returns the number of points a player gets for a given number of tile matches
+     * @param matches number of tile matches
+     * @return points
+     */
+    public static int getPersonalGoalCardPoints(int matches) {
+        switch (matches) {
+            case 0 -> {
+                return 0;
+            }
+            case 1 -> {
+                return 1;
+            }
+            case 2 -> {
+                return 2;
+            }
+            case 3 -> {
+                return 4;
+            }
+            case 4 -> {
+                return 6;
+            }
+            case 5 -> {
+                return 9;
+            }
+            case 6 -> {
+                return 12;
+            }
+            default -> throw new IllegalArgumentException("Invalid number of matches.");
+        }
+    }
+
+    /**
+     * Returns the number of points a player gets for a given number of adjacent tiles.
+     * @param numberOfTiles number of adjacent tiles
+     * @return the points
+     */
+    public static int getAdjacentTilesPoints(int numberOfTiles) {
+        if (numberOfTiles < 0) {
+            throw new IllegalArgumentException("Number of tiles must be positive.");
+        } else if (numberOfTiles < 3) {
+            return 0;
+        }
+
+        switch (numberOfTiles) {
+            case 3 -> {
+                return 2;
+            }
+            case 4 -> {
+                return 3;
+            }
+            case 5 -> {
+                return 5;
+            }
+            default -> {
+                return 8;
+            }
+        }
+    }
+
+    /**
+     * This private attribute stores temporarily the invalid positions for the living room board read from the JSON file.
+     */
+    private static Map<Integer, Set<Point>> invalidPositions;
+    /**
+     * This method is used to retrieve the invalid positions for the living room board.
+     * @param numPlayers the number of players in the game
+     * @return a set of Points containing the invalid positions
+     */
+    public static Set<Point> getInvalidPositions(int numPlayers) {
+        if (invalidPositions != null) {
+            return new HashSet<>(invalidPositions.get(numPlayers));
+        }
+
+        Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/InvalidLRBPositions.json")));
+        Type type = new TypeToken<Map<String, List<List<Integer>>>>(){}.getType();
+        Map<String, List<List<Integer>>> map = new Gson().fromJson(reader, type);
+
+        invalidPositions = new HashMap<>();
+        map.forEach((key, value) -> {
+            Set<Point> points = new HashSet<>();
+            value.forEach(point -> points.add(new Point(point.get(0), point.get(1))));
+            invalidPositions.put(Integer.parseInt(key), points);
+        });
+        return new HashSet<>(invalidPositions.get(numPlayers));
+    }
+
+    /**
+     * Returns an array of scoring tokens used in common goal cards based on the number of players.
+     * @param numberOfPlayers number of players of the game
+     * @return array of scoring tokens
+     */
+    public static int[] getScoringTokens(int numberOfPlayers) {
+        if (numberOfPlayers < Constants.playersLowerBound || numberOfPlayers > Constants.playersUpperBound) {
+            throw new IllegalArgumentException("Number of players must be between " + Constants.playersLowerBound + " and " + Constants.playersUpperBound);
+        }
+
+        switch (numberOfPlayers) {
+            case 2 -> {
+                return new int[]{4, 8};
+            }
+            case 3 -> {
+                return new int[]{4, 6, 8};
+            }
+            case 4 -> {
+                return new int[]{2, 4, 6, 8};
+            }
+        }
+
+        return new int[]{};
+    }
+
+    /**
+     * This private attribute stores temporarily the list of all the Personal Goal Cards read from the JSON file.
+     */
+    private static List<Map<String, ?>> personalGoalCards;
+    /**
+     * Returns a list of all the Personal Goal Cards from the JSON file.
+     * The first time this method is called, it reads the JSON file and stores the result in a private variable.
+     * @return a list of maps, each one representing a Personal Goal Card.
+     * The map, if the JSON file is valid, contains two keys: <br>
+     * - <i>matrix</i>: a list of String which represents the matrix of the card <br>
+     * - <i>image_path</i>: a String which represents the path of the image of the card <br>
+     * @see it.polimi.ingsw.model.goal_cards.PersonalGoalCard#PersonalGoalCard(int)
+     */
+    public static List<Map<String, ?>> getPersonalGoalCards() {
+        if (personalGoalCards != null) {
+            return new ArrayList<>(personalGoalCards);
+        }
+
+        Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/PersonalGoalCards.json")));
+
+        Type type = new TypeToken<List<Map<String, ?>>>(){}.getType();
+        personalGoalCards = new Gson().fromJson(reader, type);
+        return new ArrayList<>(personalGoalCards);
+    }
+
+    /**
+     * This private attribute stores temporarily the descriptions of all the Common Goal Cards from the JSON file.
+     */
+    private static Map<String, String> commonGoalCardsDescriptions;
+    /**
+     * Returns the description of a Common Goal Card given its ID.
+     * @param ID the id of the Common Goal Card
+     * @return the description of the Common Goal Card
+     */
+    public static String getCGCDescriptionByID(int ID) {
+        if(commonGoalCardsDescriptions != null){
+            commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
+        }
+
+        Reader reader = new InputStreamReader(Objects.requireNonNull(Constants.class.getResourceAsStream("/json/CommonGoalCardsDescriptions.json")));
+
+        Type type = new TypeToken<Map<String, String>>(){}.getType();
+        commonGoalCardsDescriptions = new Gson().fromJson(reader, type);
+        return commonGoalCardsDescriptions.get(Integer.valueOf(ID).toString());
     }
 }

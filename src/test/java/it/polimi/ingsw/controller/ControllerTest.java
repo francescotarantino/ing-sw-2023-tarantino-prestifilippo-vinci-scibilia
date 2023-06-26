@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Point;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.utils.GameUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,7 +60,7 @@ public class ControllerTest {
         Point[] fourPointsArray = {new Point(1,2), new Point(3,4), new Point(6,7),new Point(3,2)};
         assertThrows(InvalidMoveException.class, () -> controller.performTurn( 2, fourPointsArray));
         //Check if the method performTurn correctly throws an exception when trying to take an illegal tile
-        for (Point point : Constants.getInvalidPositions(2)) {
+        for (Point point : GameUtils.getInvalidPositions(2)) {
             Point[] invalidPosition = {point};
             assertThrows(InvalidMoveException.class, () -> controller.performTurn(3, invalidPosition));
         }

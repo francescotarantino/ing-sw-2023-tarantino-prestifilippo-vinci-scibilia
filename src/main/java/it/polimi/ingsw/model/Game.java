@@ -8,6 +8,7 @@ import it.polimi.ingsw.exception.UsernameTakenException;
 import it.polimi.ingsw.listeners.GameListener;
 import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
+import it.polimi.ingsw.utils.GameUtils;
 import it.polimi.ingsw.viewmodel.PlayerInfo;
 
 import java.util.*;
@@ -101,7 +102,7 @@ public class Game {
 
         // Generating an adequate number of random numbers,
         // used as indexes for class PersonalGoalCards to generate cards with no repetition
-        randomPGCNumbers = extractRandomIDsWithoutDuplicates(numberOfPlayers, Constants.getPersonalGoalCards().size());
+        randomPGCNumbers = extractRandomIDsWithoutDuplicates(numberOfPlayers, GameUtils.getPersonalGoalCards().size());
 
         // Generating an adequate number of bookshelves and creating the first bookshelf for the first player
         this.bookshelves = new Bookshelf[numberOfPlayers];
