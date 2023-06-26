@@ -339,8 +339,8 @@ public class Game {
         isPaused = paused;
     }
 
-    public long getConnectedPlayersNumber() {
-        return this.getPlayers().stream().filter(Player::isConnected).count();
+    public int getConnectedPlayersNumber() {
+        return Math.toIntExact(this.getPlayers().stream().filter(Player::isConnected).count());
     }
 
     /**

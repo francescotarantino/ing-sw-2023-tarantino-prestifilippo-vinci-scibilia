@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 
 public class AppServerImpl extends UnicastRemoteObject implements AppServer {
     /**
-     * The port on which the socket server will listen.
+     * The port on which the socket server will listen to.
      */
     private static int socketPort = Constants.defaultSocketPort;
     private static AppServerImpl instance;
@@ -111,7 +111,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
      * This method is used to start the socket server.
      */
     @SuppressWarnings("InfiniteLoopStatement")
-    public static void startSocket() throws RemoteException {
+    private static void startSocket() throws RemoteException {
         System.out.println("SOCKET > Starting socket server on port " + socketPort + "...");
 
         AppServerImpl instance = getInstance();
@@ -122,7 +122,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
                 instance.executorService.submit(() -> {
                     try {
                         ClientSkeleton clientSkeleton = new ClientSkeleton(socket);
-                        Server server = new ServerExecutor(new ServerImpl());
+                        Server server = new ServerImpl();
                         server.register(clientSkeleton);
                         while (true) {
                             clientSkeleton.receive(server);

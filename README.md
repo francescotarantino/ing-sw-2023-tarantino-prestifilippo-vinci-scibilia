@@ -29,7 +29,7 @@ Verranno generati due file jar nella cartella `target`:
 >È possibile che la GUI di un client non venga avviata correttamente se il file `.jar` è stato compilato su una architettura di processore diversa da quella in cui viene eseguito.
 Ciò avviene perché JavaFX utilizza librerie native e, al momento della compilazione, vengono incluse solo quelle per l'architettura di processore in uso.
 In tal caso è necessario ricompilare il progetto sulla macchina in cui si vuole eseguire il client, per assicurarsi di includere le librerie native corrette.
-Ciò non avviene se la JVM include già le librerie native di JavaFX.
+Ciò non avviene se la JVM installata include già le librerie native di JavaFX.
 
 ## Esecuzione
 ### Server
@@ -41,7 +41,7 @@ dove `socket port` specifica la porta su cui il server deve mettersi in ascolto 
 Se non specificata, la porta di default è la `12345`.
 >Nel caso di mal funzionamento del protocollo RMI in remoto, può essere utile impostare la proprietà **`java.rmi.server.hostname`** per specificare l'indirizzo IP del server. Ad esempio:
 >```bash
->java -Djava.rmi.server.hostname=xxx.xxx.xxx.xxx -jar myshelfie-server.jar
+>java -Djava.rmi.server.hostname=[server ip address] -jar myshelfie-server.jar [socket port]
 >```
 ### Client
 Per lanciare un client è necessario eseguire il comando:

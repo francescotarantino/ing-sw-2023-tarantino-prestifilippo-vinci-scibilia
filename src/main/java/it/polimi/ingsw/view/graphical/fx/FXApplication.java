@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 
 /**
  * This class is required by JavaFX to launch the GUI of the game.
- * It also provides the #execute(Runnable) method to execute tasks such as calls to the server in separate threads.
+ * It also provides the {@link #execute(Runnable)} method to execute tasks such as calls to the server in separate threads.
  */
 public class FXApplication extends Application {
     /**

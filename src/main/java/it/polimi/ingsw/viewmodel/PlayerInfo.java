@@ -8,6 +8,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * This class is used to send the player's info to the client.
+ */
 public record PlayerInfo(String username, int points, List<Integer> tokens,
                          Point[] lastMovePoints, Tile[] lastMoveTiles,
                          boolean isConnected, boolean isLast) implements Serializable {

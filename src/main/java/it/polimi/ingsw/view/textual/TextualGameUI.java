@@ -30,7 +30,7 @@ import static org.fusesource.jansi.Ansi.ansi;
  * Main class for the textual version of the GameUI
  */
 public class TextualGameUI extends GameUI {
-    /** Enumeration representing the state of the game from the perspective of the player*/
+    /** Enumeration representing the state of the game from the perspective of the player */
     private enum State {
         MY_TURN,
         NOT_MY_TURN,
@@ -171,9 +171,7 @@ public class TextualGameUI extends GameUI {
                 synchronized (lock) {
                     try {
                         lock.wait();
-                    } catch (InterruptedException e) {
-                        System.out.println("Error while waiting for turn: " + e.getMessage());
-                    }
+                    } catch (InterruptedException ignored) {}
                 }
             }
 
@@ -278,7 +276,7 @@ public class TextualGameUI extends GameUI {
                 Integer column = selectColumn(input, points);
                 if (column != null) {
                     if (getState() == State.MY_TURN)
-                        notifyListeners(lst, x -> x.performTurn(column, points.toArray(new Point[0])));
+                        notifyListeners(lst, x -> x.performTurn(column, points.toArray(Point[]::new)));
                     setState(State.NOT_MY_TURN);
                     break;
                 } else {
@@ -321,7 +319,7 @@ public class TextualGameUI extends GameUI {
                 revertPick(points);
             }
             else{
-                tilesCanBeTaken = checkIfTilesCanBeTaken(lastGameView.getLivingRoomBoardMatrix(), points.toArray(new Point[0]));
+                tilesCanBeTaken = checkIfTilesCanBeTaken(lastGameView.getLivingRoomBoardMatrix(), points.toArray(Point[]::new));
                 if(!tilesCanBeTaken){
                     revertPick(points);
                     System.out.println("Invalid selection. Taken tiles must form a straight line and have at least one free side.");
@@ -348,7 +346,7 @@ public class TextualGameUI extends GameUI {
      * @throws InterruptedException if the thread is interrupted
      */
     private Integer selectColumn(Scanner input, List<Point> points) throws InterruptedException {
-        System.out.println("In which column do you want to put the " + (points.size() == 1 ? "tile" : "tiles") + "?");
+        System.out.print("In which column do you want to put the " + (points.size() == 1 ? "tile" : "tiles") + "? ");
         int column = nextIntInterruptible(input, 0, bookshelfX, ("Column must be between 1 and " + bookshelfX + ".")) - 1;
         if(column == -1)
             return null;
@@ -357,7 +355,7 @@ public class TextualGameUI extends GameUI {
             System.out.print("You are placing " + points.size() + (points.size() == 1 ? " tile" : " tiles")+ " in column " + (column + 1) + ":");
             printPoints(points);
             System.out.println(".");
-            System.out.println("Do you want to continue? Select \"Y\" to confirm, or \"N\" to pick again: ");
+            System.out.print("Do you want to continue? Select \"Y\" to confirm, or \"N\" to pick again: ");
             if(!isN(input, "Select either \"N\" or \"Y\".")) {
                 return column;
             }

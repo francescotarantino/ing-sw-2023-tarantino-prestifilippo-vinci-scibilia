@@ -12,26 +12,26 @@ public class CGCLines extends CommonGoalCard {
     }
 
     private final Direction direction;
-    private final int max_different;
+    private final int maxDifferent;
     private final int repetitions;
 
     /**
-     * @param max_different 0 means that all the tiles must be different
+     * @param maxDifferent 0 means that all the tiles must be different
      *                      X > 0 means that there can be at most X > 0 tile of each type
      */
-    public CGCLines(int numberOfPlayers, int ID, Direction direction, int max_different, int repetitions) {
+    public CGCLines(int numberOfPlayers, int ID, Direction direction, int maxDifferent, int repetitions) {
         super(numberOfPlayers, ID);
 
-        if(direction == null || max_different < 0 || repetitions < 1){
+        if(direction == null || maxDifferent < 0 || repetitions < 1){
             throw new IllegalArgumentException("Invalid parameters");
-        } else if(direction == Direction.HORIZONTAL && (max_different > Constants.bookshelfX || repetitions > Constants.bookshelfY)){
+        } else if(direction == Direction.HORIZONTAL && (maxDifferent > Constants.bookshelfX || repetitions > Constants.bookshelfY)){
             throw new IllegalArgumentException("Arguments are too big for the horizontal direction");
-        } else if(direction == Direction.VERTICAL && (max_different > Constants.bookshelfY || repetitions > Constants.bookshelfX)){
+        } else if(direction == Direction.VERTICAL && (maxDifferent > Constants.bookshelfY || repetitions > Constants.bookshelfX)){
             throw new IllegalArgumentException("Arguments are too big for the vertical direction");
         }
 
         this.direction = direction;
-        this.max_different = max_different;
+        this.maxDifferent = maxDifferent;
         this.repetitions = repetitions;
     }
 
@@ -86,10 +86,10 @@ public class CGCLines extends CommonGoalCard {
             }
         }
 
-        if(this.max_different == 0){
+        if(this.maxDifferent == 0){
             return count_different == line.length;
         } else {
-            return count_different <= this.max_different;
+            return count_different <= this.maxDifferent;
         }
     }
 }

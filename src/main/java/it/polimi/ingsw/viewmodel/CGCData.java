@@ -3,6 +3,9 @@ package it.polimi.ingsw.viewmodel;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * This class is used to send common goal cards data (such as description) to the client.
+ */
 public record CGCData(String description, int[] tokens, String image_path) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

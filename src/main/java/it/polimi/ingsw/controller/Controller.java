@@ -9,6 +9,9 @@ import it.polimi.ingsw.model.goal_cards.CommonGoalCard;
 import static it.polimi.ingsw.utils.Constants.getAdjacentTilesPoints;
 import static it.polimi.ingsw.utils.GameUtils.*;
 
+/**
+ * This class is the controller of the game, and it is responsible for the game logic (according to the MVC pattern).
+ */
 public class Controller {
     private final Game game;
 
@@ -37,8 +40,8 @@ public class Controller {
     }
 
     /**
-     * This method takes the tiles from the living room board, it puts them in the player's bookshelf,
-     * and it passes the turn to the next player.
+     * This method takes the tiles from the living room board, puts them in the player's bookshelf,
+     * and passes the turn to the next player.
      * @param column is the column where the player wants to insert the tiles
      * @param points is an array of points from which the player wants to take the tiles
      */
@@ -289,7 +292,7 @@ public class Controller {
     }
 
     /**
-     * This method is a wrapper for the {@link Game#addBookshelf(Player)}} method.
+     * This method is a wrapper for the {@link Game#addBookshelf(Player)} method.
      * @param username the username of the new player
      * @return the index of the new player
      * @throws PreGameException if the username is already taken or the game is full

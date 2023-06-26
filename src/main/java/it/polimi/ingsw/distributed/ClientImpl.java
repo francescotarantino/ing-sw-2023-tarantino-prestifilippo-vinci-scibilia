@@ -37,7 +37,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     /**
      * This variable is used to check if the server is still alive.
      * It is set true when the server sends a ping to the client.
-     * Every 3 * {@link Constants#pingpongTimeout} milliseconds, the client checks if this variable is still true.
+     * Every {@link Constants#connectionLostTimeout} milliseconds, the client checks if this variable is still true.
      * If it is not, the connection is considered lost and the client should be closed.
      * @see #run()
      */

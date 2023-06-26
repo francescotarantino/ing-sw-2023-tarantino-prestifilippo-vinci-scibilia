@@ -14,10 +14,19 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * This class is the skeleton of the client seen by the server.
+ * It is used to send SOCKET messages to the client.
+ *
+ * @see Client
+ */
 public class ClientSkeleton implements Client {
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
 
+    /**
+     * This enum represents all the methods that can be called on the client.
+     */
     public enum Methods {
         UPDATE_GAMES_LIST,
         UPDATE_PLAYERS_LIST,
@@ -123,6 +132,9 @@ public class ClientSkeleton implements Client {
         }
     }
 
+    /**
+     * This method is used to receive SOCKET messages from the client.
+     */
     public void receive(Server server) throws RemoteException {
         try {
             ServerStub.Methods method = (ServerStub.Methods) ois.readObject();

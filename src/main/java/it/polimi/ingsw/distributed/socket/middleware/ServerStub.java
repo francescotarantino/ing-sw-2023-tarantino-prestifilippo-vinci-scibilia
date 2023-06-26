@@ -14,6 +14,12 @@ import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * This class is the stub of the server seen by the client.
+ * It is used to send SOCKET messages to the server.
+ *
+ * @see Server
+ */
 public class ServerStub implements Server {
     private final String ip;
     private final int port;
@@ -22,7 +28,7 @@ public class ServerStub implements Server {
     private Socket socket;
 
     /**
-     * This enumeration contains all the methods that the client can call on the server.
+     * This enum represents all the methods that can be called on the server.
      */
     public enum Methods {
         JOIN,
@@ -122,6 +128,9 @@ public class ServerStub implements Server {
         }
     }
 
+    /**
+     * This method is used to receive SOCKET messages from the server.
+     */
     @SuppressWarnings("unchecked")
     public void receive(Client client) throws RemoteException {
         try {
@@ -145,6 +154,9 @@ public class ServerStub implements Server {
         }
     }
 
+    /**
+     * Closes the socket connection.
+     */
     public void close() throws RemoteException {
         try {
             System.out.println("Closing connection...");
