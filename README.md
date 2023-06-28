@@ -56,3 +56,12 @@ I parametri sono opzionali. Se non specificati, verranno chiesti all'utente prim
 
 ## Test Coverage
 ![Coverage Report](deliverables/Test Coverage Report.png)
+
+## UML Diagrams
+- Class Diagrams
+  - [Model/Controller](deliverables/uml/UML%20Class%20Diagram%20-%20Model%20Controller.pdf)
+  - [Network](deliverables/uml/UML%20Class%20Diagram%20-%20Network.pdf)
+  - [Detailed](deliverables/uml/UML%20Class%20Diagram%20-%20Detailed.png)
+- Sequence Diagrams
+  - [RMI](deliverables/uml/UML%20Sequence%20Diagram%20-%20RMI.pdf)
+  - [SOCKET](deliverables/uml/UML%20Sequence%20Diagram%20-%20SOCKET.pdf)
