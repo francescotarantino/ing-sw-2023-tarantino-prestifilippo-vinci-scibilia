@@ -8,6 +8,9 @@ import java.util.HashMap;
 
 import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
+/**
+ * This class represents the common goal card Squares.
+ */
 public class CGCSquares extends CommonGoalCard {
     final int squareSize;
     public CGCSquares(int numberOfPlayers, int ID, int size) {

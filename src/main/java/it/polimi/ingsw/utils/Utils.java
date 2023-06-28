@@ -37,7 +37,7 @@ public abstract class Utils {
             do {
                 flag = true;
                 numbers[i] = rand.nextInt(bound);
-                for(int j=0;j<i;j++){
+                for(int j = 0; j < i; j++){
                     if (numbers[j] == numbers[i]) {
                         flag = false;
                         break;

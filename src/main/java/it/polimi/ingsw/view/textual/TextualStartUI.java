@@ -15,12 +15,33 @@ import java.util.Scanner;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * Main class for the textual version of the TextualUI.
+ */
 public class TextualStartUI extends StartUI {
+    /**
+     * The username inserted by the user.
+     */
     private String username;
+    /**
+     * The number of players inserted by the user when creating a new game.
+     */
     private int numberOfPlayers;
+    /**
+     * The number of common goal cards inserted by the user when creating a new game.
+     */
     private int numberOfCommonGoalCards;
+    /**
+     * The game ID inserted by the user when joining an existing game.
+     */
     private int gameID = -1;
+    /**
+     * If true, the user is waiting for other players to join the game.
+     */
     private boolean waitingForPlayers = false;
+    /**
+     * The list of players in the game the user is waiting for.
+     */
     private List<String> playersNameList;
 
     @Override

@@ -8,6 +8,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * This class represents the bag of tiles in the game.
+ * At the beginning of the game, it is filled with tiles of each type.
+ * During the game, it is used to extract tiles to fill the living room board.
+ */
 public class Bag {
     private final List<Tile> tiles;
 

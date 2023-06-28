@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.Tile;
 
 import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
+/**
+ * This class represents the common goal card Lines.
+ */
 public class CGCLines extends CommonGoalCard {
     public enum Direction {
         HORIZONTAL,

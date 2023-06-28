@@ -10,8 +10,17 @@ import java.util.Map;
 
 import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
+/**
+ * This class represents a personal goal card in the game.
+ */
 public class PersonalGoalCard extends GoalCard {
+    /**
+     * The matrix of the personal goal card.
+     */
     private final Constants.TileType[][] matrix;
+    /**
+     * The path of the image of the personal goal card.
+     */
     private final String imagePath;
 
     /**
@@ -71,7 +80,7 @@ public class PersonalGoalCard extends GoalCard {
     /**
      * Checks the validity of the personal goal card, returning the number of points earned.
      * @param matrix the matrix of the bookshelf to be checked
-     * @return the number of points
+     * @return the number of points earned by the player if the goal is satisfied, 0 otherwise
      */
     @Override
     public int checkValidity(Tile[][] matrix) {

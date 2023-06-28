@@ -5,6 +5,11 @@ import javafx.scene.input.DataFormat;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * This record represents a generic 2D point.
+ * @param x x coordinate
+ * @param y y coordinate
+ */
 public record Point(int x, int y) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

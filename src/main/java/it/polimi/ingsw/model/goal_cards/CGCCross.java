@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.Tile;
 
 import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
+/**
+ * This class represents the common goal card Cross.
+ */
 public class CGCCross extends CommonGoalCard {
     public CGCCross(int numberOfPlayers, int ID) {
         super(numberOfPlayers, ID);

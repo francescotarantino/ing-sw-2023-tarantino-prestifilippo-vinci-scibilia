@@ -4,6 +4,9 @@ import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.model.Tile;
 import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
+/**
+ * This class represents the common goal card Corners.
+ */
 public class CGCCorners extends CommonGoalCard{
     public CGCCorners(int numberOfPlayers, int ID) {
         super(numberOfPlayers, ID);

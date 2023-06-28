@@ -7,7 +7,15 @@ import java.util.Set;
 import static it.polimi.ingsw.utils.GameUtils.checkAdjacentTile;
 import static it.polimi.ingsw.utils.GameUtils.getInvalidPositions;
 
+/**
+ * This class represents the living room board.
+ */
 public class LivingRoomBoard {
+    /**
+     * The matrix of the board.
+     * <p>
+     * Convention: the first index represents the x coordinate (left to right), the second index represents the y coordinate (bottom to top).
+     */
     private final Tile[][] board;
 
     /**

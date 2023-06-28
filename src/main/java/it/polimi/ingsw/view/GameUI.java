@@ -6,6 +6,9 @@ import it.polimi.ingsw.viewmodel.GameView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class for the GameUI.
+ */
 abstract public class GameUI implements Runnable {
     protected final List<GameUIListener> lst = new ArrayList<>();
 

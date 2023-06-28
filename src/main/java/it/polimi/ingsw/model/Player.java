@@ -7,12 +7,37 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class represents a player in the game.
+ */
 public class Player {
+    /**
+     * The username of the player.
+     * It is unique in a game, but not in the whole server (it is possible to have two players with the same username in two different games).
+     */
     private final String username;
+    /**
+     * The points of the player.
+     * This value is updated at the end of the game.
+     */
     private int points;
+    /**
+     * The scoring tokens earned by the player.
+     */
     private final List<Integer> scoringTokens = new ArrayList<>();
+    /**
+     * The connection status of the player.
+     * If true, the player is online.
+     */
     private boolean connected;
+    /**
+     * The points of the living room board where the player has taken the tiles from in the last move.
+     * If null, the player has not made any move yet.
+     */
     private Point[] lastMovePoints = null;
+    /**
+     * The tiles involved in the last move made by the player.
+     */
     private Tile[] lastMoveTiles = null;
 
     /**

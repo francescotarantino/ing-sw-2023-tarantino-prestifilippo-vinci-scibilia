@@ -14,6 +14,9 @@ import java.util.Scanner;
 import it.polimi.ingsw.utils.Constants.UIType;
 import it.polimi.ingsw.utils.Constants.ConnectionType;
 
+/**
+ * Client application.
+ */
 public class AppClient {
     private static UIType uiType;
     private static ConnectionType connectionType;

@@ -16,6 +16,9 @@ import java.util.*;
 import static it.polimi.ingsw.utils.Utils.extractRandomIDsWithoutDuplicates;
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
+/**
+ * This class represents a game.
+ */
 public class Game {
     /**
      * Identifies the game with a unique and positive ID

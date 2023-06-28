@@ -16,6 +16,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Server application.
+ */
 public class AppServerImpl extends UnicastRemoteObject implements AppServer {
     /**
      * The port on which the socket server will listen to.

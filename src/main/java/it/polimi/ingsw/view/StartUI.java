@@ -6,6 +6,9 @@ import it.polimi.ingsw.viewmodel.GameDetailsView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class for the StartUI.
+ */
 abstract public class StartUI implements Runnable {
     protected final List<StartUIListener> lst = new ArrayList<>();
 

@@ -5,10 +5,28 @@ import it.polimi.ingsw.model.goal_cards.PersonalGoalCard;
 
 import java.util.Arrays;
 
+/**
+ * This class represents the bookshelf of a player.
+ * Each bookshelf is associated with a player and a personal goal card.
+ */
 public class Bookshelf {
+    /**
+     * The player who owns the bookshelf.
+     */
     private final Player player;
+    /**
+     * The personal goal card associated to the bookshelf.
+     */
     private final PersonalGoalCard personalGoalCard;
+    /**
+     * The matrix of the bookshelf.
+     * <p>
+     * Convention: the first index represents the column (left to right), the second index represents the row (bottom to top).
+     */
     private final Tile[][] matrix;
+    /**
+     * An array of booleans that indicates which common goal cards are completed.
+     */
     private final boolean[] completedCommonGoalCards;
 
     /**

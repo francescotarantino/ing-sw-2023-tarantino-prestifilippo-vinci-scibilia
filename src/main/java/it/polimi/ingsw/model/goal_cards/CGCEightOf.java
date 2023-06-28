@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.Tile;
 import java.util.Arrays;
 import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
+/**
+ * This class represents the common goal card Eight Of.
+ */
 public class CGCEightOf  extends CommonGoalCard{
     public CGCEightOf(int numberOfPlayers, int ID) {
         super(numberOfPlayers, ID);

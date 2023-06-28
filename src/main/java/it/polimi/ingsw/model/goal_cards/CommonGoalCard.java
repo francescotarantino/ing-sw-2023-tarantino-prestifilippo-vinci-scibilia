@@ -6,8 +6,17 @@ import it.polimi.ingsw.utils.GameUtils;
 
 import java.util.*;
 
+/**
+ * This class is the superclass of all the common goal cards in the game.
+ */
 public abstract class CommonGoalCard extends GoalCard {
+    /**
+     * Stack of scoring tokens available for this common goal card.
+     */
     private final Stack<Integer> scoringTokenStack;
+    /**
+     * Description of the common goal card.
+     */
     private final String description;
 
     /**

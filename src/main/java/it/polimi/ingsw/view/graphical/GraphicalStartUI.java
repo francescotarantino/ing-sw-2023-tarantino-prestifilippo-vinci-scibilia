@@ -23,13 +23,26 @@ import java.util.concurrent.CountDownLatch;
 
 import static it.polimi.ingsw.listeners.Listener.notifyListeners;
 
+/**
+ * Main class for the graphical version of the StartUI.
+ */
 public class GraphicalStartUI extends StartUI {
+    /**
+     * The username inserted by the user.
+     */
     private String username;
+    /**
+     * JavaFX FXML controller associated with the Graphical UI.
+     */
     private StartUIController controller;
     /**
      * Main window of the StartUI.
      */
     private Stage stage;
+    /**
+     * This latch is used to wait until the UI is launched and ready.
+     * Otherwise, if the UI is not ready and the client receives an update from the server, JavaFX could crash.
+     */
     private final CountDownLatch latch = new CountDownLatch(1);
 
     @Override

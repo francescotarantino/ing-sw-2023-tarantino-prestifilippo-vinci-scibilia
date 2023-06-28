@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.Tile;
 
 import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 
+/**
+ * This class represents the common goal card Triangular.
+ */
 public class CGCTriangular extends CommonGoalCard {
     public CGCTriangular(int numberOfPlayers, int ID) {
         super(numberOfPlayers, ID);

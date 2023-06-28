@@ -27,7 +27,7 @@ import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
- * Main class for the textual version of the GameUI
+ * Main class for the textual version of the GameUI.
  */
 public class TextualGameUI extends GameUI {
     /** Enumeration representing the state of the game from the perspective of the player */
