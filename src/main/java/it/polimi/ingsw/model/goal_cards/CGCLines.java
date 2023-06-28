@@ -9,6 +9,9 @@ import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
  * This class represents the common goal card Lines.
  */
 public class CGCLines extends CommonGoalCard {
+    /**
+     * Direction of the lines in the bookshelf.
+     */
     public enum Direction {
         HORIZONTAL,
         VERTICAL

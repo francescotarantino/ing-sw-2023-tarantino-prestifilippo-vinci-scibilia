@@ -13,9 +13,9 @@ import static it.polimi.ingsw.utils.GameUtils.checkMatrixSize;
 public class CGCGroupsOfEquals extends CommonGoalCard {
 
     /**
-     * type of blocks that must be found in the matrix by the Common Goal Card
+     * Type of blocks that must be found in the matrix by the Common Goal Card
      */
-    public enum BlockType{
+    public enum BlockType {
         FOUR_OF_FOUR,
         SIX_OF_TWO
     }
