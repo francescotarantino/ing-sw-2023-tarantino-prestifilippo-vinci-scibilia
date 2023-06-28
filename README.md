@@ -41,7 +41,7 @@ dove
 - `server ip` specifica l'indirizzo IP del server,
 - `socket port` specifica la porta su cui il server deve mettersi in ascolto per le connessioni Socket.
 Se non specificata, la porta di default è la `12345`.
->L'indirizzo IP del server è richiesto per l'utilizzo del protocollo RMI in remoto.
+>L'indirizzo IP del server è richiesto per il funzionamento del protocollo RMI in remoto.
 ### Client
 Per lanciare un client è necessario eseguire il comando:
 ```bash
@@ -53,3 +53,6 @@ dove:
 - `port` specifica la porta del server.
 
 I parametri sono opzionali. Se non specificati, verranno chiesti all'utente prima dell'avvio.
+
+## Test Coverage
+![Coverage Report](deliverables/Test Coverage Report.png)
