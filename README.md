@@ -55,7 +55,7 @@ dove:
 I parametri sono opzionali. Se non specificati, verranno chiesti all'utente prima dell'avvio.
 
 ## Test Coverage
-![Coverage Report](deliverables/Test Coverage Report.png)
+![Coverage Report](deliverables/Test%20Coverage%20Report.png)
 
 ## UML Diagrams
 - Class Diagrams
