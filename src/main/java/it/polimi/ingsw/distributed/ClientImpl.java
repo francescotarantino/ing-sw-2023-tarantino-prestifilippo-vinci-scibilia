@@ -41,7 +41,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
      * If it is not, the connection is considered lost and the client should be closed.
      * @see #run()
      */
-    private boolean pongReceived;
+    private boolean pingReceived;
 
     public ClientImpl(Server server, Constants.UIType uiType) throws RemoteException {
         this.server = server;
@@ -69,12 +69,12 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
-            if(!pongReceived){
+            if(!pingReceived){
                 System.err.println("\nConnection lost, exiting...");
                 exit();
             }
 
-            pongReceived = false;
+            pingReceived = false;
         }, Constants.pingpongTimeout, Constants.connectionLostTimeout, TimeUnit.MILLISECONDS);
 
         System.out.println("Starting StartUI...");
@@ -182,7 +182,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void ping() throws RemoteException {
-        pongReceived = true;
+        pingReceived = true;
+
         this.server.pong();
     }
 }
