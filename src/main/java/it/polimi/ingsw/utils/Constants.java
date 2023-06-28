@@ -9,7 +9,7 @@ public abstract class Constants {
     /**
      * Game version
      */
-    public static final String version = "0.2a";
+    public static final String version = "1.0";
 
     /**
      * Number of columns in the Bookshelf.
