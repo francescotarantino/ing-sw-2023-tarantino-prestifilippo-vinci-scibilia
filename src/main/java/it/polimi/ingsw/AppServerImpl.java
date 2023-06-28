@@ -21,6 +21,10 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
      * The port on which the socket server will listen to.
      */
     private static int socketPort = Constants.defaultSocketPort;
+    /**
+     * The server ip address. Used to bind the RMI protocol to a specific IP.
+     */
+    private static String serverIP = null;
     private static AppServerImpl instance;
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -43,17 +47,20 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
 
     /**
      * Starts the server application.
-     * @param args socket port
+     * @param args [server ip] [socket port]
      */
     public static void main(String[] args) {
         System.out.println("Starting server...");
 
-        if (args.length > 0) {
-            try {
-                socketPort = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid socket port. Using default port " + Constants.defaultSocketPort + "...");
-            }
+        switch (args.length){
+            case 2:
+                try {
+                    socketPort = Integer.parseInt(args[1]);
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid socket port. Using default port " + Constants.defaultSocketPort + "...");
+                }
+            case 1:
+                serverIP = args[0];
         }
 
         Thread rmiThread = new Thread(() -> {
@@ -89,6 +96,10 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
      */
     private static void startRMI() throws RemoteException {
         System.out.println("RMI > Starting RMI server...");
+
+        if(serverIP != null){
+            System.setProperty("java.rmi.server.hostname", serverIP);
+        }
 
         AppServerImpl server = getInstance();
 
