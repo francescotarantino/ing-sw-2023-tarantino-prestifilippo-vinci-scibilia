@@ -101,6 +101,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer {
         System.out.println("RMI > Starting RMI server...");
 
         if(serverIP != null){
+            System.out.println("RMI > Binding RMI server to IP " + serverIP + "...");
             System.setProperty("java.rmi.server.hostname", serverIP);
         }
 
